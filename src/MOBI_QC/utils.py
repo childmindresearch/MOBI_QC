@@ -307,7 +307,7 @@ def whole_durations(xdf_path):
 
     # percent
     max_dur = whole_durations_df.duration.max()
-    whole_durations_df['percent'] = round(whole_durations_df['duration']/max_dur*100, 4).astype(str) + '%'
+    whole_durations_df['percent'] = whole_durations_df['duration'].apply(lambda x: f"{x / max_dur:.4%}")
 
     # print which are short
     for i in whole_durations_df.iterrows():
