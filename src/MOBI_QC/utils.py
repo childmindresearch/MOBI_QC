@@ -152,7 +152,7 @@ def import_stim_data(xdf_filename):
 
 def get_event_data(event, df, stim_df):
     """
-    Get the data from the EEG dataframe that corresponds to the event in the stimuli dataframe.
+    Get the data from a given data modality that corresponds to the event in the stimuli dataframe.
     
     Args:
         event (str): The event to get the data for.
