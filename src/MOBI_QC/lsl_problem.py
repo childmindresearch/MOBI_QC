@@ -27,12 +27,12 @@ def lsl_problem_plot(ps_df: pd.DataFrame, sub_id: str):
         ps_df (pd.DataFrame): Dataframe containing the physio data.
         sub_id (str): Subject ID.
     """
-    plt.plot(ps_df['lsl_time_stamp'])
+    plt.plot(ps_df['lsl_time_stamp'], color = 'g')
     plt.xlabel('Index')
     plt.ylabel('LSL Time Stamp (s)')
     plt.title('LSL Time Stamps (Physio Data)')
     plt.savefig(f'report_images/{sub_id}_LSL_timestamps.png')
-
+    
 def lsl_loss_percentage(df_dict: dict, sub_id: str) -> pd.DataFrame:
     """
     Calculate the percentage of data loss for each modality based on LSL timestamps.
@@ -144,7 +144,7 @@ def lsl_problem(xdf_filename:str):
     offset_social_timestamp = stim_df.loc[stim_df['event'] == 'Offset_SocialTask', 'lsl_time_stamp'].values[0]
 
     # optional: returns number of loss instances in ps_df
-    lsl_quick_check(ps_df)
+    # lsl_quick_check(ps_df)
 
     lsl_problem_plot(ps_df, sub_id)
 
