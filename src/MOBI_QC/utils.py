@@ -56,7 +56,7 @@ def import_mic_data(xdf_filename):
     data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'type': 'AudioCapture'}], verbose = False)
     df = pd.DataFrame(data[0]['time_series'], columns=['int_array'])
     df['bytestring'] = df['int_array'].apply(lambda x: np.array(x).tobytes())
-    df['duration'] = (data[0]['time_stamps'] - data[0]['time_stamps'][0])/441000
+    df['duration'] = (data[0]['time_stamps'] - data[0]['time_stamps'][0])/data[0]['info']['effective_srate']
     df['lsl_time_stamp'] = data[0]['time_stamps']
     df['time'] = df.lsl_time_stamp - df.lsl_time_stamp[0]
     return df
