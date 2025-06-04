@@ -89,7 +89,7 @@ def rsp_breath_amplitude(rsp_clean: np.ndarray, peaks_df: pd.DataFrame, rsp_df: 
     return mean, std, rang
 
 # respiration rate
-def rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float) -> tuple[float, float, str]:
+def rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float, sub_id: str) -> tuple[float, float, str]:
     """
     Calculates and plots the respiration rate of the respiration signal.
     Args:
@@ -105,7 +105,7 @@ def rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float) -> t
     nk.signal_plot(rsp_rate, sampling_rate=sampling_rate, alpha = 0.6)
     plt.ylabel('Breaths Per Minute')
     plt.title('Respiration Rate Across Experiment')
-    plt.savefig(f'report_images/rsp_respirationrate.png') # {sub_id}_rsp_respirationrate.png
+    plt.savefig(f'report_images/{sub_id}_rsp_respirationrate.png') # {sub_id}_rsp_respirationrate.png
 
     mean = np.mean(rsp_rate)
     std = np.std(rsp_rate)
@@ -114,7 +114,7 @@ def rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float) -> t
     return mean, std, rang
 
 # peak to peak interval
-def rsp_peak_to_peak(rsp_df: pd.DataFrame, peaks_df: pd.DataFrame) -> tuple[float, float, str]:
+def rsp_peak_to_peak(rsp_df: pd.DataFrame, peaks_df: pd.DataFrame, sub_id: str) -> tuple[float, float, str]:
     """
     Calculates and plots the peak-to-peak interval, or the time between each breath, of the respiration signal.
     Args:
@@ -145,7 +145,7 @@ def rsp_peak_to_peak(rsp_df: pd.DataFrame, peaks_df: pd.DataFrame) -> tuple[floa
     plt.xlabel('Time (s)')
     plt.title('Peak to Peak Interval Across Experiment')
     plt.legend()
-    plt.savefig(f'report_images/rsp_peaktopeak.png')
+    plt.savefig(f'report_images/{sub_id}_rsp_peaktopeak.png')
 
     return mean, std, rang
 
@@ -168,7 +168,7 @@ def rsp_lowpass_filter(rsp: pd.Series, cutoff=0.05, fs=500, order=2) -> np.ndarr
     return filtfilt(b, a, rsp)
 
 # autocorrelation
-def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float) -> float:
+def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float, sub_id: str) -> float:
     """
     Calculates the autocorrelation of the respiration signal at a typical breath cycle, calculated 
     using the mean inter-breath interval (peak-to-peak interval) times the sampling rate.
@@ -189,7 +189,7 @@ def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float) -
     plt.title("Autocorrelation at Every Possible Lag")
     plt.ylabel("Degree of Autocorrelation")
     plt.xlabel("Lag")
-    plt.savefig(f'report_images/rsp_autocorrelation.png')
+    plt.savefig(f'report_images/{sub_id}_rsp_autocorrelation.png')
 
     return autocorr
 
@@ -229,12 +229,12 @@ def rsp_qc(xdf_filename:str) -> dict:
     print(f"Breath amplitude std: {vars['breath_amplitude_std']:.4f}")
     print(f"Breath amplitude range: {vars['breath_amplitude_range']}")
 
-    vars['rsp_rate_mean'], vars['rsp_rate_std'], vars['rsp_rate_range'] = rsp_rate(rsp_clean, peaks_dict, sampling_rate)
+    vars['rsp_rate_mean'], vars['rsp_rate_std'], vars['rsp_rate_range'] = rsp_rate(rsp_clean, peaks_dict, sampling_rate, sub_id)
     print(f"Respiration rate mean: {vars['rsp_rate_mean']:.4f}")
     print(f"Respiration rate std: {vars['rsp_rate_std']:.4f}")
     print(f"Respiration rate range: {vars['rsp_rate_range']}")
 
-    vars['ptp_mean'], vars['ptp_std'], vars['ptp_range'] = rsp_peak_to_peak(rsp_df, peaks_df)
+    vars['ptp_mean'], vars['ptp_std'], vars['ptp_range'] = rsp_peak_to_peak(rsp_df, peaks_df, sub_id)
     print(f"Peak to peak interval mean: {vars['ptp_mean']:.4f}")
     print(f"Peak to peak interval std: {vars['ptp_std']:.4f}")
     print(f"Peak to peak interval range: {vars['ptp_range']}")
@@ -243,7 +243,7 @@ def rsp_qc(xdf_filename:str) -> dict:
     vars['baseline_drift'] = np.std(lowpass)
     print(f"Baseline drift: {vars['baseline_drift']:.4f}")
 
-    vars['autocorrelation'] = rsp_autocorrelation(rsp, vars['ptp_mean'], sampling_rate)
+    vars['autocorrelation'] = rsp_autocorrelation(rsp, vars['ptp_mean'], sampling_rate, sub_id)
     print(f"Autocorrelation at typical breath cycle: {vars['autocorrelation']:.4f}")
 
     return vars
