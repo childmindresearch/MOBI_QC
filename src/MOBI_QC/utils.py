@@ -152,7 +152,7 @@ def import_stim_data(xdf_filename):
 
 def get_event_data(event, df, stim_df):
     """
-    Get the data from the EEG dataframe that corresponds to the event in the stimuli dataframe.
+    Get the data from a given data modality that corresponds to the event in the stimuli dataframe.
     
     Args:
         event (str): The event to get the data for.
@@ -219,19 +219,19 @@ def get_durations(ExperimentPart, xdf_path):
         # print if no data
         if event_data.empty:
             durations_df.loc[i] = [stream, 0, str(datetime.timedelta(seconds=0)), '0.00%']
-            print(stream + ' has no ' + ExperimentPart + ' data') 
+            print(f'{stream} has no {ExperimentPart} data') 
             continue
         # calculate duration
         start = event_data['lsl_time_stamp'].values[0]
         stop = event_data['lsl_time_stamp'].values[-1]
-        dur = round(stop - start, 3)
+        dur = round(stop - start, 4)
 
         # calculate hh:mm:ss
         dt = datetime.timedelta(seconds=dur)
         dt_dur = str(datetime.timedelta(seconds=round(dt.total_seconds())))
 
         # calculate percent 
-        percent = '{}%'.format(round(dur/exp_dur * 100, 2))
+        percent = f'{dur/exp_dur:.4%}'
 
         durations_df.loc[i] = [stream, dur, dt_dur, percent]
 
@@ -240,10 +240,10 @@ def get_durations(ExperimentPart, xdf_path):
         if i[1]['duration'] == 0:
             continue
         if i[1]['duration'] < (exp_dur - 5): # 5 second margin
-            print(i[1]['stream'] + ' is shorter than expected for ' + ExperimentPart + ' by ' + str(round(exp_dur - i[1]['duration'], 2)) + ' seconds')
+            print(f"{i[1]['stream']} is shorter than expected for {ExperimentPart} by {exp_dur - i[1]['duration']:.4f} seconds")
     
     # print + return durations_df
-    durations_df.loc[durations_df.index.max() + 1] = ['expected', exp_dur, exp_dt_dur, '100.0%']
+    durations_df.loc[durations_df.index.max() + 1] = ['expected', exp_dur, exp_dt_dur, '100.0000%']
     durations_df.sort_values(by='duration', inplace=True)
     print('\n' + ExperimentPart + ' DataFrame')
     return durations_df
@@ -297,7 +297,7 @@ def whole_durations(xdf_path):
     # populate whole_durations_df
     for i, stream in enumerate(streams):  
         duration = df_map[stream]['lsl_time_stamp'].iloc[-1]- df_map[stream]['lsl_time_stamp'].iloc[0]
-        duration = round(duration, 3)
+        duration = round(duration, 4)
         # convert to mm:ss
         whole_dt = datetime.timedelta(seconds=duration)
         whole_dt_dur = str(datetime.timedelta(seconds=round(whole_dt.total_seconds())))
@@ -307,18 +307,18 @@ def whole_durations(xdf_path):
 
     # percent
     max_dur = whole_durations_df.duration.max()
-    whole_durations_df['percent'] = round(whole_durations_df['duration']/max_dur*100, 2).astype(str) + '%'
+    whole_durations_df['percent'] = whole_durations_df['duration'].apply(lambda x: f"{x / max_dur:.4%}")
 
     # print which are short
     for i in whole_durations_df.iterrows():
         if i[1]['duration'] == 0:
             continue
         if i[1]['duration'] < (max_dur - 30): # 30 second margin
-            print(i[1]['stream'] + ' is shorter than expected by ' + str(round(max_dur - i[1]['duration'], 2)) + ' seconds')
-    
+            print(f"{i[1]['stream']} is shorter than expected by {max_dur - i[1]['duration']:.4f} seconds")
+
         
     whole_durations_df.sort_values(by = 'duration', inplace = True)
-    return(whole_durations_df)# #
+    return(whole_durations_df)
 
 def get_sampling_rate(df):
     effective_sampling_rate = 1 / (df.lsl_time_stamp.diff().median())

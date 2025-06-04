@@ -28,7 +28,7 @@ def et_val(et_df: pd.DataFrame) -> pd.DataFrame:
     val_df['variable'] = et_data_cols
 
     for i, var in enumerate(et_data_cols):
-        val_df.loc[i, 'percent_valid'] = round((1 - et_df[var].isna().mean()), 4)
+        val_df.loc[i, 'percent_valid'] = 1 - et_df[var].isna().mean()
 
     return val_df
 
@@ -100,7 +100,7 @@ def et_val_LR(val_df: pd.DataFrame) -> float:
     for i, (df, RL) in enumerate([(left, 'left'), (right, 'right')]):
         min1 = min(df['percent_valid'])
         max1 = max(df['percent_valid'])
-        mean1 = round(np.mean(df['percent_valid']), 4)
+        mean1 = np.mean(df['percent_valid'])
         RL_val.loc[i] = [RL, min1, max1, mean1]
 
     # find diff between RL 
@@ -187,7 +187,7 @@ def et_qc(xdf_filename: str):
     vars = {}
 
     vars['sampling_rate'] = sampling_rate
-    print(f"Effective sampling rate: {sampling_rate:.3f}")
+    print(f"Effective sampling rate: {sampling_rate:.4f}")
 
     vars['flag1'] = et_flag_1(val_df)
     print(f"Flag: all coordinates have the same % validity within each measure (LR, gaze point/origin/diameter): {vars['flag1']}")
@@ -196,10 +196,10 @@ def et_qc(xdf_filename: str):
     print(f"Flag: % of NaNs is the same between coordinate systems (UCS and TBCS (gaze origin) and between UCS and display area (gaze point)): {vars['flag2']}")
 
     vars['LR_mean_diff'] = et_val_LR(val_df)
-    print(f"Mean difference in percent valid data between right and left eyes: {vars['LR_mean_diff']:.3%}")
+    print(f"Mean difference in percent valid data between right and left eyes: {vars['LR_mean_diff']:.4%}")
 
     vars['percent_over02'] = et_percent_over02(et_df)
-    print(f"Percent of data with gaze point differences of over 0.2 mm: {vars['percent_over02']:.3%}")
+    print(f"Percent of data with gaze point differences of over 0.2 mm: {vars['percent_over02']:.4%}")
 
     et_lineplot(et_df, vars['percent_over02'], sub_id)
 

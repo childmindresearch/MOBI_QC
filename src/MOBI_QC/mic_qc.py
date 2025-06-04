@@ -62,7 +62,7 @@ def mic_samples_stats(mic_df: pd.DataFrame) -> tuple[float, float, float, int, i
 
     return quan25, quan75, std, minn, maxx
 
-def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame):
+def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame, sub_id: str):
     """
     Create plots for the microphone data.
     Args:
@@ -74,7 +74,7 @@ def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame):
     plt.xlabel('Microphone Samples')
     plt.ylabel('Count')
     plt.title('Distribution of Microphone Samples')
-    plt.savefig(f'report_images/mic_histogram.png')
+    plt.savefig(f'report_images/{sub_id}_mic_histogram.png')
 
     #line plot
     plt.figure(figsize=(9, 3))
@@ -87,7 +87,7 @@ def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame):
     plt.ylabel('Samples')
     plt.title('Microphone Samples over Time')
     plt.tight_layout()
-    plt.savefig(f'report_images/mic_lineplot.png')
+    plt.savefig(f'report_images/{sub_id}_mic_lineplot.png')
 
 def mic_qc(xdf_filename:str) -> dict:
     """
@@ -106,19 +106,19 @@ def mic_qc(xdf_filename:str) -> dict:
 
     vars = {}
     vars['sampling_rate'] = sampling_rate
-    print(f"Effective sampling rate: {sampling_rate:.3f}")
+    print(f"Effective sampling rate: {sampling_rate:.4f}")
 
     vars['lsl_wav_duration_diff'] = mic_lsl_wav_durations(xdf_filename, mic_df)
-    print(f"Difference between .wav file and lsl timestamps durations: {vars['lsl_wav_duration_diff']:.3f}")
+    print(f"Difference between .wav file and lsl timestamps durations: {vars['lsl_wav_duration_diff']:.4f}")
 
     vars['num_NaN'], vars['percent_NaN'] = mic_nans(mic_df)
-    print(f"number of NaN's: {vars['num_NaN']} \npercent of NaN's: {vars['percent_NaN']:.3%}")
+    print(f"number of NaN's: {vars['num_NaN']} \npercent of NaN's: {vars['percent_NaN']:.4%}")
     vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = mic_samples_stats(mic_df)
     print('mic samples first quartile: {} \nmic samples third quartile: {}'.format(vars['quan25'], vars['quan75']))
-    print('mic samples standard deviation: {:.3f}'.format(vars['std']))
+    print('mic samples standard deviation: {:.4f}'.format(vars['std']))
     print(f"mic samples min: {vars['min']} \nmic samples max: {vars['max']}")
     
-    mic_plots(mic_df, stim_df)
+    mic_plots(mic_df, stim_df, sub_id)
 
     return vars
 
