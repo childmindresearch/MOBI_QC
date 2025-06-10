@@ -89,7 +89,7 @@ def compute_eeg_pipeline(xdf_filename):
                 "line_freqs": np.arange(60, raw.info["sfreq"] / 2, 60),
             }
         # these params set up the robust reference  - i.e. median of all channels and interpolate bad channels
-        prep = pyprep.PrepPipeline(raw, montage=montage, channel_wise=True, prep_params=prep_params)
+        prep = pyprep.PrepPipeline(raw, montage=montage, channel_wise=True, prep_params=prep_params, verbose=True)
         prep_output = prep.fit()
         raw_cleaned = prep_output.raw_eeg
 
