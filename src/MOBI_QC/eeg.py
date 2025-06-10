@@ -8,7 +8,9 @@ import pyxdf
 from utils import *
 from scipy.signal import welch
 import warnings
+import json
 warnings.filterwarnings("ignore")
+from mne.preprocessing import ICA
 
 
 #%%
