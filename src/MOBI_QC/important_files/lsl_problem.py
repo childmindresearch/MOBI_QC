@@ -27,11 +27,12 @@ def lsl_problem_plot(ps_df: pd.DataFrame, sub_id: str):
         ps_df (pd.DataFrame): Dataframe containing the physio data.
         sub_id (str): Subject ID.
     """
-    plt.figure(figsize = (15, 5))
+    plt.figure()
     plt.plot(ps_df['lsl_time_stamp'], color = 'g')
     plt.xlabel('Index')
     plt.ylabel('LSL Time Stamp (s)')
     plt.title('LSL Time Stamps (Physio Data)')
+    plt.tight_layout()
     plt.savefig(f'report_images/{sub_id}_LSL_timestamps.png')
     
 def lsl_loss_percentage(df_dict: dict, sub_id: str) -> pd.DataFrame:

@@ -186,7 +186,7 @@ def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float, s
     autocorr = rsp.autocorr(lag = lag)
 
     autocorr2 = np.correlate(rsp, rsp, mode='full')
-    plt.figure()    
+    plt.figure(figsize = (8,4))
     plt.plot(autocorr2)
     plt.title("Autocorrelation at Every Possible Lag")
     plt.ylabel("Degree of Autocorrelation")

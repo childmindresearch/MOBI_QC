@@ -159,7 +159,7 @@ def et_lineplot(et_df: pd.DataFrame, percent_over02: float, sub_id: str):
     all_dists = np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
     # plt with x = index 
-    plt.figure(figsize=(12, 3))
+    plt.figure(figsize=(10, 3))
     plt.plot(all_dists)
     plt.title(f"Distance Between Left and Right Gaze Points Over Time")
     plt.axhline(y = 0.2, color = 'red', label = 'Gaze point difference = 0.2')

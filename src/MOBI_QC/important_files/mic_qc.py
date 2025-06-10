@@ -70,7 +70,7 @@ def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame, sub_id: str):
         stim_df (pd.DataFrame): dataframe containing stimulus markers
     """
     #hist
-    plt.figure(figsize = (15, 5))
+    plt.figure()
     plt.hist(mic_df['int_array'], bins=100)
     plt.xlabel('Microphone Samples')
     plt.ylabel('Count')
@@ -78,7 +78,7 @@ def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame, sub_id: str):
     plt.savefig(f'report_images/{sub_id}_mic_histogram.png')
 
     #line plot
-    plt.figure(figsize=(12, 3))
+    plt.figure(figsize=(9, 3))
     plt.plot(mic_df.lsl_time_stamp, mic_df.int_array)
     for event in stim_df.loc[stim_df.event.str.contains('StoryListening|SocialTask')].iterrows():
         plt.axvline(event[1]['lsl_time_stamp'], color='r')
