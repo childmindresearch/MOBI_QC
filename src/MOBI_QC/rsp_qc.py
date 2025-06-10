@@ -77,6 +77,7 @@ def rsp_breath_amplitude(rsp_clean: np.ndarray, peaks_df: pd.DataFrame, rsp_df: 
     y = cleaned_breath_amplitude
     z = np.polyfit(x, y, 3)
     p = np.poly1d(z)
+    plt.figure()
     plt.plot(x, y)
     plt.plot(x, p(x), label = 'trendline')
     plt.axhline(np.mean(cleaned_breath_amplitude), color = 'yellowgreen', label = 'mean')
@@ -138,6 +139,7 @@ def rsp_peak_to_peak(rsp_df: pd.DataFrame, peaks_df: pd.DataFrame, sub_id: str) 
     y = ptp[1:]
     z = np.polyfit(x, y, 3)
     p = np.poly1d(z)
+    plt.figure()
     plt.plot(x, y)
     plt.plot(x, p(x), label = 'trendline')
     plt.axhline(np.nanmean(ptp), color = 'yellowgreen', label = 'mean')
@@ -184,7 +186,7 @@ def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float, s
     autocorr = rsp.autocorr(lag = lag)
 
     autocorr2 = np.correlate(rsp, rsp, mode='full')
-    plt.figure(figsize = (8,4))
+    plt.figure()    
     plt.plot(autocorr2)
     plt.title("Autocorrelation at Every Possible Lag")
     plt.ylabel("Degree of Autocorrelation")

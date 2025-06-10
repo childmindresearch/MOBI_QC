@@ -79,14 +79,14 @@ def scl_trend_analysis(eda_signals: pd.DataFrame, eda_df: pd.DataFrame, eda_samp
     rolling_mean = pd.Series(eda_signals['EDA_Tonic']).rolling(window=(int)(eda_sampling_rate), center=True).mean()
     slope_rolling_mean = np.gradient(rolling_mean)
     
-    plt.figure(figsize=(20,5))
+    plt.figure(figsize = (8,2)) # figsize=(10,5)
     plt.plot(eda_df['lsl_time_stamp'], slope_rolling_mean, label='SCL Rolling_mean slope', color='orange', linestyle='-')
     plt.plot(eda_df['lsl_time_stamp'], scl_df['EDA_Tonic_Slope'], label='Slope of SCL', color='blue')
     plt.title('SCL Slope and Rolling Mean Slope Over Time', fontsize=16)
     plt.xlabel('Time', fontsize=14)
     plt.ylabel('Slope', fontsize=14)
     plt.legend(loc='upper right', fontsize=12)
-    plt.savefig(f'report_images/{subject}_eda_slope.png',dpi=300, bbox_inches='tight')
+    plt.savefig(f'report_images/{subject}_eda_slope.png', dpi = 100, bbox_inches='tight')
     # Show the plot
     plt.show()
 
@@ -150,7 +150,7 @@ def eda_report_plot(eda_signals: pd.DataFrame, info: dict, subject: str) -> plt:
     fig = nk.eda_plot(eda_signals, info)
     fig = plt.gcf()
     axes = fig.get_axes()
-    fig.set_size_inches(20, 10)
+    fig.set_size_inches(8,2)
     raw_signal_line = axes[0].lines[0]
     raw_signal_line.set_color('red')
 
@@ -161,6 +161,7 @@ def eda_report_plot(eda_signals: pd.DataFrame, info: dict, subject: str) -> plt:
 
     axes[0].legend(handles, labels)  
     axes[0].legend(loc='upper right', bbox_to_anchor=(1, 1), fontsize=10)
+    plt.tight_layout()
     plt.savefig(f'report_images/{subject}_eda_report.png')
     plt.show()
 

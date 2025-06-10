@@ -27,7 +27,7 @@ def lsl_problem_plot(ps_df: pd.DataFrame, sub_id: str):
         ps_df (pd.DataFrame): Dataframe containing the physio data.
         sub_id (str): Subject ID.
     """
-    plt.figure()
+    plt.figure(figsize = (15, 5))
     plt.plot(ps_df['lsl_time_stamp'], color = 'g')
     plt.xlabel('Index')
     plt.ylabel('LSL Time Stamp (s)')
