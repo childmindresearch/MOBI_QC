@@ -27,6 +27,7 @@ def lsl_problem_plot(ps_df: pd.DataFrame, sub_id: str):
         ps_df (pd.DataFrame): Dataframe containing the physio data.
         sub_id (str): Subject ID.
     """
+    plt.figure()
     plt.plot(ps_df['lsl_time_stamp'], color = 'g')
     plt.xlabel('Index')
     plt.ylabel('LSL Time Stamp (s)')
@@ -116,7 +117,7 @@ def lsl_loss_before_social(df_dict: dict, sub_id: str, offset_social_timestamp: 
     nonzero_loss_social = percent_data_loss_social[percent_data_loss_social['num_losses'] != 0]
     return nonzero_loss_social
 
-def lsl_problem(xdf_filename:str):
+def lsl_problem_qc(xdf_filename:str):
     """
     Main function to check for LSL timestamp gaps in the data.
     Args:
