@@ -121,7 +121,7 @@ def mic_qc(xdf_filename:str) -> dict:
     
     mic_plots(mic_df, stim_df, sub_id)
 
-    return vars
+    return vars, mic_df
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":

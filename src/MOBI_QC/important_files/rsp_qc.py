@@ -248,7 +248,7 @@ def rsp_qc(xdf_filename:str) -> dict:
     vars['autocorrelation'] = rsp_autocorrelation(rsp, vars['ptp_mean'], sampling_rate, sub_id)
     print(f"Autocorrelation at typical breath cycle: {vars['autocorrelation']:.4f}")
 
-    return vars
+    return vars, rsp_df
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":

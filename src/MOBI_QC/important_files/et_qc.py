@@ -203,7 +203,7 @@ def et_qc(xdf_filename: str):
 
     et_lineplot(et_df, vars['percent_over02'], sub_id)
 
-    return vars
+    return vars, et_df
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
