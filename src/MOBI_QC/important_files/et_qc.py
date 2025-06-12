@@ -170,13 +170,14 @@ def et_lineplot(et_df: pd.DataFrame, percent_over02: float, sub_id: str):
     plt.savefig(f'report_images/{sub_id}_et_gazedifference.png')
 
 
-def et_qc(xdf_filename: str):
+def et_qc(xdf_filename: str) -> tuple[dict, pd.DataFrame]:
     """
     Main function to extract eye tracking quality control metrics.
     Args:
         xdf_filename (str): Path to the XDF file containing eye-tracking data.
     Returns:
         vars (dict): Dictionary containing quality control metrics.
+        et_df (pd.DataFrame): Dataframe containing eye-tracking data.
     """
     sub_id = xdf_filename.split('-')[1].split('/')[0]
     et_df = import_et_data(xdf_filename)
