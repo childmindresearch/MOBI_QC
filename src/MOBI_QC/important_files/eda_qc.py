@@ -150,7 +150,7 @@ def eda_report_plot(eda_signals: pd.DataFrame, info: dict, subject: str) -> plt:
     fig = nk.eda_plot(eda_signals, info)
     fig = plt.gcf()
     axes = fig.get_axes()
-    fig.set_size_inches(20, 10)
+    fig.set_size_inches(16, 6) # 20, 10
     raw_signal_line = axes[0].lines[0]
     raw_signal_line.set_color('red')
 
