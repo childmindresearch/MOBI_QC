@@ -1,20 +1,6 @@
 [![DOI](https://zenodo.org/badge/657341621.svg)](https://zenodo.org/doi/10.5281/zenodo.10383685)
 
-# CMI-DAIR Template Python Repository
-
-Welcome to the CMI-DAIR Template Python Repository! This template is designed to streamline your project setup and ensure a consistent structure. To get started, follow these steps:
-
-
-- [x] Run `setup_template.py` to initialize the repository.
-- [ ] Replace the content of this `README.md` with details specific to your project.
-- [ ] Install the `pre-commit` hooks to ensure code quality on each commit.
-- [ ] Revise SECURITY.md to reflect supported versions or remove it if not applicable.
-- [ ] Remove the placeholder src and test files, these are there merely to show how the CI works.
-- [ ] If it hasn't already been done for your organization/acccount, grant third-party app permissions for CodeCov.
-- [ ] To set up an API documentation website, after the first successful build, go to the `Settings` tab of your repository, scroll down to the `GitHub Pages` section, and select `gh-pages` as the source. This will generate a link to your API docs.
-- [ ] Update stability badge in `README.md` to reflect the current state of the project. A list of stability badges to copy can be found [here](https://github.com/orangemug/stability-badges). The [node documentation](https://nodejs.org/docs/latest-v20.x/api/documentation.html#documentation_stability_index) can be used as a reference for the stability levels.
-
-# Project name
+# A Python Pipeline for Quality Control of Multimodal Datasets
 
 [![Build](https://github.com/childmindresearch/MOBI_QC/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/childmindresearch/MOBI_QC/actions/workflows/test.yaml?query=branch%3Amain)
 [![codecov](https://codecov.io/gh/childmindresearch/MOBI_QC/branch/main/graph/badge.svg?token=22HWWFWPW5)](https://codecov.io/gh/childmindresearch/MOBI_QC)
@@ -23,15 +9,32 @@ Welcome to the CMI-DAIR Template Python Repository! This template is designed to
 [![LGPL--3.0 License](https://img.shields.io/badge/license-LGPL--3.0-blue.svg)](https://github.com/childmindresearch/MOBI_QC/blob/main/LICENSE)
 [![pages](https://img.shields.io/badge/api-docs-blue)](https://childmindresearch.github.io/MOBI_QC)
 
-What problem does this tool solve?
+**MOBI_QC** is a python quality control pipeline designed for efficient, automated assessment of multimodal datasets (in xdf format), including EEG, Eye-tracking, Physiological signals, Audio and Video data. The pipeline performs preprocessing, computes a comprehensive quality control metrics for each modality and generates a PDF report summarizing the results for easy review and documentation.
 
 ## Features
 
-- A few
-- Cool
-- Things
+- **Multimodal Compatibility**: Supports EEG, Eye-Tracking, ECG, EDA, Respiration, Audio, Video and Behavior data.
+- **Automated Preprocessing**: Standardized cleaning and preprocessing for each modality.
+- **Quality Control Metrics Computation**:
+  - **EEG**: sampling rate, mean peak-to-peak amplitude, standard deviation of amplitude, absolute voltage range, high and low frequency noise, flat channels, line noise ratio, dropout percentage, signal-to-noise ratio, alpha power, spectral entropy, correlations between channels, number of missing samples.
+  - **Eye-tracking**: validity of gaze point, gaze origin and pupil diameter, mean difference in percent valid data between right and left eyes.
+  - **ECG**: average heart rate, signal-to-noise ratio, signal quality indices - kurtosis, power spectrum distribution, relative power in baseline.
+  - **EDA**: signal integrity check, average skin conductance level (SCL), SCL standard deviation, SCL coefficient of variation, average amplitude of skin conductance response (SCR), SCR validity, signal-to-noise ratio.
+  - **Respiration**: signal-to-noise-ratio, breath amplitude - mean, standard deviation and range, respiration rate - mean standard deviation and range, peak-to-peak interval - mean, standard deviation and range, baseline drift, autocorrelation at typical breath cycle.
+  - **Audio**: percent of missing data, distribution of microphone samples - first quartile, third quartile, mean, standard deviation, minimum and maximum.
+  - **Video**: sampling rate, percentage of frames with faces detected.
+- **Generation of PDF Report**: A PDF report is generated for each subject data summarizing quality control metric and visualizations for each modality for review and documentation.
+- **Export to csv**: Results from entire dataset are summarized and exported in a csv file to facilitate feature identification and descriptive statistics for the dataset.
 
-## Installation
+## Requirements
+- **pyxdf**: a ytho library for importing Extensible Data Format(XDF)
+- **MNE-Python**: a python pacakge used for preproecessing of EEG
+- **Neurokit2**: a python toolbox used for processing of physiological signals
+- **librosa**: a python package for music and audio analysis
+- **opencv-python**: a open-source python library for computer vision and machine learning
+- 
+
+## Installation (TBA)
 
 Install this package via :
 
@@ -45,7 +48,7 @@ Or get the newest development version via:
 pip install git+https://github.com/childmindresearch/MOBI_QC
 ```
 
-## Quick start
+## Quick start (TBA)
 
 Short tutorial, maybe with a
 
@@ -55,6 +58,6 @@ import MOBI_QC
 MOBI_QC.short_example()
 ```
 
-## Links or References
+## Links or References (TBA)
 
 - [https://www.wikipedia.de](https://www.wikipedia.de)
