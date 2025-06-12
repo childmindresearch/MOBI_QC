@@ -156,7 +156,7 @@ def ecg_report_plot(ecg_signals:pd.DataFrame, info: dict, subject:str) -> plt:
     nk.ecg_plot(ecg_signals, info)
     fig = plt.gcf()
     axes = fig.get_axes()
-    fig.set_size_inches(20, 10)
+    # fig.set_size_inches(20, 10)
     plt.tight_layout()
 
     # Iterate over each axis and move the legend

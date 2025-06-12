@@ -79,7 +79,7 @@ def scl_trend_analysis(eda_signals: pd.DataFrame, eda_df: pd.DataFrame, eda_samp
     rolling_mean = pd.Series(eda_signals['EDA_Tonic']).rolling(window=(int)(eda_sampling_rate), center=True).mean()
     slope_rolling_mean = np.gradient(rolling_mean)
     
-    plt.figure(figsize = (20,5)) # figsize=(10,5)
+    plt.figure(figsize = (10,3)) # figsize=(10,5), 20,5
     plt.plot(eda_df['lsl_time_stamp'], slope_rolling_mean, label='SCL Rolling_mean slope', color='orange', linestyle='-')
     plt.plot(eda_df['lsl_time_stamp'], scl_df['EDA_Tonic_Slope'], label='Slope of SCL', color='blue')
     plt.title('SCL Slope and Rolling Mean Slope Over Time', fontsize=16)
