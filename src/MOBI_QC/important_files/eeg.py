@@ -16,7 +16,7 @@ from mne.preprocessing import ICA
 #%%
 
 xdf_filename = '/Users/bryan.gonzalez/CUNY_subs/sub-P5029423/sub-P5029423_ses-S001_task-CUNY_run-001_mobi.xdf'
-def compute_eeg_pipeline(xdf_filename):
+def compute_eeg_pipeline(xdf_filename, task='RestingState'):
     """
     This function computes the EEG pipeline for the given xdf file.
     Args:
@@ -59,7 +59,7 @@ def compute_eeg_pipeline(xdf_filename):
     subject = xdf_filename.split('sub-')[-1].split('_')[0]
 
     if len(glob('/'.join(xdf_filename.split('/')[:-1]) +'/*.fif')) < 1:
-        df = get_event_data(event='RestingState', 
+        df = get_event_data(event=task, 
                             df=import_eeg_data(xdf_filename),
                             stim_df=import_stim_data(xdf_filename))
 
@@ -142,7 +142,7 @@ def compute_eeg_pipeline(xdf_filename):
     ica = ICA(n_components=num_components, method='picard')
     ica.fit(raw_cleaned)
 
-    return vars, raw_cleaned, ica
+    return vars, raw_cleaned, ica, raw_cleaned.to_data_frame()
 
 
 def test_eeg_pipeline(xdf_filename):
