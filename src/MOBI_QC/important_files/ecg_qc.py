@@ -213,7 +213,7 @@ def ecg_qc(xdf_filename:str) -> tuple[dict, plt]:
 
     fig = ecg_report_plot(ecg_signals, info, subject)
 
-    return vars, fig
+    return vars, fig, ps_df
 #%% 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":

@@ -209,7 +209,7 @@ def eda_qc(xdf_filename: str) -> tuple[dict, plt, plt]:
     eda_slope_fig = scl_trend_analysis(eda_signals, eda_df, eda_sampling_rate, subject)
     eda_report_fig = eda_report_plot(eda_signals, info, subject)
     
-    return vars, eda_slope_fig, eda_report_fig
+    return vars, eda_slope_fig, eda_report_fig, ps_df
 #%%
 
 if __name__ == "__main__":

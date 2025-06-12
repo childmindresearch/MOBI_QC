@@ -183,7 +183,7 @@ def webcam_qc(xdf_filename:str, video_file:str, task:str):
     canvas = plot_frames_with_wrap(frames, highlight_indices=highlight_indices, overlap_ratio=0.3, frames_per_row=30)
     # same the canvas
     plt.imsave(f'report_images/{sub_id}_webcam_qc.png', canvas)
-    return vars
+    return vars, cam_df
 
 
 # allow the functions in this script to be imported into other scripts
