@@ -32,7 +32,6 @@
 - **Neurokit2**: a python toolbox used for processing of physiological signals
 - **librosa**: a python package for music and audio analysis
 - **opencv-python**: a open-source python library for computer vision and machine learning
-- 
 
 ## Installation (TBA)
 
