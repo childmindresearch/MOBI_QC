@@ -18,8 +18,8 @@ def count_faces_in_video(video_path:str, cam_df:pd.DataFrame, stim_df:pd.DataFra
 
     # Load the pre-trained MobileNet SSD model and config file for face detection
     net = cv2.dnn.readNetFromCaffe(
-        '/Users/camilla.strauss/Desktop/MOBI_QC/src/MOBI_QC/important_files/deploy.prototxt',  # Path to the model configuration file
-        '/Users/camilla.strauss/Desktop/MOBI_QC/src/MOBI_QC/important_files/res10_300x300_ssd_iter_140000_fp16.caffemodel'  # Path to the model weights
+        '../important_files/deploy.prototxt',  # Path to the model configuration file
+        '../important_files/res10_300x300_ssd_iter_140000_fp16.caffemodel'  # Path to the model weights
     )
 
     # Open the video
