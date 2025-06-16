@@ -129,18 +129,11 @@ def lsl_problem_qc(xdf_filename:str, df_map: dict, stim_df: pd.DataFrame) -> dic
     # load data 
     sub_id = xdf_filename.split('-')[1].split('/')[0]
 
-    df_map = {
-    'ps': ps_df,
-    'et': et_df,
-    'mic': mic_df,
-    'cam': cam_df,
-    'eeg': eeg_df}
-
     offset_social_timestamp = stim_df.loc[stim_df['event'] == 'Offset_SocialTask', 'lsl_time_stamp'].values[0]
 
     # optional: returns number of loss instances in ps_df
     # lsl_quick_check(ps_df)
-
+    ps_df = df_map['ps']
     lsl_problem_plot(ps_df, sub_id)
 
     vars = {}
