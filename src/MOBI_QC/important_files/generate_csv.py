@@ -1,0 +1,87 @@
+import os
+import glob
+import pandas as pd
+from utils import *
+from eeg import *
+from et_qc import *
+from ecg_qc import *
+from eda_qc import *
+from rsp_qc import *
+from mic_qc import *
+from webcam_qc import *
+from behavior_qc import *
+
+def get_subjectID_and_collectionDate(xdf_filename:str):
+    
+    subject_id = xdf_filename.split('-')[1].split('/')[0]
+    collection_date = get_collection_date(xdf_filename)
+    
+    return subject_id, collection_date
+
+#def check_for_report(subject_id):
+
+def get_qc_metrics(xdf_filename:str, subject_id:str, stim_df:pd.DataFrame):
+    eeg_vars,_,_,_ = compute_eeg_pipeline(xdf_filename, task='RestingState')
+    eeg_vars = {f"eeg_{key}": value for key, value in eeg_vars.items()}
+
+    et_vars,_ = et_qc(xdf_filename)
+    et_vars = {f"et_{key}": value for key, value in et_vars.items()}
+
+    ecg_vars,_, _= ecg_qc(xdf_filename, stim_df)
+    ecg_vars = {f"ecg_{key}": value for key, value in ecg_vars.items()}
+
+    eda_vars,_,_,_ = eda_qc(xdf_filename, stim_df)
+    eda_vars = {f"eda_{key}": value for key, value in eda_vars.items()}
+
+    rsp_vars,_ = rsp_qc(xdf_filename)
+    rsp_vars = {f"rsp_{key}": value for key, value in rsp_vars.items()}
+
+    mic_vars,_ = mic_qc(xdf_filename)
+    mic_vars = {f"mic_{key}": value for key, value in mic_vars.items()}
+
+    webcam_file = glob(f'/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-{subject_id}/*.avi')[0]
+    webcam_vars,_ = webcam_qc(xdf_filename=xdf_filename, video_file=webcam_file, task='RestingState')
+    webcam_vars = {f"webcam_{key}": value for key, value in webcam_vars.items()}
+
+    behavior_vars = behavior_qc(xdf_filename)
+    behavior_vars = {f"behavior_{key}": value for key, value in behavior_vars.items()}
+
+    return [eeg_vars, et_vars, ecg_vars, eda_vars, rsp_vars, mic_vars, webcam_vars, behavior_vars]
+
+def generate_qc_dataframe(xdf_filename:str, stim_df:pd.DataFrame):
+
+    subject_id, collection_date = get_subjectID_and_collectionDate(xdf_filename)
+    modality_vars = get_qc_metrics(xdf_filename, subject_id, stim_df)
+
+    subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
+    for modality in modality_vars:
+        subject_csv.update(modality)
+
+    subject_csv_df = pd.DataFrame([subject_csv])
+
+    return subject_csv_df
+
+def save_to_csv(subject_csv_df:pd.DataFrame):
+    if os.path.exists('CUNY_QC.csv'):
+        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=False)
+    else:
+        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=True)
+
+    return True
+
+def generate_csv(xdf_filename:str):
+
+    stim_df = import_stim_data(xdf_filename)
+
+    subject_csv_df = generate_qc_dataframe(xdf_filename, stim_df)
+
+    add_to_csv = save_to_csv(subject_csv_df)
+    
+    return 'Done'
+# %%
+
+# allow the functions in this script to be imported into other scripts
+if __name__ == "__main__":
+    pass
+
+# %%
