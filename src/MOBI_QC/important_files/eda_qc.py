@@ -167,7 +167,7 @@ def eda_report_plot(eda_signals: pd.DataFrame, info: dict, subject: str) -> plt:
 
     return plt
 
-def eda_qc(xdf_filename: str) -> tuple[dict, plt, plt]:
+def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tuple[dict, plt, plt, pd.DataFrame]:
     """
     Performs quality control on EDA data from an XDF file.
     Args:
@@ -178,9 +178,9 @@ def eda_qc(xdf_filename: str) -> tuple[dict, plt, plt]:
         eda_report_fig (matplotlib.pyplot): EDA report plot.
     """
     subject = xdf_filename.split('-')[1].split('/')[0]
-    ps_df = get_event_data(event='RestingState',
+    ps_df = get_event_data(event=task,
                     df=import_physio_data(xdf_filename),
-                    stim_df=import_stim_data(xdf_filename))
+                    stim_df=stim_df)
     eda_df = ps_df[['EDA2', 'lsl_time_stamp', 'time']]
 
     eda_sampling_rate = get_sampling_rate(eda_df)
