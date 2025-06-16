@@ -196,11 +196,12 @@ def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float, s
     return autocorr
 
 # final big dict 
-def rsp_qc(xdf_filename:str) -> tuple[dict, pd.DataFrame]:
+def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
     """
     Main function to extract respiration quality control metrics.
     Args:
         xdf_filename (str): Path to the XDF file containing the respiration data.
+        stim_df (pd.DataFrame): dataframe containing stimulus markers.
     Returns:
         vars (dict): Dictionary containing respiration quality control metrics.
         ps_df (pd.DataFrame): DataFrame containing physiological data.

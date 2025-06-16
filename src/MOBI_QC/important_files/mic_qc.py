@@ -90,11 +90,12 @@ def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame, sub_id: str):
     plt.tight_layout()
     plt.savefig(f'report_images/{sub_id}_mic_lineplot.png')
 
-def mic_qc(xdf_filename:str) -> tuple[dict, pd.DataFrame]:
+def mic_qc(xdf_filename:str, stim_df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
     """
     Main function to extract microphone quality control metrics.
     Args:
         xdf_filename (str): Path to the XDF file containing the microphone data.
+        stim_df (pd.DataFrame): dataframe containing stimulus markers.
     Returns:
         vars (dict): Dictionary containing the quality control metrics.
         mic_df (pd.DataFrame): DataFrame containing microphone data.
@@ -102,7 +103,6 @@ def mic_qc(xdf_filename:str) -> tuple[dict, pd.DataFrame]:
     # load data
     sub_id = xdf_filename.split('-')[1].split('/')[0]
     mic_df = import_mic_data(xdf_filename)
-    stim_df = import_stim_data(xdf_filename)
 
     sampling_rate = get_sampling_rate(mic_df)
 
