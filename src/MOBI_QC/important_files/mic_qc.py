@@ -96,7 +96,8 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
     Args:
         xdf_filename (str): Path to the XDF file containing the microphone data.
         stim_df (pd.DataFrame): dataframe containing stimulus markers.
-        task (str): arm of the experiment for which user wants quality control performed.
+        task (str): arm of the experiment for which user wants quality control performed. Must be one of "Experiment", 
+            "RestingState", "StoryListening", "SocialTask".
 
     Returns:
         vars (dict): Dictionary containing the quality control metrics.
@@ -105,7 +106,7 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
     # load data
     sub_id = xdf_filename.split('-')[1].split('/')[0]
     whole_mic_df = import_mic_data(xdf_filename)
-    mic_df = get_event_data(task = task, df = whole_mic_df, stim_df = stim_df)
+    mic_df = get_event_data(event = task, df = whole_mic_df, stim_df = stim_df)
 
     sampling_rate = get_sampling_rate(mic_df)
 

@@ -183,7 +183,7 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
     """
     sub_id = xdf_filename.split('-')[1].split('/')[0]
     whole_et_df = import_et_data(xdf_filename)
-    et_df = get_event_data(task = task, df = whole_et_df, stim_df = stim_df)
+    et_df = get_event_data(event = task, df = whole_et_df, stim_df = stim_df)
 
 
     sampling_rate = get_sampling_rate(et_df)
