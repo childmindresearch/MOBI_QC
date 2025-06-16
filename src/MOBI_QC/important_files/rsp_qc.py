@@ -196,12 +196,13 @@ def rsp_autocorrelation(rsp: pd.Series, ptp_mean: float, sampling_rate: float, s
     return autocorr
 
 # final big dict 
-def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
+def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tuple[dict, pd.DataFrame]:
     """
     Main function to extract respiration quality control metrics.
     Args:
         xdf_filename (str): Path to the XDF file containing the respiration data.
         stim_df (pd.DataFrame): dataframe containing stimulus markers.
+        task (str): arm of the experiment for which user wants quality control performed.
     Returns:
         vars (dict): Dictionary containing respiration quality control metrics.
         ps_df (pd.DataFrame): DataFrame containing physiological data.
@@ -209,7 +210,8 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame) -> tuple[dict, pd.DataFrame]
     
     # load data 
     sub_id = xdf_filename.split('-')[1].split('/')[0]
-    ps_df = import_physio_data(xdf_filename)
+    whole_ps_df = import_physio_data(xdf_filename)
+    ps_df = get_event_data(task = task, df = whole_ps_df, stim_df = stim_df)
 
     # get rsp data
     rsp_df = ps_df[['RESPIRATION0', 'lsl_time_stamp']].rename(columns={'RESPIRATION0': 'respiration'})
@@ -250,7 +252,7 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame) -> tuple[dict, pd.DataFrame]
     vars['autocorrelation'] = rsp_autocorrelation(rsp, vars['ptp_mean'], sampling_rate, sub_id)
     print(f"Autocorrelation at typical breath cycle: {vars['autocorrelation']:.4f}")
 
-    return vars, ps_df
+    return vars, whole_ps_df
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
