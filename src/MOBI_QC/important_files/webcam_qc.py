@@ -18,8 +18,8 @@ def count_faces_in_video(video_path:str, cam_df:pd.DataFrame, stim_df:pd.DataFra
 
     # Load the pre-trained MobileNet SSD model and config file for face detection
     net = cv2.dnn.readNetFromCaffe(
-        '/Users/camilla.strauss/Desktop/MOBI_QC/src/MOBI_QC/important_files/deploy.prototxt',  # Path to the model configuration file
-        '/Users/camilla.strauss/Desktop/MOBI_QC/src/MOBI_QC/important_files/res10_300x300_ssd_iter_140000_fp16.caffemodel'  # Path to the model weights
+        '../important_files/deploy.prototxt',  # Path to the model configuration file
+        '../important_files/res10_300x300_ssd_iter_140000_fp16.caffemodel'  # Path to the model weights
     )
 
     # Open the video
@@ -183,7 +183,7 @@ def webcam_qc(xdf_filename:str, video_file:str, task:str):
     canvas = plot_frames_with_wrap(frames, highlight_indices=highlight_indices, overlap_ratio=0.3, frames_per_row=30)
     # same the canvas
     plt.imsave(f'report_images/{sub_id}_webcam_qc.png', canvas)
-    return vars
+    return vars, cam_df
 
 
 # allow the functions in this script to be imported into other scripts

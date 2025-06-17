@@ -170,16 +170,21 @@ def et_lineplot(et_df: pd.DataFrame, percent_over02: float, sub_id: str):
     plt.savefig(f'report_images/{sub_id}_et_gazedifference.png')
 
 
-def et_qc(xdf_filename: str):
+def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tuple[dict, pd.DataFrame]:
     """
     Main function to extract eye tracking quality control metrics.
     Args:
         xdf_filename (str): Path to the XDF file containing eye-tracking data.
+        stim_df (pd.DataFrame): dataframe containing stimulus markers.
+        task (str): arm of the experiment for which user wants quality control performed.
     Returns:
         vars (dict): Dictionary containing quality control metrics.
+        et_df (pd.DataFrame): Dataframe containing eye-tracking data.
     """
     sub_id = xdf_filename.split('-')[1].split('/')[0]
-    et_df = import_et_data(xdf_filename)
+    whole_et_df = import_et_data(xdf_filename)
+    et_df = get_event_data(event = task, df = whole_et_df, stim_df = stim_df)
+
 
     sampling_rate = get_sampling_rate(et_df)
     val_df = et_val(et_df)
@@ -203,7 +208,7 @@ def et_qc(xdf_filename: str):
 
     et_lineplot(et_df, vars['percent_over02'], sub_id)
 
-    return vars
+    return vars, whole_et_df
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":

@@ -178,7 +178,7 @@ def ecg_report_plot(ecg_signals:pd.DataFrame, info: dict, subject:str) -> plt:
 
     return plt
 
-def ecg_qc(xdf_filename:str) -> tuple[dict, plt]:
+def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple[dict, plt, pd.DataFrame]:
     """
     Performs quality control on ECG data from an XDF file.
     Args:
@@ -188,9 +188,9 @@ def ecg_qc(xdf_filename:str) -> tuple[dict, plt]:
         fig (matplotlib.pyplot): Generated ECG report plot.
     """
     subject = xdf_filename.split('-')[1].split('/')[0]
-    ps_df = get_event_data(event='RestingState',
+    ps_df = get_event_data(event=task,
                     df=import_physio_data(xdf_filename),
-                    stim_df=import_stim_data(xdf_filename))
+                    stim_df=stim_df)
     ecg_df = ps_df[['ECG1', 'lsl_time_stamp', 'time']]
 
     ecg_sampling_rate = get_sampling_rate(ecg_df)  
@@ -213,7 +213,7 @@ def ecg_qc(xdf_filename:str) -> tuple[dict, plt]:
 
     fig = ecg_report_plot(ecg_signals, info, subject)
 
-    return vars, fig
+    return vars, fig, ps_df
 #%% 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":

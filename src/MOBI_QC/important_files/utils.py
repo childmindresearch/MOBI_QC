@@ -162,45 +162,36 @@ def get_event_data(event, df, stim_df):
     Returns:
         pd.DataFrame: The  data corresponding to the event.
         """
-    return df.loc[(df.lsl_time_stamp >= stim_df.loc[stim_df.event == 'Onset_'+event, 'lsl_time_stamp'].values[0]) & 
-                  (df.lsl_time_stamp <= stim_df.loc[stim_df.event == 'Offset_'+event, 'lsl_time_stamp'].values[0])]
+    new_df = df.loc[(df['lsl_time_stamp'] >= stim_df.loc[stim_df['event'] == 'Onset_'+event, 'lsl_time_stamp'].values[0]) & 
+                  (df['lsl_time_stamp'] <= stim_df.loc[stim_df['event'] == 'Offset_'+event, 'lsl_time_stamp'].values[0])].copy().reset_index(drop = True)
+    return new_df
 
 # get durations of certain experiment arm
-def get_durations(ExperimentPart, xdf_path):
+def get_durations(xdf_path: str, 
+    task: str, 
+    df_map: dict, 
+    stim_df: pd.DataFrame) -> dict:
     
     """
     Get the durations of each data stream and compare to their expected duration, given an experiment arm, where the expected duration is calculated from the LSL timestamps of the stimulus markers.
     
     Args:
-        ExperimentPart (str): The part of the experiment to view durations. Can be one of "Experiment", 
+        task (str): The part of the experiment to view durations. Can be one of "Experiment", 
             "RestingState", "StoryListening", "SocialTask", or any one of the stories ('BirthdayParty', 
             'ZoomClass', 'Tornado', 'FrogDissection', 'DanceContest', 'CampFriend')
         xdf_path (str): The path to the xdf file.
+        df_map (dict): Containing dataframes for each data modality, loaded through import_modality_data functions in utils.
+        stim_df (pd.DataFrame): The stimuli dataframe containing the events mapped to lsl timestamps.
     
     Returns:
         pd.DataFrame: The durations of each stream in seconds and mm:ss and the percent that that duration 
             comprised of the length of that experiment arm.
-    """
-    # import all data modalities 
-    et_df = import_et_data(xdf_path)
-    stim_df = import_stim_data(xdf_path)
-    eeg_df = import_eeg_data(xdf_path)
-    mic_df = import_mic_data(xdf_path)
-    cam_df = import_video_data(xdf_path)
-    ps_df = import_physio_data(xdf_path)
-
-    df_map = {
-            'et': et_df,
-            'ps': ps_df,
-            'mic': mic_df,
-            'cam': cam_df,
-            'eeg': eeg_df
-        }
+    """    
     streams = list(df_map.keys())
 
     # find expected duration (stim lsl_time_stamp length of experiment part)
-    exp_start = stim_df.loc[stim_df.event == 'Onset_'+ExperimentPart, 'lsl_time_stamp'].values[0]
-    exp_end = stim_df.loc[stim_df.event == 'Offset_'+ExperimentPart, 'lsl_time_stamp'].values[0]
+    exp_start = stim_df.loc[stim_df.event == 'Onset_'+task, 'lsl_time_stamp'].values[0]
+    exp_end = stim_df.loc[stim_df.event == 'Offset_'+task, 'lsl_time_stamp'].values[0]
     exp_dur = round(exp_end - exp_start, 4)
 
     # expected mm:ss
@@ -211,15 +202,15 @@ def get_durations(ExperimentPart, xdf_path):
     durations_df = pd.DataFrame(columns = ['stream', 'duration', 'mm:ss', 'percent'])
     for i, stream in enumerate(streams):
         # don't include mic in resting state
-        if ExperimentPart == 'RestingState' and stream == 'mic':
+        if task == 'RestingState' and stream == 'mic':
             continue
         # grab data for stream + experiment part
-        event_data = get_event_data(ExperimentPart, df_map[stream], stim_df)
+        event_data = get_event_data(task, df_map[stream], stim_df)
 
         # print if no data
         if event_data.empty:
             durations_df.loc[i] = [stream, 0, str(datetime.timedelta(seconds=0)), '0.00%']
-            print(f'{stream} has no {ExperimentPart} data') 
+            print(f'{stream} has no {task} data') 
             continue
         # calculate duration
         start = event_data['lsl_time_stamp'].values[0]
@@ -240,12 +231,12 @@ def get_durations(ExperimentPart, xdf_path):
         if i[1]['duration'] == 0:
             continue
         if i[1]['duration'] < (exp_dur - 5): # 5 second margin
-            print(f"{i[1]['stream']} is shorter than expected for {ExperimentPart} by {exp_dur - i[1]['duration']:.4f} seconds")
+            print(f"{i[1]['stream']} is shorter than expected for {task} by {exp_dur - i[1]['duration']:.4f} seconds")
     
     # print + return durations_df
     durations_df.loc[durations_df.index.max() + 1] = ['expected', exp_dur, exp_dt_dur, '100.0000%']
     durations_df.sort_values(by='duration', inplace=True)
-    print('\n' + ExperimentPart + ' DataFrame')
+    print('\n' + task + ' DataFrame')
     return durations_df
 
 def load_xdf_from_zip(path_to_zip):  

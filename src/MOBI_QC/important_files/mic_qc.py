@@ -90,18 +90,23 @@ def mic_plots(mic_df: pd.DataFrame, stim_df: pd.DataFrame, sub_id: str):
     plt.tight_layout()
     plt.savefig(f'report_images/{sub_id}_mic_lineplot.png')
 
-def mic_qc(xdf_filename:str) -> dict:
+def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple[dict, pd.DataFrame]:
     """
     Main function to extract microphone quality control metrics.
     Args:
         xdf_filename (str): Path to the XDF file containing the microphone data.
+        stim_df (pd.DataFrame): dataframe containing stimulus markers.
+        task (str): arm of the experiment for which user wants quality control performed. Must be one of "Experiment", 
+            "RestingState", "StoryListening", "SocialTask".
+
     Returns:
         vars (dict): Dictionary containing the quality control metrics.
+        mic_df (pd.DataFrame): DataFrame containing microphone data.
     """
     # load data
     sub_id = xdf_filename.split('-')[1].split('/')[0]
-    mic_df = import_mic_data(xdf_filename)
-    stim_df = import_stim_data(xdf_filename)
+    whole_mic_df = import_mic_data(xdf_filename)
+    mic_df = get_event_data(event = task, df = whole_mic_df, stim_df = stim_df)
 
     sampling_rate = get_sampling_rate(mic_df)
 
@@ -121,7 +126,7 @@ def mic_qc(xdf_filename:str) -> dict:
     
     mic_plots(mic_df, stim_df, sub_id)
 
-    return vars
+    return vars, whole_mic_df
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
