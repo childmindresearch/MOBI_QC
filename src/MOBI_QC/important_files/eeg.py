@@ -62,6 +62,8 @@ def compute_eeg_pipeline(xdf_filename, task='RestingState'):
         df = get_event_data(event=task, 
                             df=import_eeg_data(xdf_filename),
                             stim_df=import_stim_data(xdf_filename))
+        
+        TS = df.lsl_time_stamp
 
         ch_names = [f"E{i+1}" for i in range(df.shape[1] - 1)]
         info = mne.create_info(ch_names, 
@@ -141,9 +143,10 @@ def compute_eeg_pipeline(xdf_filename, task='RestingState'):
     num_components = .95 
     ica = ICA(n_components=num_components, method='picard')
     ica.fit(raw_cleaned)
-
-    return vars, raw_cleaned, ica, raw_cleaned.to_data_frame()
-
+    ddf = raw_cleaned.to_data_frame()
+    ddf['lsl_time_stamp'] = TS
+    
+    return vars, raw_cleaned, ica, ddf
 
 def test_eeg_pipeline(xdf_filename):
     """
