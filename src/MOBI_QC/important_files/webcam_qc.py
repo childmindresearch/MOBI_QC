@@ -138,9 +138,9 @@ def plot_frames_with_wrap(frames, highlight_indices=[], overlap_ratio=0.3, frame
 
 
 
-def webcam_qc(xdf_filename:str, video_file:str, task:str):
+def webcam_qc(xdf_filename:str, video_file:str, stim_df:pd.DataFrame, task:str):
     cam_df = import_video_data(xdf_filename)
-    stim_df = import_stim_data(xdf_filename)
+    
     sub_id = xdf_filename.split('-')[1].split('/')[0]
 
 
