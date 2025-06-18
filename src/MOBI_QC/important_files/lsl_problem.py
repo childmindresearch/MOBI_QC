@@ -20,18 +20,18 @@ def lsl_quick_check(ps_df: pd.DataFrame):
     quickcheck = sum([not math.isclose(x, 1/sampling_rate, abs_tol=1e-2) for x in ps_df.lsl_time_stamp.diff()]) - 1
     return quickcheck
 
-def lsl_problem_plot(ps_df: pd.DataFrame, sub_id: str):
+def lsl_problem_plot(plot_df: pd.DataFrame, sub_id: str, modality_to_plot: str):
     """
     Plot the LSL timestamps for the physio data.
     Args:
-        ps_df (pd.DataFrame): Dataframe containing the physio data.
+        plot_df (pd.DataFrame): Dataframe with data to be plotted.
         sub_id (str): Subject ID.
     """
     plt.figure()
-    plt.plot(ps_df['lsl_time_stamp'], color = 'g')
+    plt.plot(plot_df['lsl_time_stamp'], color = 'g')
     plt.xlabel('Index')
     plt.ylabel('LSL Time Stamp (s)')
-    plt.title('LSL Time Stamps (Physio Data)')
+    plt.title(f'LSL Time Stamps ({modality_to_plot.upper()} Data)')
     plt.tight_layout()
     plt.savefig(f'report_images/{sub_id}_LSL_timestamps.png')
     
@@ -118,14 +118,14 @@ def lsl_loss_before_social(df_map: dict, sub_id: str, offset_social_timestamp: f
     nonzero_loss_social = percent_data_loss_social[percent_data_loss_social['num_losses'] != 0]
     return nonzero_loss_social
 
-def lsl_problem_qc(xdf_filename:str, df_map: dict, stim_df: pd.DataFrame) -> dict:
+def lsl_problem_qc(xdf_filename:str, df_map:dict, stim_df:pd.DataFrame, modality_to_plot:str) -> dict:
     """
     Main function to check for LSL timestamp gaps in the data.
     Args:
         xdf_filename (str): Path to the XDF file.
         df_map (dict): Dictionary with all data dfs 
         stim_df (pd.DataFrame): Contains stimulus markers
-        plot_modality (str): Which modality you want plotted. can be one of 'et', 'ps', 'mic', 'cam', 'eeg'   
+        modality_to_plot (str): Which modality you want plotted. can be one of 'et', 'ps', 'mic', 'cam', 'eeg'   
         Returns:
         vars (dict): Dictionary containing the percentage of data loss for each modality and the number of loss instances.
     """
@@ -136,8 +136,9 @@ def lsl_problem_qc(xdf_filename:str, df_map: dict, stim_df: pd.DataFrame) -> dic
 
     # optional: returns number of loss instances in ps_df
     # lsl_quick_check(ps_df)
-    ps_df = df_map['ps']
-    lsl_problem_plot(ps_df, sub_id)
+    # ps_df = df_map['ps']
+    plot_df = df_map[modality_to_plot]
+    lsl_problem_plot(plot_df, sub_id, modality_to_plot)
 
     vars = {}
 
