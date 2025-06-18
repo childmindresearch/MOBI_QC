@@ -21,36 +21,36 @@ def get_subjectID_and_collectionDate(xdf_filename:str):
 #def check_for_report(subject_id):
 
 def get_qc_metrics(xdf_filename:str, subject_id:str, stim_df:pd.DataFrame):
-    eeg_vars,_,_,_ = compute_eeg_pipeline(xdf_filename, task='RestingState')
+    eeg_vars,_,_,_ = compute_eeg_pipeline(xdf_filename, stim_df=stim_df, task='Experiment')
     eeg_vars = {f"eeg_{key}": value for key, value in eeg_vars.items()}
 
-    et_vars,_ = et_qc(xdf_filename)
+    et_vars,_ = et_qc(xdf_filename, stim_df, task='Experiment')
     et_vars = {f"et_{key}": value for key, value in et_vars.items()}
 
-    ecg_vars,_, _= ecg_qc(xdf_filename, stim_df)
+    ecg_vars,_, _= ecg_qc(xdf_filename, stim_df, task='Experiment')
     ecg_vars = {f"ecg_{key}": value for key, value in ecg_vars.items()}
 
-    eda_vars,_,_,_ = eda_qc(xdf_filename, stim_df)
+    eda_vars,_,_,_ = eda_qc(xdf_filename, stim_df, task='Experiment')
     eda_vars = {f"eda_{key}": value for key, value in eda_vars.items()}
 
-    rsp_vars,_ = rsp_qc(xdf_filename)
+    rsp_vars,_ = rsp_qc(xdf_filename, stim_df, task='Experiment')
     rsp_vars = {f"rsp_{key}": value for key, value in rsp_vars.items()}
 
-    mic_vars,_ = mic_qc(xdf_filename)
+    mic_vars,_ = mic_qc(xdf_filename, stim_df, task='Experiment')
     mic_vars = {f"mic_{key}": value for key, value in mic_vars.items()}
 
     webcam_file = glob(f'/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-{subject_id}/*.avi')[0]
-    webcam_vars,_ = webcam_qc(xdf_filename=xdf_filename, video_file=webcam_file, task='RestingState')
+    webcam_vars,_ = webcam_qc(xdf_filename=xdf_filename, video_file=webcam_file, stim_df=stim_df, task='Experiment')
     webcam_vars = {f"webcam_{key}": value for key, value in webcam_vars.items()}
 
     behavior_vars = behavior_qc(xdf_filename)
     behavior_vars = {f"behavior_{key}": value for key, value in behavior_vars.items()}
 
     return [eeg_vars, et_vars, ecg_vars, eda_vars, rsp_vars, mic_vars, webcam_vars, behavior_vars]
+    #return [eeg_vars, et_vars, ecg_vars, eda_vars, rsp_vars, webcam_vars, behavior_vars]
 
-def generate_qc_dataframe(xdf_filename:str, stim_df:pd.DataFrame):
-
-    subject_id, collection_date = get_subjectID_and_collectionDate(xdf_filename)
+def generate_qc_dataframe(xdf_filename:str, stim_df:pd.DataFrame, subject_id:str, collection_date: str):
+    
     modality_vars = get_qc_metrics(xdf_filename, subject_id, stim_df)
 
     subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
@@ -61,23 +61,43 @@ def generate_qc_dataframe(xdf_filename:str, stim_df:pd.DataFrame):
 
     return subject_csv_df
 
-def save_to_csv(subject_csv_df:pd.DataFrame):
-    if os.path.exists('CUNY_QC.csv'):
-        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=False)
+def check_data_exists(filename, subject_id):
+    existing_data = pd.read_csv(filename)  
+    if subject_id in existing_data['Subject'].values:
+        rows = existing_data.loc[existing_data['Subject'] == subject_id]
+        return rows
     else:
-        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=True)
+        rows = pd.DataFrame()
+        return rows
+    
 
-    return True
+def save_to_csv(subject_csv_df:pd.DataFrame):
+    if os.path.exists('CUNY_QC.csv') == True:
+        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=False)
+        return 'Saved'
+    elif os.path.exists('CUNY_QC.csv') == False:
+        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=True)
+        return 'Saved'
+    else:
+        return 'Export Error'
+
+def run_qc(xdf_filename:str, subject_id, collection_date):
+    stim_df = import_stim_data(xdf_filename)
+    subject_csv_df = generate_qc_dataframe(xdf_filename, stim_df, subject_id, collection_date)
+    added_to_csv = save_to_csv(subject_csv_df)
+    return added_to_csv
 
 def generate_csv(xdf_filename:str):
 
-    stim_df = import_stim_data(xdf_filename)
+    csvfilename = 'CUNY_QC.csv'
+    subject_id, collection_date = get_subjectID_and_collectionDate(xdf_filename)
+    if os.path.exists(csvfilename) == True and (check_data_exists(csvfilename, subject_id)).empty != True:
+        print ('Participant data already exists')
+        return check_data_exists(csvfilename, subject_id)
+    else:
+        status = run_qc(xdf_filename, subject_id, collection_date)
+        return status
 
-    subject_csv_df = generate_qc_dataframe(xdf_filename, stim_df)
-
-    add_to_csv = save_to_csv(subject_csv_df)
-    
-    return 'Done'
 # %%
 
 # allow the functions in this script to be imported into other scripts
