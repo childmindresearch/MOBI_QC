@@ -33,11 +33,14 @@ def missing_markers(events: dict[int, str], stim_df: pd.DataFrame) -> list | Non
         missing_markers (list): The list of missing event markers in the given xdf file   
     """    
     missing_markers=[]
-    for event in events:
-        if event in stim_df.event:
-            return None
+    for event in list(events.values()):
+        if event in stim_df.event.tolist():
+            continue
         else:
             missing_markers = missing_markers + [event]
+    if not missing_markers:
+        return None
+    else:   
         return missing_markers
 
 def total_experiment_duration(stim_df: pd.DataFrame) -> str:
