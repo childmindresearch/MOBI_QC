@@ -118,7 +118,7 @@ def lsl_loss_before_social(df_map: dict, sub_id: str, offset_social_timestamp: f
     nonzero_loss_social = percent_data_loss_social[percent_data_loss_social['num_losses'] != 0]
     return nonzero_loss_social
 
-def lsl_problem_qc(xdf_filename:str, df_map:dict, stim_df:pd.DataFrame, modality_to_plot:str) -> dict:
+def lsl_problem_qc(xdf_filename:str, df_map:dict, stim_df:pd.DataFrame, modality_to_plot='et') -> dict:
     """
     Main function to check for LSL timestamp gaps in the data.
     Args:
