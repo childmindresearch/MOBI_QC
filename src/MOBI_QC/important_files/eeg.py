@@ -61,7 +61,7 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
     if len(glob('/'.join(xdf_filename.split('/')[:-1]) +'/*.fif')) < 1:
         df = get_event_data(event=task, 
                             df=import_eeg_data(xdf_filename),
-                            stim_df=import_stim_data(xdf_filename))
+                            stim_df=stim_df)
         
         TS = df.lsl_time_stamp
 
