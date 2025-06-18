@@ -108,9 +108,12 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
     whole_mic_df = import_mic_data(xdf_filename)
     mic_df = get_event_data(event = task, df = whole_mic_df, stim_df = stim_df)
 
-    sampling_rate = get_sampling_rate(mic_df)
-
     vars = {}
+    if task == 'RestingState':
+        vars['sampling_rate'], vars['lsl_wav_duration_diff'], vars['num_NaN'], vars['percent_NaN'], vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = np.zeros(9)
+        return vars, whole_mic_df
+    
+    sampling_rate = get_sampling_rate(mic_df)
     vars['sampling_rate'] = sampling_rate
     print(f"Effective sampling rate: {sampling_rate:.4f}")
 

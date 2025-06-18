@@ -22,6 +22,8 @@ def compute_eeg_pipeline(xdf_filename, task='RestingState'):
     Args:
         xdf_filename (str): The path to the xdf file.
     """    
+    ddf = import_eeg_data(xdf_filename)
+
     def annotate_blinks(
         raw: mne.io.Raw, ch_name: list[str] = ["E25", "E8"]
     ) -> mne.Annotations:
@@ -60,10 +62,10 @@ def compute_eeg_pipeline(xdf_filename, task='RestingState'):
 
     if len(glob('/'.join(xdf_filename.split('/')[:-1]) +'/*.fif')) < 1:
         df = get_event_data(event=task, 
-                            df=import_eeg_data(xdf_filename),
+                            df=ddf,
                             stim_df=import_stim_data(xdf_filename))
         
-        TS = df.lsl_time_stamp
+        TS = df['lsl_time_stamp']
 
         ch_names = [f"E{i+1}" for i in range(df.shape[1] - 1)]
         info = mne.create_info(ch_names, 
@@ -143,8 +145,8 @@ def compute_eeg_pipeline(xdf_filename, task='RestingState'):
     num_components = .95 
     ica = ICA(n_components=num_components, method='picard')
     ica.fit(raw_cleaned)
-    ddf = raw_cleaned.to_data_frame()
-    ddf['lsl_time_stamp'] = TS
+    # ddf = raw_cleaned.to_data_frame()
+    # ddf['lsl_time_stamp'] = TS
     
     return vars, raw_cleaned, ica, ddf
 
