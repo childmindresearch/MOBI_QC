@@ -62,11 +62,9 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
 
     if len(glob('/'.join(xdf_filename.split('/')[:-1]) +'/*.fif')) < 1:
         df = get_event_data(event=task, 
-                            df=import_eeg_data(xdf_filename),
+                            df=ddf,
                             stim_df=stim_df)
         
-        TS = df['lsl_time_stamp']
-
         ch_names = [f"E{i+1}" for i in range(df.shape[1] - 1)]
         info = mne.create_info(ch_names, 
                             sfreq=1/df.lsl_time_stamp.diff().mean(), 
@@ -145,8 +143,7 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
     num_components = .95 
     ica = ICA(n_components=num_components, method='picard')
     ica.fit(raw_cleaned)
-    ddf = raw_cleaned.to_data_frame()
-    ddf['lsl_time_stamp'] = TS
+    
 
     return vars, raw_cleaned, ica, ddf
 
