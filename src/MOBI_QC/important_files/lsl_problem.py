@@ -123,7 +123,10 @@ def lsl_problem_qc(xdf_filename:str, df_map: dict, stim_df: pd.DataFrame) -> dic
     Main function to check for LSL timestamp gaps in the data.
     Args:
         xdf_filename (str): Path to the XDF file.
-    Returns:
+        df_map (dict): Dictionary with all data dfs 
+        stim_df (pd.DataFrame): Contains stimulus markers
+        plot_modality (str): Which modality you want plotted. can be one of 'et', 'ps', 'mic', 'cam', 'eeg'   
+        Returns:
         vars (dict): Dictionary containing the percentage of data loss for each modality and the number of loss instances.
     """
     # load data 

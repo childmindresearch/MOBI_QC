@@ -22,6 +22,8 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
     Args:
         xdf_filename (str): The path to the xdf file.
     """    
+    ddf = import_eeg_data(xdf_filename)
+
     def annotate_blinks(
         raw: mne.io.Raw, ch_name: list[str] = ["E25", "E8"]
     ) -> mne.Annotations:
@@ -63,7 +65,7 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
                             df=import_eeg_data(xdf_filename),
                             stim_df=stim_df)
         
-        TS = df.lsl_time_stamp
+        TS = df['lsl_time_stamp']
 
         ch_names = [f"E{i+1}" for i in range(df.shape[1] - 1)]
         info = mne.create_info(ch_names, 

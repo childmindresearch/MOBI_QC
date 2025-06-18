@@ -12,7 +12,7 @@ import datetime
 
 
 
-def get_collection_date(xdf_filename):
+def get_collection_date(xdf_filename:str):
     """Get the collection date from the xdf file.
     
     Args:
@@ -26,7 +26,7 @@ def get_collection_date(xdf_filename):
 
 
 
-def import_webcam_data(xdf_filename):    
+def import_webcam_data(xdf_filename:str):    
     cam_data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'name': 'WebcamStream'}], verbose=False)
     frame_nums = [int(i[0]) for i in cam_data[0]['time_series']]
     time_pre = [float(i[1]) for i in cam_data[0]['time_series']]
@@ -44,7 +44,7 @@ def import_webcam_data(xdf_filename):
     return cam_df
 
 
-def import_physio_data(xdf_filename):
+def import_physio_data(xdf_filename:str):
     data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'name': 'OpenSignals'}], verbose = False)
     column_labels = [data[0]['info']['desc'][0]['channels'][0]['channel'][i]['label'][0] for i in range(len(data[0]['info']['desc'][0]['channels'][0]['channel']))]
     df = pd.DataFrame(data[0]['time_series'], columns=column_labels)
@@ -52,7 +52,7 @@ def import_physio_data(xdf_filename):
     df['time'] = df.lsl_time_stamp - df.lsl_time_stamp[0]
     return df
 
-def import_mic_data(xdf_filename):
+def import_mic_data(xdf_filename:str):
     data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'type': 'AudioCapture'}], verbose = False)
     df = pd.DataFrame(data[0]['time_series'], columns=['int_array'])
     df['bytestring'] = df['int_array'].apply(lambda x: np.array(x).tobytes())
@@ -61,7 +61,7 @@ def import_mic_data(xdf_filename):
     df['time'] = df.lsl_time_stamp - df.lsl_time_stamp[0]
     return df
 
-def import_video_data(xdf_filename):
+def import_video_data(xdf_filename:str):
     data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'type': 'video'}], verbose = False)
     frame_nums = [int(i[0]) for i in data[0]['time_series']]
     time_pre = [float(i[1]) for i in data[0]['time_series']]
@@ -77,7 +77,7 @@ def import_video_data(xdf_filename):
     df['time'] = df.lsl_time_stamp - df.lsl_time_stamp[0]
     return df
 
-def import_et_data(xdf_filename):
+def import_et_data(xdf_filename:str):
     data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'type': 'ET'}], verbose = False)
     column_labels = [data[0]['info']['desc'][0]['channels'][0]['channel'][i]['label'][0] for i in range(len(data[0]['info']['desc'][0]['channels'][0]['channel']))]
     df = pd.DataFrame(data[0]['time_series'], columns=column_labels)
@@ -94,7 +94,7 @@ def import_eeg_data(xdf_filename:str):
     #df['time'] = df.lsl_time_stamp - df.lsl_time_stamp[0]
     return df
 
-def import_stim_data(xdf_filename):
+def import_stim_data(xdf_filename:str):
     '''
     Get the stimuli dataframe from the xdf file.
     
