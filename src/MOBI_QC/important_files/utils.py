@@ -321,6 +321,16 @@ def get_sampling_rate(df):
     effective_sampling_rate = 1 / (df.lsl_time_stamp.diff().median())
     return effective_sampling_rate
 
+def get_range_for_metrics(filename):
+    ranges_for_qc = {}
+    qc_metrics = pd.read_csv(filename)
+    for metric in qc_metrics.columns:
+        if qc_metrics[metric].dtype in ['float64', 'int64']:
+            q1 = np.percentile(qc_metrics[metric], 25)
+            q3 = np.percentile(qc_metrics[metric], 75)
+            ranges_for_qc.update({f'range_{metric}': [q1, q3]})
+    return ranges_for_qc
+
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
     pass
