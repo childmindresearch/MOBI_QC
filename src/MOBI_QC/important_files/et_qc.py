@@ -143,6 +143,7 @@ def et_percent_over02(et_df: pd.DataFrame) -> float:
         percent_over02 (float): Percentage of data with gaze point differences of over 0.2 mm.
     """
     # distance between gaze points
+
     # remove NaNs
     et_nums = et_df[~np.isnan(et_df.left_gaze_point_on_display_area_0) &
             ~np.isnan(et_df.left_gaze_point_on_display_area_1) &
@@ -158,6 +159,7 @@ def et_percent_over02(et_df: pd.DataFrame) -> float:
 
     percent_over02 = sum(dists >= 0.2)/len(dists) * 100  
     return percent_over02 
+
 
 def et_lineplot(et_df: pd.DataFrame, percent_over02: float, sub_id: str):
     """
@@ -237,6 +239,13 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
 
         et_error = False
 
+        return vars, whole_et_df, et_error
+    # if et_nums is empty
+    except ZeroDivisionError: 
+        vars.update({key: float('nan') for key in vars.keys()})
+        vars['left_gaze_point_invalid'], vars['right_gaze_point_invalid'], vars['left_gaze_origin_invalid'], vars['right_gaze_origin_invalid'], vars['left_pupil_invalid'], vars['right_pupil_invalid'] = et_invalid_data(et_df)
+        et_error = True        
+        print(f'Error: Too much ET data missing to calculate metrics for participant {sub_id} in {xdf_filename}.')
         return vars, whole_et_df, et_error
     except: # leaving this without a specific error for now because we have no PTs without ET data!
         
