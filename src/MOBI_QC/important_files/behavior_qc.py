@@ -167,13 +167,14 @@ def average_question_response_time(stim_df: pd.DataFrame) -> str:
 
     return average_response_time
 
-def behavior_qc(xdf_filename) -> dict[str,int]:
+def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
     """
     This function computes the Behavior quality control pipeline for the given xdf file.
     Args:
         xdf_filename (str): The path to the xdf file.
     Returns:
         vars (dict): Contains all quality control measures for behavior data of the give xdf file   
+        behavior_error (bool): Indicates whether stim_df had an error.
     """    
     events = {
         200: 'Onset_Experiment',
@@ -218,28 +219,33 @@ def behavior_qc(xdf_filename) -> dict[str,int]:
         "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/Left_Home_Alone_in_a_Tornado.wav",
         "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/The_Birthday_Party_Prank_44.wav",
     ]
-
-
         #xdf_filename = '/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-P5029423/sub-P5029423_ses-S001_task-CUNY_run-001_mobi.xdf'
-    stim_df = import_stim_data(xdf_filename)
-    
+    subject = xdf_filename.split('sub-')[1].split('/')[0]
     vars = {}
-    print(f"Missing stimulus markers: {get_missing_markers(events, stim_df)}")
-    vars['missing_stimulus_markers'] = get_missing_markers(events, stim_df)
-    print(f"Duration of experiment: {total_experiment_duration(stim_df)}")
-    vars['total_duration'] = total_experiment_duration(stim_df)
-    print(f"Durations do not match expected length: {unexpected_durations(stim_df, story_onsets, events, audiofiles)}")
-    vars['unexpected_durations'] = unexpected_durations(stim_df, story_onsets, events, audiofiles)
-    print(f"Is Resting state of expected duration? {resting_state_social_script_durations(stim_df, 10)}") # immediate qc measure, not included in the report
-    print(f"Is Social script of expected duration? {resting_state_social_script_durations(stim_df, 80)}") # immediate qc measure, not included in the report
-    print(f"Duration of Impedance check: {impedance_check_duration(stim_df)}")
-    vars['impedance_check_duration'] = impedance_check_duration(stim_df)
-    print(f"Are all 10 seconds rest equal? {ten_seconds_rest(stim_df)}")
-    vars['ten_seconds_rest'] = ten_seconds_rest(stim_df)
-    print(f"Average response time across all story listening tasks: {average_question_response_time(stim_df)}")
-    vars['average_response_time'] = average_question_response_time(stim_df)
-
-    return vars
+    vars['missing_stimulus_markers'], vars['total_duration'], vars['unexpected_durations'], vars['impedance_check_duration'], vars['ten_seconds_rest'], vars['average_response_time'] = np.zeros(6)
+    try:
+        print(f"Missing stimulus markers: {get_missing_markers(events, stim_df)}")
+        vars['missing_stimulus_markers'] = get_missing_markers(events, stim_df) 
+        print(f"Duration of experiment: {total_experiment_duration(stim_df)}")
+        vars['total_duration'] = total_experiment_duration(stim_df)
+        print(f"Durations do not match expected length: {unexpected_durations(stim_df, story_onsets, events, audiofiles)}")
+        vars['unexpected_durations'] = unexpected_durations(stim_df, story_onsets, events, audiofiles)
+        print(f"Is Resting state of expected duration? {resting_state_social_script_durations(stim_df, 10)}") # immediate qc measure, not included in the report
+        print(f"Is Social script of expected duration? {resting_state_social_script_durations(stim_df, 80)}") # immediate qc measure, not included in the report
+        print(f"Duration of Impedance check: {impedance_check_duration(stim_df)}")
+        vars['impedance_check_duration'] = impedance_check_duration(stim_df)
+        print(f"Are all 10 seconds rest equal? {ten_seconds_rest(stim_df)}")
+        vars['ten_seconds_rest'] = ten_seconds_rest(stim_df)
+        print(f"Average response time across all story listening tasks: {average_question_response_time(stim_df)}")
+        vars['average_response_time'] = average_question_response_time(stim_df)
+        behavior_error = False
+        return vars, behavior_error 
+    except IndexError:
+        print(f'Error: Missing stimulus markers for participant {subject} in {xdf_filename}.') # check if this is true 
+        vars.update({key: float('nan') for key in vars.keys()})
+        vars['missing_stimulus_markers'] = get_missing_markers(events, stim_df) 
+        behavior_error = True
+        return vars, behavior_error 
 #%% 
 
 # allow the functions in this script to be imported into other scripts
