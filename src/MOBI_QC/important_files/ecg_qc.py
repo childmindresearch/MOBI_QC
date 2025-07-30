@@ -191,7 +191,7 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
     subject = xdf_filename.split('sub-')[1].split('/')[0]
     whole_ps_df = import_physio_data(xdf_filename)
     vars = {}
-    vars['task_run'], vars['sampling_rate'], vars['average_heart_rate'], vars['kurtosis_SQI'], vars['power_spectrum_distribution_SQI'], vars['relative_baseline_power_sqi'], vars['SNR'] = np.zeros(7)  
+    vars['event'], vars['sampling_rate'], vars['average_heart_rate'], vars['kurtosis_SQI'], vars['power_spectrum_distribution_SQI'], vars['relative_baseline_power_sqi'], vars['SNR'] = np.zeros(7)  
 
     try:
         ps_df = get_event_data(event=task,
@@ -203,7 +203,7 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
         ecg_signals, info = ecg_preprocess(ecg_df, ecg_sampling_rate)
         ecg_cleaned = ecg_signals['ECG_Clean']
 
-        vars['task_run'] = task
+        vars['event'] = task
         print(f"Effective sampling rate: {ecg_sampling_rate}")
         vars['sampling_rate'] = ecg_sampling_rate
         print(f"Average heart rate: {average_heartrate(ecg_signals)}")

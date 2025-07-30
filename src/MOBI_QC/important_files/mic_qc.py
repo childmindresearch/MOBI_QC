@@ -109,7 +109,7 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
 
     # initialize mic_vars keys as zeros
     vars = {}
-    vars['task_run'], vars['sampling_rate'], vars['lsl_wav_duration_diff'], vars['num_NaN'], vars['percent_NaN'], vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = np.zeros(10)
+    vars['event'], vars['sampling_rate'], vars['lsl_wav_duration_diff'], vars['num_NaN'], vars['percent_NaN'], vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = np.zeros(10)
 
     try:
         # get data
@@ -121,7 +121,7 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
             return vars, whole_mic_df, mic_error
         
         # get metrics
-        vars['task_run'] = task
+        vars['event'] = task
         sampling_rate = get_sampling_rate(mic_df)
         vars['sampling_rate'] = sampling_rate
         print(f"Effective sampling rate: {sampling_rate:.4f}")

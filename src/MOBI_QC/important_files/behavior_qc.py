@@ -241,7 +241,7 @@ def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
         behavior_error = False
         return vars, behavior_error 
     except IndexError:
-        print(f'Error: Missing stimulus markers for participant {subject} in {xdf_filename}.') # check if this is true 
+        print(f'Error: Missing stimulus markers for participant {subject} in {xdf_filename}.')
         vars.update({key: float('nan') for key in vars.keys()})
         vars['missing_stimulus_markers'] = get_missing_markers(events, stim_df) 
         behavior_error = True
