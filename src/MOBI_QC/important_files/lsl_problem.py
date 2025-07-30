@@ -134,7 +134,6 @@ def lsl_problem_qc(xdf_filename:str, stim_df:pd.DataFrame, df_map:dict, error_ma
         stim_df (pd.DataFrame): Contains stimulus markers
         df_map (dict): Dictionary with all data dfs 
         error_map (dict): Contains booleans for each data modality indicating error. 
-        modality_to_plot (str): Which modality you want plotted. can be one of 'et', 'ps', 'mic', 'cam', 'eeg'   
 
         Returns:
         vars (dict): Dictionary containing the percentage of data loss for each modality and the number of loss instances.

@@ -57,7 +57,7 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
     
         return muscle_annotations
     subject = xdf_filename.split('sub-')[-1].split('_')[0]
-    vars = {varname: np.nan for varname in ['percent_good', 'bad_channels_before',
+    vars = {varname: np.nan for varname in ['event', 'percent_good', 'bad_channels_before',
                                             'interpolated_channels', 'bad_channels_after',
                                             'excluded_components']}
     eeg_error = False
@@ -98,7 +98,7 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
             print("DONE with preprocessing")
 
             # check if cleaned file already exists
-            
+            vars['event'] = task
             print(f"Bad channels before robust reference: {prep.noisy_channels_original['bad_all']}")
             vars['bad_channels_before'] = prep.noisy_channels_original['bad_all']
             print(f"Interpolated channels: {prep.interpolated_channels}")
