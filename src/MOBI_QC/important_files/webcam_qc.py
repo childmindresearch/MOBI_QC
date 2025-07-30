@@ -141,7 +141,7 @@ def webcam_qc(xdf_filename:str, video_file:str, stim_df:pd.DataFrame, task:str):
     
     sub_id = xdf_filename.split('sub-')[1].split('/')[0]
     vars = {}
-    vars[f'collected_full_{task}'], vars['sampling_rate'], vars['face_perc'] = np.zeros(3)
+    vars['task_run'], vars[f'collected_full_{task}'], vars['sampling_rate'], vars['face_perc'] = np.zeros(4)
 
 
     try:
@@ -156,7 +156,7 @@ def webcam_qc(xdf_filename:str, video_file:str, stim_df:pd.DataFrame, task:str):
         stop = cam_exp['lsl_time_stamp'].values[-1]
         cam_dur = stop - start
 
-        
+        vars['task_run'] = task
         if abs(experiment_dur - cam_dur) < 0.1:
             print(f'{task} duration matches camera duration!')
             vars[f'collected_full_{task}'] = True

@@ -203,7 +203,7 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
     """
     sub_id = xdf_filename.split('sub-')[1].split('/')[0]
     vars = {}
-    vars['sampling_rate'], vars['left_gaze_point_invalid'], vars['right_gaze_point_invalid'], vars['left_gaze_origin_invalid'], vars['right_gaze_origin_invalid'], vars['left_pupil_invalid'], vars['right_pupil_invalid'], vars['xyz_measures_check'], vars['coordinate_system_check'], vars['LR_mean_diff'], vars['percent_over02'] = np.zeros(11)
+    vars['task_run'], vars['sampling_rate'], vars['left_gaze_point_invalid'], vars['right_gaze_point_invalid'], vars['left_gaze_origin_invalid'], vars['right_gaze_origin_invalid'], vars['left_pupil_invalid'], vars['right_pupil_invalid'], vars['xyz_measures_check'], vars['coordinate_system_check'], vars['LR_mean_diff'], vars['percent_over02'] = np.zeros(12)
 
     try:
         whole_et_df = import_et_data(xdf_filename)
@@ -211,7 +211,7 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
 
         sampling_rate = get_sampling_rate(et_df)
         val_df = et_val(et_df)
-
+        vars['task_run'] = task
         vars['sampling_rate'] = sampling_rate
         print(f"Effective sampling rate: {sampling_rate:.4f}")
 

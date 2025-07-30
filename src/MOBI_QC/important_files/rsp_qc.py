@@ -219,7 +219,7 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
     sub_id = xdf_filename.split('sub-')[1].split('/')[0]
     whole_ps_df = import_physio_data(xdf_filename)
     vars = {}
-    vars['sampling_rate'], vars['percent_missing'], vars['rsp_snr'], vars['breath_amplitude_mean'],vars['breath_amplitude_std'], vars['breath_amplitude_min'], vars['breath_amplitude_max'], vars['rsp_rate_mean'], vars['rsp_rate_std'], vars['rsp_rate_min'], vars['rsp_rate_max'], vars['ptp_mean'], vars['ptp_std'], vars['ptp_min'], vars['ptp_max'], vars['baseline_drift'], vars['autocorrelation'] = np.zeros(17)    
+    vars['task_run'], vars['sampling_rate'], vars['percent_missing'], vars['rsp_snr'], vars['breath_amplitude_mean'],vars['breath_amplitude_std'], vars['breath_amplitude_min'], vars['breath_amplitude_max'], vars['rsp_rate_mean'], vars['rsp_rate_std'], vars['rsp_rate_min'], vars['rsp_rate_max'], vars['ptp_mean'], vars['ptp_std'], vars['ptp_min'], vars['ptp_max'], vars['baseline_drift'], vars['autocorrelation'] = np.zeros(18)    
     
     try:
         ps_df = get_event_data(event = task, df = whole_ps_df, stim_df = stim_df)
@@ -235,6 +235,7 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
         rsp_clean, peaks_df, peaks_dict = rsp_preprocess(rsp, sampling_rate)
 
         # variables
+        vars['task_run'] = task
         vars['sampling_rate'] = sampling_rate
         print(f"Effective sampling rate: {sampling_rate:.4f}")
         vars['percent_missing'] = percent_missing
