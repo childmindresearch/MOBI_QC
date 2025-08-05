@@ -212,12 +212,12 @@ def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
     story_onsets = [20, 30, 40, 50, 60, 70]
 
     audiofiles= [
-        "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/Camp_Lose_A_Friend.wav",
-        "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/Frog_Dissection_Disaster.wav",
-        "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/I_Decided_To_Be_Myself_And_Won_A_Dance_Contest.wav",
-        "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/I_Fully_Embarrassed_Myself_In_Zoom_Class1.wav",
-        "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/Left_Home_Alone_in_a_Tornado.wav",
-        "/Users/apurva.gokhe/Documents/CUNY_QC/NEW_AUDIO_44/The_Birthday_Party_Prank_44.wav",
+        "src/NEW_AUDIO_44/Camp_Lose_A_Friend.wav",
+        "src/NEW_AUDIO_44/Frog_Dissection_Disaster.wav",
+        "src/NEW_AUDIO_44/I_Decided_To_Be_Myself_And_Won_A_Dance_Contest.wav",
+        "src/NEW_AUDIO_44/I_Fully_Embarrassed_Myself_In_Zoom_Class1.wav",
+        "src/NEW_AUDIO_44/Left_Home_Alone_in_a_Tornado.wav",
+        "src/NEW_AUDIO_44/The_Birthday_Party_Prank_44.wav"
     ]
         #xdf_filename = '/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-P5029423/sub-P5029423_ses-S001_task-CUNY_run-001_mobi.xdf'
     subject = xdf_filename.split('sub-')[1].split('/')[0]
