@@ -63,7 +63,7 @@ def unexpected_durations(stim_df: pd.DataFrame, story_onsets: list, events: dict
         stim_df (pd.DataFrame): The dataframe that includes all stimulus triggers, markers and corresponding time stamps.
         story_onsets (list): The list of story listening event triggers.
         events (dict): The dictionary that contains all event triggeres and their labels.
-        audiofiles (list): The list of paths to all story listenign audiofiles.    
+        audiofiles (list): The list of paths to all story listening audiofiles.    
     Returns:
         list_of_task_duration_difference (list): The story listening tasks with durations not within expected length. 
     """    
@@ -212,12 +212,12 @@ def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
     story_onsets = [20, 30, 40, 50, 60, 70]
 
     audiofiles= [
-        "src/NEW_AUDIO_44/Camp_Lose_A_Friend.wav",
-        "src/NEW_AUDIO_44/Frog_Dissection_Disaster.wav",
-        "src/NEW_AUDIO_44/I_Decided_To_Be_Myself_And_Won_A_Dance_Contest.wav",
-        "src/NEW_AUDIO_44/I_Fully_Embarrassed_Myself_In_Zoom_Class1.wav",
-        "src/NEW_AUDIO_44/Left_Home_Alone_in_a_Tornado.wav",
-        "src/NEW_AUDIO_44/The_Birthday_Party_Prank_44.wav"
+        "../../../../MOBI_QC/src/NEW_AUDIO_44/Camp_Lose_A_Friend.wav",
+        "../../../../MOBI_QC/src/NEW_AUDIO_44/Frog_Dissection_Disaster.wav",
+        "../../../../MOBI_QC/src/NEW_AUDIO_44/I_Decided_To_Be_Myself_And_Won_A_Dance_Contest.wav",
+        "../../../../MOBI_QC/src/NEW_AUDIO_44/I_Fully_Embarrassed_Myself_In_Zoom_Class1.wav",
+        "../../../../MOBI_QC/src/NEW_AUDIO_44/Left_Home_Alone_in_a_Tornado.wav",
+        "../../../../MOBI_QC/src/NEW_AUDIO_44/The_Birthday_Party_Prank_44.wav"
     ]
         #xdf_filename = '/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-P5029423/sub-P5029423_ses-S001_task-CUNY_run-001_mobi.xdf'
     subject = xdf_filename.split('sub-')[1].split('/')[0]
