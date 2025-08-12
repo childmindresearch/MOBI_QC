@@ -15,7 +15,6 @@ import seaborn as sns
 from stim_correction import trigger_recovery
 
 
-
 def get_collection_date(xdf_filename:str):
     if platform.system() == 'Windows':
             return datetime.datetime.fromtimestamp(os.path.getctime(xdf_filename))
@@ -148,7 +147,7 @@ def import_stim_data(xdf_filename:str):
     # relabel the event as a psychopy timestamp if the trigger is greater than 5 digits
     stim_df.loc[stim_df.trigger.astype(str).str.len() > 5, 'event'] = 'psychopy_time_stamp'
     stim_df['lsl_time_stamp'] = data[0]['time_stamps']
-    stim_df['time'] = (data[0]['time_stamps'] - data[0]['time_stamps'][0])
+    #stim_df['time'] = (data[0]['time_stamps'] - data[0]['time_stamps'][0])
 
     dt = datetime.datetime.fromtimestamp(stim_df.loc[stim_df.event == "psychopy_time_stamp", "trigger"].to_list()[0])#.strftime('%Y-%m-%d %H:%M:%S')
     # check if date after 03/25/2025

@@ -9,6 +9,8 @@ from tqdm import tqdm
 import sounddevice as sd    #0.5.2
 import sys
 import os
+from scipy.io import wavfile    #1.11.3
+from scipy.signal import correlate, resample    #1.11.3
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -18,85 +20,20 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 def trigger_recovery(stim_df, xdf_filename):
     ''' This function recovers the trigger events in the stim_df DataFrame'''
-    from utils import get_event_data, import_mic_data
+    # Import the Mic data
+    mic_data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'name': 'Microphone'}], verbose = False)
+    mic_df = pd.DataFrame(mic_data[0]['time_series'], columns=['int_array'])
+    mic_df['lsl_time_stamp'] = mic_data[0]['time_stamps']
+    # Reduce the mic_data to only the story listening events, we have triggers for onset and offset of the story listening block
+    mic_df = mic_df.loc[(mic_df.lsl_time_stamp >= stim_df.loc[stim_df.event == 'Onset_StoryListening', 'lsl_time_stamp'].values[0]) & 
+                    (mic_df.lsl_time_stamp <= stim_df.loc[stim_df.event == 'Offset_StoryListening', 'lsl_time_stamp'].values[0])]
+    mic = mic_df['int_array'].values
 
-    mic_df = get_event_data(event='StoryListening',
-                df=import_mic_data(xdf_filename=xdf_filename), 
-                stim_df=stim_df
-                )
-
-    rate = 44100
-    chunk_size = 4410
-    threshold = 75
-    audio = mic_df['int_array'].values.astype(np.int16)
-    #num_chunks = len(audio) // chunk_size
-    n_samples= len(audio)
-    is_audio = np.zeros(n_samples, dtype=bool)
-    energies = []
-    for start in tqdm(range(0, n_samples, chunk_size)):
-        end = min(start + chunk_size, n_samples)
-        chunk = audio[start:end]
-        energy = np.mean(np.abs(chunk))
-        if energy > threshold:
-            is_audio[start:end] = True
-        energies.append(energy)
-    mic_df['mic_signal'] = is_audio
-    energies = np.array(energies)
-    # Make sure 'is_audio' is a boolean Series (or 0/1 integers)
-    is_audio = mic_df['mic_signal'].astype(bool)
-    # Identify where values change (True <-> False)
-    change_points = is_audio.ne(is_audio.shift()).cumsum()
-    # Group by these change points and get lengths
-    runs = mic_df.groupby(change_points).agg({
-        'mic_signal': ['first', 'size'],
-        'time': ['first', 'last']
-    })
-    runs.columns = ['value', 'length', 'start_time', 'end_time']
-    runs = runs.reset_index(drop=True)
-    # Select runs where value == False and length > 132300
-    long_false_blocks = runs[(runs['value'] == False) & (runs['length'] > 132300)]   # silences much be longer than 132300 rows (44100 Hz x 3 seconds = 132300)
-    print(long_false_blocks)
-    # Initialize column with False
-    mic_df['long_silence'] = False
-
-    # Mark rows that fall into those long silence blocks
-    for _, row in long_false_blocks.iterrows():
-        mic_df.loc[(mic_df['time'] >= row['start_time']) & (mic_df['time'] <= row['end_time']), 'long_silence'] = True
-
-    mic_df['is_audio'] = ~mic_df['long_silence']  # Invert long_silence to get is_audio
-
-    # Example box function
-    s = mic_df['is_audio'].astype(int)  # Convert boolean to int (0s and 1s)
-    # Treat 1s (or True) as boxes
-    is_box = s.astype(bool)
-
-    # Find the start of each new box (True preceded by False)
-    box_start = is_box & ~is_box.shift(fill_value=False)
-
-    # Use cumsum to increment on each new box start
-    box_ids = box_start.cumsum()
-
-    # Mask: assign box ID where s == 1, else 0
-    labeled_boxes = box_ids.where(is_box, 0)
-    mic_df['audio_segment'] = labeled_boxes
-
-    psycho = pd.read_csv(glob('/'.join(xdf_filename.split('/')[:-1])+'/*behavior.csv')[0], sep=',', header=0)
+    # Import the behavior file from psychopy
+    psy_path = glob(os.path.join('/'.join(xdf_filename.split('/')[:-1]),'*behavior.csv'))[0]
+    psycho = pd.read_csv(psy_path, sep=',', header=0)
     audio_order = [f.split('/')[-1].split('.')[0] for f in psycho.AudioFile.unique() if pd.notna(f)]
-
-    story_count = 0
-    # get the duration in seconds of each audio segment
-    mic_df['sound_id'] = 'silence'
-    for i in range(1, mic_df['audio_segment'].max() + 1):
-        segment = mic_df[mic_df['audio_segment'] == i]
-        duration = (segment['time'].max() - segment['time'].min())
-        if duration < 93:
-            mic_df.loc[mic_df['audio_segment'] == i, 'sound_id'] = 'noise' 
-        else:
-            mic_df.loc[mic_df['audio_segment'] == i, 'sound_id'] = audio_order[story_count]
-            story_count += 1
-
-        print(f"Audio Segment {i}: Duration = {duration:.2f} seconds")
-
+    # Add triggers
     events = {
         200: 'Onset_Experiment',
         10: 'Onset_RestingState',
@@ -130,13 +67,29 @@ def trigger_recovery(stim_df, xdf_filename):
         201: 'Offset_Experiment',
     }
 
+    story_triggers = []
     for story in audio_order:
-        story_df = mic_df[mic_df['sound_id'] == story]
-        story_onset = mic_df.loc[mic_df['sound_id'] == story, 'time'].min()
-        story_offset = mic_df.loc[mic_df['sound_id'] == story, 'time'].max()
+        # import the audio file and downsample to 44.1kHz
+        audio_file_path = '../../NEW_AUDIO_48/'+ story + '.wav'
+        fs_audiofile, audiofile = wavfile.read(audio_file_path)
+        audio_duration = len(audiofile) / fs_audiofile
+        audiofile = resample(audiofile, int(audio_duration * 44100))
 
+        # cross correlate with the microphone data
+        corr = correlate(mic, audiofile, mode='full')
+        best_index = np.argmax(corr)
+        onset = best_index - len(audiofile) + 1
+        onset_timestamp = mic_df.lsl_time_stamp[onset]
+        story_triggers.append(onset_timestamp)
+
+        # calculate the offset from the length of the audio file
+        offset = onset + len(audiofile)
+        offset_timestamp = mic_df.lsl_time_stamp[offset]
+        story_triggers.append(offset_timestamp)
+
+        # add to stim_df
         if story == 'Camp_Lose_A_Friend':
-            event_id = 20
+                event_id = 20
         elif story == 'Frog_Dissection_Disaster':
             event_id = 30
         elif story == 'I_Decided_To_Be_Myself_And_Won_A_Dance_Contest':
@@ -147,15 +100,15 @@ def trigger_recovery(stim_df, xdf_filename):
             event_id = 60
         elif story == 'The_Birthday_Party_Prank':
             event_id = 70
-        # Add the story onset and offset to the stim_df
-        row = [event_id, f'{events[event_id]}', story_df.lsl_time_stamp.min(), story_df.time.min()]
-        # Append the row to stim_df
-        stim_df.loc[len(stim_df)] = row
-        row = [event_id + 1, f'{events[event_id+1]}', story_df.lsl_time_stamp.max(), story_df.time.max()]
-        # Append the row to stim_df
-        stim_df.loc[len(stim_df)] = row
-    # Sort stim_df by 'lsl_time_stamp'
-    stim_df.sort_values('lsl_time_stamp', inplace=True)
+
+        # Add the story onset to the stim_df
+        stim_df.loc[len(stim_df)] = [event_id, f'{events[event_id]}', onset_timestamp]
+        # Add the story offset to the stim_df
+        stim_df.loc[len(stim_df)] = [event_id + 1, f'{events[event_id+1]}', offset_timestamp]
+
+
+    #sort by the lsl_time_stamp
+    stim_df.sort_values('lsl_time_stamp')
 
     return stim_df
 
