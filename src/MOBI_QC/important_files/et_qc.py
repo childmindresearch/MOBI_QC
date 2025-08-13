@@ -188,7 +188,7 @@ def et_lineplot(et_df: pd.DataFrame, percent_over02: float, sub_id: str):
     plt.savefig(f'report_images/{sub_id}_et_gazedifference.png')
 
 
-def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tuple[dict, pd.DataFrame, bool]:
+def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tuple[dict, pd.DataFrame, str]:
     """
     Main function to extract eye tracking quality control metrics.
     Args:
@@ -237,21 +237,20 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
 
         et_lineplot(et_df, vars['percent_over02'], sub_id)
 
-        et_error = False
+        et_error = None
 
         return vars, whole_et_df, et_error
     # if et_nums is empty
     except ZeroDivisionError: 
-        vars.update({key: float('nan') for key in vars.keys()})
-        vars['left_gaze_point_invalid'], vars['right_gaze_point_invalid'], vars['left_gaze_origin_invalid'], vars['right_gaze_origin_invalid'], vars['left_pupil_invalid'], vars['right_pupil_invalid'] = et_invalid_data(et_df)
-        et_error = True        
-        print(f'Error: Too much ET data missing to calculate metrics for participant {sub_id} in {xdf_filename}.')
+        vars['percent_over02'] = float('nan')
+        et_error = 'missing_data'        
+        print(f'Error: Significant amount of ET data missing for participant {sub_id} in {xdf_filename}.')
         return vars, whole_et_df, et_error
     except: # leaving this without a specific error for now because we have no PTs without ET data!
         
         whole_et_df = pd.DataFrame()
         vars.update({key: float('nan') for key in vars.keys()})
-        et_error = True
+        et_error = 'no_data'
         print(f'Error: No ET data found for participant {sub_id} in {xdf_filename}.')
         return vars, whole_et_df, et_error
 
