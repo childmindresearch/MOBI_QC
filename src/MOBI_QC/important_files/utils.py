@@ -352,7 +352,7 @@ def make_iqr_plots(xdf_filename, modality_vars):
         plt.ylabel(col)
         plt.title(f'Box & Whisker Plot for {subject}_{col}')
         plt.tight_layout()
-        plt.savefig(f'report_images/{subject}_{col}_IQR.png')
+        plt.savefig(f'report_images/IQR_imgs/{subject}_{col}_IQR.png')
         plt.show()
 
 # allow the functions in this script to be imported into other scripts
