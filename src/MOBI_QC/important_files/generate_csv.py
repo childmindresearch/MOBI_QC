@@ -102,7 +102,7 @@ def make_iqr_plots(subject_id, modality_vars):
                 plt.xlabel(None)
                 plt.ylabel(col)
                 plt.tight_layout()
-                plt.savefig(f'report_images/{subject_id}_{col}_IQR.png')
+                plt.savefig(f'report_images/IQR_imgs/{subject_id}_{col}_IQR.png')
                 plt.show()
             return 'IQR plots were created.'
     
