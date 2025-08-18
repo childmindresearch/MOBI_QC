@@ -4,9 +4,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.utils import ImageReader
 import os
-import mne
-import json
-import glob
+
 
 from utils import *
 from eeg_qc import compute_eeg_pipeline, test_eeg_pipeline
@@ -28,9 +26,7 @@ def run_qc(xdf_filename):
     error_log = []
     subjectID = subject.split('-')[1].split('/')[0]
 
-    eeg_vars, eeg_df, eeg_error = compute_eeg_pipeline(xdf_filename, 
-                                                            stim_df=stim_df, 
-                                                            task='RestingState')
+    eeg_vars, eeg_df, eeg_error = compute_eeg_pipeline(xdf_filename, stim_df=stim_df, task='RestingState')
 
     [ecg_vars, ecg_plt, ps_df, ecg_error] = ecg_qc(xdf_filename = xdf_filename, stim_df = stim_df, task='RestingState')
 
@@ -41,9 +37,7 @@ def run_qc(xdf_filename):
     mic_vars, mic_df, mic_error = mic_qc(xdf_filename=xdf_filename, stim_df=stim_df)
 
     video_filename = '/'.join(xdf_filename.split('/')[:-1])+ f'/sub-{subjectID}_task-CUNY_run-001_video.avi'
-    webcam_vars, cam_df, cam_error = webcam_qc(xdf_filename=xdf_filename,
-                                                video_file=video_filename, 
-                                                stim_df=stim_df,task='RestingState')
+    webcam_vars, webcam_df, webcam_error = webcam_qc(xdf_filename=xdf_filename, video_file=video_filename, stim_df=stim_df,task='RestingState')
 
     et_vars, et_df, et_error = et_qc(xdf_filename = xdf_filename, stim_df = stim_df, task='RestingState')
 
@@ -53,17 +47,19 @@ def run_qc(xdf_filename):
         'et': et_df,
         'ps': ps_df,
         'mic': mic_df,
-        'cam': cam_df,
+        'cam': webcam_df,
         'eeg': eeg_df
         }
 
-    cam_error = False # remove this after webcam done
     ps_error = False
+    if ecg_error + eda_error + rsp_error == 3:
+        ps_error = True
+
     error_map = {
         'et': et_error,
         'ps': ps_error,
         'mic': mic_error,
-        'cam': cam_error,
+        'cam': webcam_error,
         'eeg': eeg_error
         }
 
@@ -96,7 +92,7 @@ stim_df = import_stim_data(xdf_filename)
 
 error_log = []
 
-modaity_vars = run_qc(xdf_filename)
+modality_vars = run_qc(xdf_filename)
 generate_csv(xdf_filename, modality_vars)
 
 # Report code goes here
