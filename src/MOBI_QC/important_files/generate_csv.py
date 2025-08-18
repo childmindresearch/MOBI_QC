@@ -65,12 +65,53 @@ def check_data_exists(filename, subject_id):
         rows = pd.DataFrame()
         return rows
     
+def make_iqr_plots(subject_id, modality_vars):
+    if os.path.exists('CUNY_QC.csv') == False:
+        return 'QC metric csv file does not exist.'
+    else:
+        qc_metrics = pd.read_csv('CUNY_QC.csv')
+        if qc_metrics.shape[0] <= 10:
+            return 'IQR cannot be calculated due to insufficient participant data.'
+        else:
+            numeric_cols = qc_metrics.select_dtypes(include=['float64', 'int64']).columns
+            for col in numeric_cols:
+                plt.figure(figsize=(5, 2.5))
+                sns.boxplot(x=qc_metrics[col], color='paleturquoise', width=0.2)
+                sns.swarmplot(x=qc_metrics[col], color='black', size=6, alpha=0.7)
+                for modality in modality_vars:
+                    if col in modality_vars[modality]:
+                        subject_value = modality_vars[modality][col]
+                        print(col,'=',subject_value)
+                        plt.axvline(subject_value, color='red', linestyle='dotted', linewidth=1, label=f'N={qc_metrics.shape[0]}')
+                        xlim = plt.gca().get_xlim()
+                        if float(subject_value) < (xlim[0]+xlim[1])/2:
+                            text_x = xlim[1]
+                            side = 'right'
+                        else:
+                            text_x = xlim[0]
+                            side='left'
+                        #plt.vlines(subject_value, ymin=qc_metrics[col].min(), ymax=qc_metrics[col].max(), color='red', zorder=5, label=subject)
+                        break
+                plt.text(
+                    text_x, plt.gca().get_ylim()[0],
+                    f'N={qc_metrics.shape[0]}',
+                    fontsize=10,
+                    verticalalignment='bottom',
+                    horizontalalignment=side
+                )
+                plt.xlabel(None)
+                plt.ylabel(col)
+                plt.tight_layout()
+                plt.savefig(f'report_images/{subject_id}_{col}_IQR.png')
+                plt.show()
+            return 'IQR plots were created.'
+    
 def save_to_csv(subject_csv_df:pd.DataFrame):
     if os.path.exists('CUNY_QC.csv') == True:
         subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=False)
         return 'Saved'
     elif os.path.exists('CUNY_QC.csv') == False:
-        subject_csv_df.to_csv('CUNY_QC.csv', mode='a', index=False, header=True)
+        subject_csv_df.to_csv('CUNY_QC.csv', index=False, header=True)
         return 'Saved'
     else:
         return 'Export Error'
@@ -91,10 +132,11 @@ def generate_csv(xdf_filename:str, modality_vars:dict):
     else:
         modality_vars['lsl'], modality_vars['duration'] = unpack_vars(modality_vars['lsl'], modality_vars['duration'])
         modality_vars = add_modality_name(modality_vars)
+        create_IQR = make_iqr_plots(subject_id, modality_vars)
         subject_csv_df = generate_qc_dataframe(subject_id, collection_date, modality_vars.values())
         status = save_to_csv(subject_csv_df)
         #status = add_to_csv(subject_id, collection_date, modality_vars)
-        return status
+        return create_IQR, status
 
 
 # %%

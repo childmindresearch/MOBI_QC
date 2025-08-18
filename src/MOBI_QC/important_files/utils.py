@@ -322,39 +322,6 @@ def get_sampling_rate(df):
     effective_sampling_rate = 1 / (df.lsl_time_stamp.diff().median())
     return effective_sampling_rate
 
-def get_IQR(filename):
-    if os.path.exists(filename) != True:
-        print('File does not exist.')
-    else:
-        ranges_for_qc = {}
-        qc_metrics = pd.read_csv(filename)
-        numeric_cols = qc_metrics.select_dtypes(include=['float64', 'int64']).columns
-        for metric in numeric_cols:
-            q1 = np.percentile(qc_metrics[metric], 25)
-            q3 = np.percentile(qc_metrics[metric], 75)
-            ranges_for_qc.update({f'range_{metric}': [q1, q3]})
-        return ranges_for_qc
-    
-def make_iqr_plots(xdf_filename, modality_vars):
-    qc_metrics = pd.read_csv('CUNY_QC.csv')
-    numeric_cols = qc_metrics.select_dtypes(include=['float64', 'int64']).columns
-    subject = xdf_filename.split('sub-')[1].split('/')[0]
-    for col in numeric_cols:
-        plt.figure(figsize=(6, 5))
-        sns.boxplot(y=qc_metrics[col], color='paleturquoise', width=0.3)
-        sns.swarmplot(y=qc_metrics[col], color='black', size=6, alpha=0.7)
-        for modality in modality_vars:
-            if col in modality_vars[modality]:
-                subject_value = modality_vars[modality][col]
-                plt.scatter(0, subject_value, color='red', zorder=5, label=subject)
-                plt.legend(loc='upper right')
-                break
-        plt.ylabel(col)
-        plt.title(f'Box & Whisker Plot for {subject}_{col}')
-        plt.tight_layout()
-        plt.savefig(f'report_images/IQR_imgs/{subject}_{col}_IQR.png')
-        plt.show()
-
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
     pass
