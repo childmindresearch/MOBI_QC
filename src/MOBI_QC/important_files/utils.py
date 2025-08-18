@@ -322,7 +322,6 @@ def get_sampling_rate(df):
     effective_sampling_rate = 1 / (df.lsl_time_stamp.diff().median())
     return effective_sampling_rate
 
-
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
     pass
