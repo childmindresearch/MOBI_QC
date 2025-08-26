@@ -70,14 +70,17 @@ def make_iqr_plots(subject_id, modality_vars):
         return 'QC metric csv file does not exist.'
     else:
         qc_metrics = pd.read_csv('CUNY_QC.csv')
-        if qc_metrics.shape[0] <= 10:
+        print(qc_metrics['Subject'].nunique())
+        if qc_metrics['Subject'].nunique() <= 10:
             return 'IQR cannot be calculated due to insufficient participant data.'
         else:
             numeric_cols = qc_metrics.select_dtypes(include=['float64', 'int64']).columns
             for col in numeric_cols:
                 plt.figure(figsize=(5, 2.5))
                 sns.boxplot(x=qc_metrics[col], color='paleturquoise', width=0.2)
-                sns.swarmplot(x=qc_metrics[col], color='black', size=6, alpha=0.7)
+                ax = plt.gca()
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
                 for modality in modality_vars:
                     if col in modality_vars[modality]:
                         subject_value = modality_vars[modality][col]
