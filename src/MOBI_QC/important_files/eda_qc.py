@@ -167,21 +167,19 @@ def eda_report_plot(eda_signals: pd.DataFrame, info: dict, subject: str) -> plt:
 
     return plt
 
-def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tuple[dict, plt, plt, pd.DataFrame, bool]:
+def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tuple[dict, pd.DataFrame, bool]:
     """
     Performs quality control on EDA data from an XDF file.
     Args:
         xdf_filename (str): Path to the XDF file.
     Returns:
         vars (dict): Quality control metrics for the EDA data.
-        eda_slope_fig (matplotlib.pyplot): SCL trend analysis plot.
-        eda_report_fig (matplotlib.pyplot): EDA report plot.
         eda_error (bool): Indicates whether there was an error loading EDA data.
     """
     subject = xdf_filename.split('sub-')[1].split('/')[0]
     whole_ps_df = import_physio_data(xdf_filename)
     vars = {}
-    vars['event'], vars['sampling_rate'], vars['signal_integrity_check'], vars['average_scl'], vars['scl_sd'], vars['scl_cv'], vars['average_scr_amplitude'], vars['scr_validity'], vars['snr'] = np.zeros(9)
+    vars['event'], vars['sampling_rate'], vars['percent_missing'], vars['signal_integrity_check'], vars['average_scl'], vars['scl_sd'], vars['scl_cv'], vars['average_scr_amplitude'], vars['scr_validity'], vars['snr'] = np.zeros(10)
 
     try: 
         ps_df = get_event_data(event=task,
@@ -190,6 +188,7 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
         eda_df = ps_df[['EDA2', 'lsl_time_stamp', 'time']]
 
         eda_sampling_rate = get_sampling_rate(eda_df)
+        percent_missing = eda_df.EDA2.isnull().mean() 
         eda_signals, info = eda_preprocess(eda_df, eda_sampling_rate)
         average_scl, scl_sd, scl_cv = scl_stability(eda_signals['EDA_Tonic'])
         average_scr_amplitude, scr_amplitude_validity = scr_amplitudes(info)
@@ -197,6 +196,8 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
         vars['event'] = task
         print(f"Effective sampling rate: {eda_sampling_rate:.3f} Hz")
         vars['sampling_rate'] = eda_sampling_rate
+        print(f"Percent missing data: {percent_missing:.4f}%")
+        vars['percent_missing'] = percent_missing
         print(f"Signal Integrity Check: {eda_signal_integrity_check(eda_df):.3f} %")
         vars['signal_integrity_check'] = eda_signal_integrity_check(eda_df)
         print(f"Average Skin Conductance Level: {average_scl:.3f} mS")
@@ -216,7 +217,7 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
         eda_report_fig = eda_report_plot(eda_signals, info, subject)
         
         eda_error = False
-        return vars, eda_slope_fig, eda_report_fig, whole_ps_df, eda_error
+        return vars, whole_ps_df, eda_error
 
     except KeyError: 
         print(f'Error: No EDA data found for participant {subject} in {xdf_filename}.')
@@ -224,7 +225,7 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
         eda_error = True
         eda_slope_fig=None
         eda_report_fig=None
-        return vars, None, None, whole_ps_df, eda_error
+        return vars, whole_ps_df, eda_error
 
 #%%
 

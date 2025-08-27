@@ -43,8 +43,8 @@ def unpack_vars(lsl_vars, duration_vars):
 
 def add_modality_name(modality_vars):
     for key, vars in modality_vars.items():
-        vars = {f"{key}_{k}": value for k, value in vars.items()}
-        modality_vars[key] = vars
+        new_vars = {(f"{key}_{k}" if key not in k else k): value for k, value in vars.items()}
+        modality_vars[key] = new_vars
     return modality_vars
 
 def generate_qc_dataframe(subject_id:str, collection_date: str, modality_vars):

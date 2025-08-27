@@ -178,14 +178,13 @@ def ecg_report_plot(ecg_signals:pd.DataFrame, info: dict, subject:str) -> plt:
 
     return plt
 
-def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple[dict, plt, pd.DataFrame, bool]:
+def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple[dict, pd.DataFrame, bool]:
     """
     Performs quality control on ECG data from an XDF file.
     Args:
         xdf_filename (str): Path to the XDF file.
     Returns:
         vars (dict): Quality control metrics for the ECG data.
-        fig (matplotlib.pyplot): Generated ECG report plot.
         ecg_error (bool): Indicates whether there was an error loading ECG data. 
     """
     subject = xdf_filename.split('sub-')[1].split('/')[0]
@@ -223,13 +222,13 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
         fig = ecg_report_plot(ecg_signals, info, subject)
 
         ecg_error = False
-        return vars, fig, whole_ps_df, ecg_error 
+        return vars, whole_ps_df, ecg_error 
 
     except KeyError:
         print(f'Error: No ECG data found for participant {subject} in {xdf_filename}.')
         vars.update({key: float('nan') for key in vars.keys()})
         ecg_error = True
-        return vars, None, whole_ps_df, ecg_error
+        return vars, whole_ps_df, ecg_error
 
 #%% 
 # allow the functions in this script to be imported into other scripts
