@@ -63,6 +63,7 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
     eeg_error = False
     try:
         whole_eeg_df = import_eeg_data(xdf_filename)
+        # check if cleaned file already exists
 
         if len(glob('/'.join(xdf_filename.split('/')[:-1]) +'/*.fif')) < 1:
             df = get_event_data(event=task, 
@@ -97,7 +98,6 @@ def compute_eeg_pipeline(xdf_filename, stim_df, task='RestingState'):
             raw_cleaned = prep_output.raw_eeg
             print("DONE with preprocessing")
 
-            # check if cleaned file already exists
             vars['event'] = task
             print(f"Bad channels before robust reference: {prep.noisy_channels_original['bad_all']}")
             vars['bad_channels_before'] = prep.noisy_channels_original['bad_all']
