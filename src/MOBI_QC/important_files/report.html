@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Load Functions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="report_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Load Functions</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="imports" class="level2">
+<h2 class="anchored" data-anchor-id="imports">0. imports</h2>
+<div id="cell-3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reportlab.lib.styles <span class="im">import</span> ParagraphStyle, getSampleStyleSheet</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reportlab.lib.pagesizes <span class="im">import</span> A4</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reportlab.lib <span class="im">import</span> colors</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reportlab.platypus <span class="im">import</span> SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reportlab.lib.utils <span class="im">import</span> ImageReader</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> eeg_qc <span class="im">import</span> compute_eeg_pipeline, test_eeg_pipeline</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ecg_qc <span class="im">import</span> ecg_qc </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> eda_qc <span class="im">import</span> eda_qc</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rsp_qc <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mic_qc <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lsl_problem <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> et_qc <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> webcam_qc <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> behavior_qc <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> generate_csv <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-4" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># subject = "P5943825"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># xdf_filename = f'/Users/bryan.gonzalez/CUNY_subs/sub-{subject}/sub-{subject}_ses-S001_task-CUNY_run-001_mobi.xdf'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>subject <span class="op">=</span> <span class="st">"P5526990"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>xdf_filename <span class="op">=</span> <span class="ss">f'/Users/camilla.strauss/Desktop/CUNY_Data/Data/sub-</span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss">/sub-</span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss">_ses-S001_task-CUNY_run-001_mobi.xdf'</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># subject = "P5842073"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># xdf_filename =  f'/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-{subject}/sub-{subject}_ses-S001_task-CUNY_run-001_MOBI.xdf'</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>video_filename <span class="op">=</span> <span class="st">'/'</span>.join(xdf_filename.split(<span class="st">'/'</span>)[:<span class="op">-</span><span class="dv">1</span>])<span class="op">+</span> <span class="ss">f'/sub-</span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss">_task-CUNY_run-001_video.avi'</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#sub-P5840273_ses-S001_task-CUNY_run-001_mobi.xdf</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="stim-behavior" class="level1">
+<h1>Stim + Behavior</h1>
+<div id="cell-6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stim_df <span class="op">=</span> import_stim_data(xdf_filename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-7" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>error_log <span class="op">=</span> []</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-8" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>behavior_vars, behavior_error <span class="op">=</span> behavior_qc(xdf_filename, stim_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Missing stimulus markers: None
+Duration of experiment: 36:30
+Durations do not match expected length: ['Onset_CampFriend', 'Onset_FrogDissection', 'Onset_DanceContest', 'Onset_ZoomClass', 'Onset_Tornado', 'Onset_BirthdayParty']
+299.9984974814579
+Is Resting state of expected duration? True
+300.56137254537316
+Is Social script of expected duration? True
+Duration of Impedance check: 04:46
+Are all 10 seconds rest equal? True
+Average response time across all story listening tasks: 00:30</code></pre>
+</div>
+</div>
+<div id="cell-9" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> behavior_error <span class="kw">and</span> <span class="st">'Offset_Experiment'</span> <span class="kw">in</span> behavior_vars[<span class="st">'missing_stimulus_markers'</span>]:</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    behavior_print <span class="op">=</span> {<span class="st">'Missing data error'</span>: <span class="ss">f"Missing stimulus markers including Offset_Experiment for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Missing stimulus markers'</span>: behavior_vars[<span class="st">'missing_stimulus_markers'</span>]}</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    error_log.append(behavior_print[<span class="st">'Missing data error'</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># if missing stim markers but not missing Offset Experiment</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> behavior_error:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    behavior_print <span class="op">=</span> {<span class="st">'Missing data error'</span>: <span class="ss">f"Missing stimulus markers for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span>, </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Missing stimulus markers'</span>: behavior_vars[<span class="st">'missing_stimulus_markers'</span>]}</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    error_log.append(behavior_print[<span class="st">'Missing data error'</span>])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    behavior_print <span class="op">=</span> {</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Missing stimulus marker"</span>: behavior_vars[<span class="st">'missing_stimulus_markers'</span>],</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Duration of experiment"</span>: behavior_vars[<span class="st">'total_duration'</span>],</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Durations do not match expected length"</span>: behavior_vars[<span class="st">'unexpected_durations'</span>],</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Duration of impedence check"</span>: behavior_vars[<span class="st">'impedance_check_duration'</span>],</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Are all 10 seconds rest equal?"</span>: behavior_vars[<span class="st">'ten_seconds_rest'</span>],</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Average response time across all story listening task"</span>: behavior_vars[<span class="st">'average_response_time'</span>]</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="get-metrics" class="level1">
+<h1>Get Metrics</h1>
+<section id="eeg" class="level2">
+<h2 class="anchored" data-anchor-id="eeg">1. EEG</h2>
+<div id="cell-12" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Compute the eeg vars</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>eeg_vars, eeg_df, eeg_error <span class="op">=</span> compute_eeg_pipeline(xdf_filename, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                                          stim_df<span class="op">=</span>stim_df, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                                                          task<span class="op">=</span><span class="st">'RestingState'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Opening raw data file /Users/camilla.strauss/Desktop/CUNY_Data/Data/sub-P5526990/sub-P5526990_ses-S001_task-CUNY_run-001_eeg_clean.fif...
+    Range : 0 ... 299987 =      0.000 ...   299.998 secs
+Ready.
+Reading 0 ... 299987  =      0.000 ...   299.998 secs...
+Bad channels before robust reference: ['E21', 'E72', 'Cz', 'E55', 'E31', 'E75', 'E62', 'E71']
+Interpolated channels: ['E21', 'E72', 'Cz', 'E75', 'E62', 'E81', 'E71']
+Bad channels after interpolation: ['E76', 'E8']</code></pre>
+</div>
+</div>
+<div id="cell-13" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> eeg_error:</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    eeg_print <span class="op">=</span> <span class="ss">f"No EEG data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(eeg_print)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    eeg_print <span class="op">=</span> {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>eeg_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Bad channels before robust reference"</span>: eeg_vars[<span class="st">"bad_channels_before"</span>], </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Interpolated channels"</span>: eeg_vars[<span class="st">"interpolated_channels"</span>], </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Bad channels after interpolation"</span>: eeg_vars[<span class="st">"bad_channels_after"</span>], </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent Good before artifact removal"</span>: <span class="ss">f'</span><span class="sc">{</span>eeg_vars[<span class="st">"percent_good"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Artifactual Components Excluded"</span>: <span class="ss">f'</span><span class="sc">{</span>eeg_vars[<span class="st">"excluded_components"</span>]<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ecg" class="level2">
+<h2 class="anchored" data-anchor-id="ecg">2. ECG</h2>
+<div id="cell-15" class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>[ecg_vars, ps_df, ecg_error] <span class="op">=</span> ecg_qc(xdf_filename <span class="op">=</span> xdf_filename, stim_df <span class="op">=</span> stim_df, task<span class="op">=</span><span class="st">'RestingState'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Effective sampling rate: 1000.689606437081
+Percent missing data: 0.0000%
+Average heart rate: 50.632242418341896
+Kurtosis signal quality index: 9.901783332020836
+Power spectrum distribution signal quality index: 0.6950355562302343
+Relative power in baseline signal quality index: 72.73738973961412
+Signal to Noise Ratio: 7.254730089926805</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ecg_error:</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ecg_print <span class="op">=</span> <span class="ss">f"No ECG data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(ecg_print)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    ecg_print <span class="op">=</span> {</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Effective sampling rate"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"sampling_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> Hz'</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent of data missing"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"percent_missing"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Signal to Noise Ratio"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"SNR"</span>]<span class="sc">:.4f}</span><span class="ss"> dB'</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Average heart rate"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"average_heart_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> bpm'</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Kurtosis signal quality index (kSQI)"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"kurtosis_SQI"</span>]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Power spectrum distribution (pSQI)"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"power_spectrum_distribution_SQI"</span>]<span class="sc">:.4f}</span><span class="ss"> mV²/Hz'</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Relative power in baseline (basSQI)"</span>: <span class="ss">f'</span><span class="sc">{</span>ecg_vars[<span class="st">"relative_baseline_power_sqi"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="eda" class="level2">
+<h2 class="anchored" data-anchor-id="eda">3. EDA</h2>
+<div id="cell-18" class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>[eda_vars, ps_df, eda_error] <span class="op">=</span> eda_qc(xdf_filename <span class="op">=</span> xdf_filename, stim_df <span class="op">=</span> stim_df, task<span class="op">=</span> <span class="st">'RestingState'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Effective sampling rate: 1000.690 Hz
+Signal Integrity Check: 100.000 %
+Average Skin Conductance Level: 0.353 mS
+Skin Conductance Level Standard deviation: 0.004 mS
+Skin Conductance Level Coefficient of Variation: 1.218 %
+Average Amplitude of Skin Conductance Response: 0.019 mS
+Skin Conductance Response Validity: 14.286 %
+Signal to Noise Ratio: 18.670 dB</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-12-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-19" class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> eda_error:</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    eda_print <span class="op">=</span> <span class="ss">f"No EDA data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(eda_print)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    eda_print <span class="op">=</span> {</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Effective sampling rate"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"sampling_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> Hz'</span>, </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent of data missing"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"percent_missing"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Signal to noise ratio"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"snr"</span>]<span class="sc">:.4f}</span><span class="ss"> dB'</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Signal integrity check"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"signal_integrity_check"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Average skin conductance level"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"average_scl"</span>]<span class="sc">:.4f}</span><span class="ss"> mS'</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Skin conductance level std"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"scl_sd"</span>]<span class="sc">:.4f}</span><span class="ss"> mS'</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Skin conductance level coefficient of variation"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"scl_cv"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Average amplitude of skin conductance response"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"average_scr_amplitude"</span>]<span class="sc">:.4f}</span><span class="ss"> mS'</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Skin conductance response validity"</span>: <span class="ss">f'</span><span class="sc">{</span>eda_vars[<span class="st">"scr_validity"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rsp" class="level2">
+<h2 class="anchored" data-anchor-id="rsp">4. RSP</h2>
+<div id="cell-21" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rsp_vars, ps_df, rsp_error <span class="op">=</span> rsp_qc(xdf_filename<span class="op">=</span>xdf_filename, stim_df<span class="op">=</span>stim_df, task<span class="op">=</span><span class="st">'RestingState'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Effective sampling rate: 1000.6896
+Percent missing data: 0.0000%
+Signal to Noise Ratio: 18.7966
+Breath amplitude mean: 0.1453
+Breath amplitude std: 0.0375
+Breath amplitude range: 0.0680 - 0.4250
+Respiration rate mean: 16.8717
+Respiration rate std: 0.7503
+Respiration rate range: 14.3621 - 19.5294
+Peak to peak interval mean: 3.6346
+Peak to peak interval std: 0.7267
+Peak to peak interval range: 2.2534 - 6.1448
+Baseline drift: 0.0061
+Autocorrelation at typical breath cycle: 0.7340</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-14-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-14-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-14-output-5.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-22" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> rsp_error:</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    rsp_print <span class="op">=</span> <span class="ss">f"No RSP data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(rsp_print)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    rsp_print <span class="op">=</span> {</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Effective sampling rate"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"sampling_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> Hz'</span>, </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent of data missing"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"percent_missing"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Signal to noise ratio"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"rsp_snr"</span>]<span class="sc">:.4f}</span><span class="ss"> dB'</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Breath amplitude mean"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"breath_amplitude_mean"</span>]<span class="sc">:.4f}</span><span class="ss"> V'</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Breath amplitude std"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"breath_amplitude_std"</span>]<span class="sc">:.4f}</span><span class="ss"> V'</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Breath amplitude range"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"breath_amplitude_min"</span>]<span class="sc">:.4f}</span><span class="ss"> - </span><span class="sc">{</span>rsp_vars[<span class="st">"breath_amplitude_max"</span>]<span class="sc">:.4f}</span><span class="ss"> V'</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Respiration rate mean"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"rsp_rate_mean"</span>]<span class="sc">:.4f}</span><span class="ss"> bpm'</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Respiration rate std"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"rsp_rate_std"</span>]<span class="sc">:.4f}</span><span class="ss"> bpm'</span>, </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Respiration rate range"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"rsp_rate_min"</span>]<span class="sc">:.4f}</span><span class="ss"> - </span><span class="sc">{</span>rsp_vars[<span class="st">"rsp_rate_max"</span>]<span class="sc">:.4f}</span><span class="ss"> bpm'</span>, </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Peak to peak interval mean"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"ptp_mean"</span>]<span class="sc">:.4f}</span><span class="ss"> sec'</span>, </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Peak to peak interval std"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"ptp_std"</span>]<span class="sc">:.4f}</span><span class="ss"> sec'</span>, </span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Peak to peak interval range"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"ptp_min"</span>]<span class="sc">:.4f}</span><span class="ss"> - </span><span class="sc">{</span>rsp_vars[<span class="st">"ptp_max"</span>]<span class="sc">:.4f}</span><span class="ss"> sec'</span>, </span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Baseline drift"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"baseline_drift"</span>]<span class="sc">:.4f}</span><span class="ss"> V'</span>, </span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Autocorrelation at typical breath cycle"</span>: <span class="ss">f'</span><span class="sc">{</span>rsp_vars[<span class="st">"autocorrelation"</span>]<span class="sc">:.4f}</span><span class="ss">'</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="mic" class="level2">
+<h2 class="anchored" data-anchor-id="mic">5. Mic</h2>
+<div id="cell-24" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mic_vars, mic_df, mic_error <span class="op">=</span> mic_qc(xdf_filename<span class="op">=</span>xdf_filename, stim_df<span class="op">=</span>stim_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Effective sampling rate: 44099.2296
+Difference between .wav file and lsl timestamps durations: 46.7540
+number of NaN's: 0 
+percent of NaN's: 0.0000%
+mic samples first quartile: -36.0 
+mic samples third quartile: 35.0
+mic samples standard deviation: 121.4192
+mic samples min: -9195 
+mic samples max: 11008</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-16-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-16-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-25" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> mic_error:</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    mic_print <span class="op">=</span> <span class="ss">f"No mic data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(mic_print)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    mic_print <span class="op">=</span> {</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Effective sampling rate"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"sampling_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> Hz'</span>, </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Difference between .wav file and lsl timestamps durations"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"lsl_wav_duration_diff"</span>]<span class="sc">:.4f}</span><span class="ss"> sec'</span>, </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Number of NaN's"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"num_NaN"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent of NaN's"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"percent_NaN"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Mic samples first quartile"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"quan25"</span>]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Mic samples third quartile"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"quan75"</span>]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Mic samples std"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"std"</span>]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Mic samples min"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"min"</span>]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Mic samples max"</span>: <span class="ss">f'</span><span class="sc">{</span>mic_vars[<span class="st">"max"</span>]<span class="sc">:.4f}</span><span class="ss">'</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="webcam" class="level2">
+<h2 class="anchored" data-anchor-id="webcam">6. Webcam</h2>
+<div id="cell-27" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>webcam_vars, webcam_df, webcam_error <span class="op">=</span> webcam_qc(xdf_filename<span class="op">=</span>xdf_filename,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                                            video_file<span class="op">=</span>video_filename, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                                            stim_df<span class="op">=</span>stim_df,task<span class="op">=</span><span class="st">'RestingState'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>RestingState duration matches camera duration!
+RestingState:  299.9984974814579
+Webcam Stream:  299.9664488750859</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-18-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-28" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> webcam_error:</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    webcam_print <span class="op">=</span> <span class="ss">f"No webcam data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(webcam_print)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    webcam_print <span class="op">=</span> {</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>webcam_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Effective sampling rate"</span>: <span class="ss">f'</span><span class="sc">{</span>webcam_vars[<span class="st">"sampling_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> Hz'</span>, </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Collected full resting state"</span>: webcam_vars[<span class="st">"collected_full_RestingState"</span>], </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent of frames with face detected"</span>: <span class="ss">f'</span><span class="sc">{</span>webcam_vars[<span class="st">"face_perc"</span>]<span class="sc">:.4}</span><span class="ss">%'</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="et" class="level2">
+<h2 class="anchored" data-anchor-id="et">7. ET</h2>
+<div id="cell-30" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>et_vars, et_df, et_error <span class="op">=</span> et_qc(xdf_filename <span class="op">=</span> xdf_filename, stim_df <span class="op">=</span> stim_df, task<span class="op">=</span><span class="st">'RestingState'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Effective sampling rate: 119.9960
+Percent invalid data in left gaze point: 39.05%
+Percent invalid data in right gaze point: 38.76%
+Percent invalid data in left gaze origin: 39.04%
+Percent invalid data in right gaze origin: 38.76%
+Percent invalid data in left pupil diameter: 39.05%
+Percent invalid data in right pupil diameter: 38.76%
+Flag: all coordinates have the same % validity within each measure (LR, gaze point/origin/diameter): True
+Flag: % of NaNs is the same between coordinate systems (UCS and TBCS (gaze origin) and between UCS and display area (gaze point)): True
+Mean difference in percent valid data between right and left eyes: 0.2847%
+Percent of data with gaze point differences of over 0.2 mm: 1.112%</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-20-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-31" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> et_error <span class="op">==</span> <span class="st">'no_data'</span>:</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    et_print <span class="op">=</span> <span class="ss">f"No ET data was found for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    error_log.append(et_print)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    et_print <span class="op">=</span> {</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Event"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"event"</span>]<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Effective sampling rate"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"sampling_rate"</span>]<span class="sc">:.4f}</span><span class="ss"> Hz'</span>, </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent invalid data in left gaze point"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"left_gaze_point_invalid"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent invalid data in right gaze point"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"right_gaze_point_invalid"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent invalid data in left gaze origin"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"left_gaze_origin_invalid"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent invalid data in right gaze origin"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"right_gaze_origin_invalid"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent invalid data in left pupil diameter"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"left_pupil_invalid"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent invalid data in right pupil diameter"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"right_pupil_invalid"</span>]<span class="sc">:.4}</span><span class="ss">%'</span>,</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Flag: all coordinates have the same % validity within each measure (LR, gaze point/origin/diameter)"</span>: et_vars[<span class="st">"xyz_measures_check"</span>], </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Flag: </span><span class="sc">% o</span><span class="st">f NaNs is the same between coordinate systems (UCS and TBCS (gaze origin) and between UCS and display area (gaze point))"</span>: et_vars[<span class="st">"coordinate_system_check"</span>],</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Mean difference in percent valid data between right and left eyes"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"LR_mean_diff"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span>,</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Percent of data with gaze point differences of over 0.2 mm"</span>: <span class="ss">f'</span><span class="sc">{</span>et_vars[<span class="st">"percent_over02"</span>]<span class="sc">:.4f}</span><span class="ss">%'</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> et_error <span class="op">==</span> <span class="st">'missing_data'</span>:</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    error_log.append(<span class="ss">f"Significant amount of ET data missing for participant </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>xdf_filename<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    et_print[<span class="st">"Percent of data with gaze point differences of over 0.2 mm"</span>] <span class="op">=</span> <span class="bu">float</span>(<span class="st">'nan'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="stream-durations" class="level2">
+<h2 class="anchored" data-anchor-id="stream-durations">Stream Durations</h2>
+<section id="functions-are-in-utils.py-but-should-be-called-in-the-report" class="level3">
+<h3 class="anchored" data-anchor-id="functions-are-in-utils.py-but-should-be-called-in-the-report">functions are in utils.py (but should be called in the report)</h3>
+<div id="cell-34" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ps_error <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ecg_error <span class="op">+</span> eda_error <span class="op">+</span> rsp_error <span class="op">==</span> <span class="dv">3</span>:</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    ps_error <span class="op">=</span> <span class="va">True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-35" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df_map <span class="op">=</span> {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'et'</span>: et_df,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ps'</span>: ps_df,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mic'</span>: mic_df,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cam'</span>: webcam_df,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'eeg'</span>: eeg_df</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>error_map <span class="op">=</span> {</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'et'</span>: et_error,</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ps'</span>: ps_error,</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mic'</span>: mic_error,</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cam'</span>: webcam_error,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'eeg'</span>: eeg_error</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>duration_vars <span class="op">=</span> {<span class="st">"Durations of each modality + comparison to expected duration:"</span>: </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    get_durations(xdf_path<span class="op">=</span>xdf_filename, task<span class="op">=</span><span class="st">'Experiment'</span>, stim_df <span class="op">=</span> stim_df, df_map <span class="op">=</span> df_map, error_map <span class="op">=</span> error_map)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mic is shorter than expected for Experiment by 331.9182 seconds
+
+Experiment DataFrame</code></pre>
+</div>
+</div>
+<div id="cell-37" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>duration_print <span class="op">=</span> duration_vars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-38" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># i wont run these but they are here for reference</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># get_durations('RestingState', xdf_filename)</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get_durations('CampFriend', xdf_filename)</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get_durations('SocialTask', xdf_filename)</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># whole_durations(xdf_filename, stim_df, df_map, error_map)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="lsl-problem" class="level2">
+<h2 class="anchored" data-anchor-id="lsl-problem">LSL Problem</h2>
+<div id="cell-40" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>lsl_vars <span class="op">=</span> lsl_problem_qc(xdf_filename, stim_df<span class="op">=</span>stim_df, df_map<span class="op">=</span>df_map, error_map <span class="op">=</span> error_map)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    subject stream  num_losses  percent_lost
+0  P5526990     et           1        0.2025
+1  P5526990     ps           0        0.0000
+2  P5526990    mic           0        0.0000
+3  P5526990    cam           0        0.0000
+4  P5526990    eeg           0        0.0000
+    subject stream  num_losses  percent_lost
+0  P5526990     et           0           0.0
+1  P5526990     ps           0           0.0
+2  P5526990    mic           0           0.0
+3  P5526990    cam           0           0.0
+4  P5526990    eeg           0           0.0</code></pre>
+</div>
+</div>
+<div id="cell-41" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>lsl_print <span class="op">=</span> {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Percent of missing data in entire experiment"</span>: lsl_vars[<span class="st">"percent_loss"</span>],</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Percent of missing data before social task offset"</span>: lsl_vars[<span class="st">"loss_before_social_task"</span>]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="add-to-cuny_qc.csv" class="level2">
+<h2 class="anchored" data-anchor-id="add-to-cuny_qc.csv">Add to CUNY_QC.csv</h2>
+<div id="cell-43" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>modality_vars <span class="op">=</span> {</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'eeg'</span>:eeg_vars, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'et'</span>:et_vars, </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ecg'</span>:ecg_vars, </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'eda'</span>:eda_vars, </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'rsp'</span>:rsp_vars, </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mic'</span>:mic_vars, </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cam'</span>:webcam_vars, </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'lsl'</span>:lsl_vars, </span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'duration'</span>:duration_vars}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-44" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>make_iqr_plots(xdf_filename, modality_vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-5.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-6.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-7.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-8.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-9.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-10.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-11.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-12.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-13.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-14.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-15.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-16.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-17.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-18.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-19.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-20.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-21.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-22.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-23.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-24.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-25.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-26.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-27.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-28.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-29.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-30.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-31.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-32.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-33.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-34.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-35.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-36.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-37.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-38.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-39.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-40.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-41.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-42.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-43.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-44.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-45.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-46.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-47.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-48.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-49.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-50.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-51.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-52.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-53.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-54.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-55.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-56.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-57.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-58.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-59.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-60.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-61.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-62.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-63.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-64.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-65.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-66.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-67.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-68.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-30-output-69.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-45" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get interquartile ranges for metrics</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>iqranges <span class="op">=</span> get_IQR(<span class="st">'CUNY_QC.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-46" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>generate_csv(xdf_filename, modality_vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Participant data already exists</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Subject</th>
+<th data-quarto-table-cell-role="th">Collection Date</th>
+<th data-quarto-table-cell-role="th">eeg_event</th>
+<th data-quarto-table-cell-role="th">eeg_percent_good</th>
+<th data-quarto-table-cell-role="th">eeg_bad_channels_before</th>
+<th data-quarto-table-cell-role="th">eeg_interpolated_channels</th>
+<th data-quarto-table-cell-role="th">eeg_bad_channels_after</th>
+<th data-quarto-table-cell-role="th">eeg_excluded_components</th>
+<th data-quarto-table-cell-role="th">et_event</th>
+<th data-quarto-table-cell-role="th">et_sampling_rate</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">duration_et_percent</th>
+<th data-quarto-table-cell-role="th">duration_ps_duration</th>
+<th data-quarto-table-cell-role="th">duration_ps_mm:ss</th>
+<th data-quarto-table-cell-role="th">duration_ps_percent</th>
+<th data-quarto-table-cell-role="th">duration_eeg_duration</th>
+<th data-quarto-table-cell-role="th">duration_eeg_mm:ss</th>
+<th data-quarto-table-cell-role="th">duration_eeg_percent</th>
+<th data-quarto-table-cell-role="th">duration_expected_duration</th>
+<th data-quarto-table-cell-role="th">duration_expected_mm:ss</th>
+<th data-quarto-table-cell-role="th">duration_expected_percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>P5526990</td>
+<td>2025-08-11 12:21:04</td>
+<td>RestingState</td>
+<td>87.58517</td>
+<td>['E21', 'E72', 'Cz', np.str_('E55'), np.str_('...</td>
+<td>['E21', 'E72', 'Cz', 'E75', 'E62', 'E81', 'E71']</td>
+<td>['E76', 'E8']</td>
+<td>[0, 1, 8, 9]</td>
+<td>RestingState</td>
+<td>119.995952</td>
+<td>...</td>
+<td>99.9993</td>
+<td>2190.5624</td>
+<td>0:36:31</td>
+<td>99.9999</td>
+<td>2190.5634</td>
+<td>0:36:31</td>
+<td>100.0</td>
+<td>2190.5643</td>
+<td>0:36:31</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1 rows × 96 columns</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="copy" class="level1">
+<h1>Copy</h1>
+<div id="cell-48" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>copy <span class="op">=</span> {</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'EEG'</span>: <span class="st">'Data preprocessed by performing &lt;b&gt;line noise removal&lt;/b&gt;, &lt;b&gt;robust referencing&lt;/b&gt;, and &lt;b&gt;bad channel detection/interpolation&lt;/b&gt; using PyPrep pipeline. First, the pipeline applies a notch filter at 60 Hz and its harmonics to remove power line noise. Then, it performs &lt;b&gt;robust average referencing&lt;/b&gt;, where it detects bad channels, interpolates them using surrounding signals, and computes a median-based reference across EEG channels. This ensures a stable reference even in the presence of noisy electrodes. Independent components analysis (ICA) was then performed to identify and remove ocular and muscle artifacts. The final output is a cleaned EEG dataset with a consistent reference, ready for further analysis.'</span>,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ET'</span>: <span class="st">'In the eye tracking data, gaze origin, gaze point, and pupil diameter are reported, for the left and right eyes. Gaze origin describes the point in 3D space where the gaze vector starts, and is reported in both the user coordinate system (UCS) and the trackbox coordinate system (TBCS). Gaze point describes the spot on the screen where the participant is looking, for each eye. Gaze origin is reported in 3D space in the UCS and the display area. The percent of data for which the distance between the gaze point of the left and right eye is more than 0.2 mm is reported below.'</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ECG'</span>: <span class="st">"The data was processed using the neurokit2 automated pipeline for preprocessing ECG signals. ECG data is cleaned using the default parameters that apply fifth order 0.5 Hz high-pass butterworth filter followed by 50 Hz powerline filtering. Neurokit2 was also used to calculate signal quality indices (SQI) based on Zhao et.al (2018). SQIs calculated were kurtosis (kSQI), power spectrum distribution of QRS wave (pSQI) and relative power in baseline (basSQI). kSQI was calculated using the Fisher's method. pSQI and basSQI were calculated using the Welch method."</span>,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'EDA'</span>: <span class="st">"Electrodermal Activity (EDA) is measured in microSiemens from a standard EDA sensor. EDA data quality metrics calculated from raw and clean data using neurokit2 python package. The data is processed using the neurokit2 automated pipeline for preprocessing EDA signal. EDA data is cleaned using the default parameters that apply fourth order butterworth filter. Additionally, the automated preprocessing pipeline was used to decompose the EDA signal into the tonic component, Skin Conductance Level (SCL) and the phasic component, Skin Conductance Response (SCR). The decomposition was done using default parameters that perform high-pass filtering with a cutoff frequency of 0.05Hz on EDA signal."</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'RSP'</span>: <span class="st">"Respiration data is measured in volts from a piezoelectric sensor. Respiration data quality metrics are calculated both from raw and cleaned data, where the neurokit2 package was used to clean the data using the default method of a second order 0.05-3 Hz bandpass Butterworth filter, as in Khodadad et al, 2018. Neurokit2 was also used to extract the peaks and troughs of detected breaths. Respiration rate was calculated using the cross correlation method, which was more consistent to the raw data than the other trough method. Baseline drift was quantified as the standard deviation of the data after applying a lowpass filter to raw data."</span>,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'MIC'</span>: <span class="st">"For audio data, it is important to confirm that the distribution of microphone samples (see graph below) is relatively centered around 0, with no outlier peaks and no values above 32,000 or below -32,000."</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'WEBCAM'</span>: <span class="st">"The quality of the webcam data is assessed by checking the percentage of frames where a face is detected. If a face is not detected in more than 50 percent of the frames, it may indicate issues with the recording or participant positioning."</span>,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Stream Durations'</span>: <span class="st">"The following dataframe shows the duration of each data modality for the whole experiment and compares it to the duration calculated from the LSL timestamps of corresponding stimulus markers."</span>,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'LSL'</span>: <span class="st">"While the difference between consecutive LSL time stamps are expected to consistently be equal to the inverse of the sampling rate, it was found that there were longer gaps between some LSL time stamps for some data modalities, indicating a potential system or other technical error during data collection. Below, the percentage of missing data for each data modality due to these LSL time stamp gaps is shown. The amount of data in seconds for each modality is also shown below, and each duration is then compared to the expected duration of the experiment."</span>,</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'BEHAVIOR'</span>: <span class="st">"Behavior data metrics were calculated from stimuli markers data."</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="report" class="level1">
+<h1>Report</h1>
+<div id="cell-50" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modalities and corresponding data</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> behavior_error: </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    modality_modalitys <span class="op">=</span> [<span class="st">'Behavior'</span>]</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    print_list <span class="op">=</span> [behavior_print]</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    modality_names <span class="op">=</span> [<span class="st">"EEG"</span>, <span class="st">"ECG"</span>, <span class="st">"EDA"</span>, <span class="st">"RSP"</span>, <span class="st">"MIC"</span>,<span class="st">"ET"</span>, <span class="st">"CAM"</span>]</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    print_list <span class="op">=</span> [eeg_print, ecg_print, eda_print, rsp_print, mic_print, et_print, webcam_print]</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PDF structure</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>parent_folder <span class="op">=</span> xdf_filename.split(<span class="st">'mobi'</span>)[<span class="dv">0</span>]</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>pdf_path <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>parent_folder<span class="sc">}</span><span class="ss">QCReport.pdf"</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> SimpleDocTemplate(pdf_path, pagesize<span class="op">=</span>A4)</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>elements <span class="op">=</span> []</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>styles <span class="op">=</span> getSampleStyleSheet()</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Define subtitle style if not already done</span></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>subtitle_style <span class="op">=</span> ParagraphStyle(</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"Subtitle"</span>,</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>    parent<span class="op">=</span>styles[<span class="st">"Heading2"</span>],</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>    fontSize<span class="op">=</span><span class="dv">14</span>,</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>    leading<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>    textColor<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>    spaceAfter<span class="op">=</span><span class="dv">12</span>,</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>    alignment<span class="op">=</span><span class="dv">1</span>  <span class="co"># Centered</span></span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a><span class="co"># page number function</span></span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_page_number(canvas, doc):</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>    page_num <span class="op">=</span> <span class="ss">f'</span><span class="sc">{</span>canvas<span class="sc">.</span>getPageNumber()<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>    canvas.setFont(<span class="st">"Helvetica"</span>, <span class="dv">9</span>)</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>    canvas.drawRightString(<span class="dv">570</span>, <span class="dv">20</span>, page_num)  <span class="co"># (x, y) from bottom-left</span></span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a>elements.append(Paragraph(<span class="ss">f"Subject Report: </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss">"</span>, styles[<span class="st">"Title"</span>]))</span>
+<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>elements.append(Paragraph(<span class="ss">f"Collection Date: </span><span class="sc">{</span>get_collection_date(xdf_filename)<span class="sc">}</span><span class="ss">"</span>, subtitle_style))</span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a>elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Format each metrics dict</span></span>
+<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> modality, metric_print <span class="kw">in</span> <span class="bu">zip</span>(modality_names, print_list):</span>
+<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a>    elements.append(Paragraph(modality, styles[<span class="st">"Heading2"</span>]))</span>
+<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>    modality <span class="op">=</span> modality.lower() </span>
+<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> key, value <span class="kw">in</span> metric_print.items():</span>
+<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a>        text <span class="op">=</span> <span class="ss">f"&lt;b&gt;</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">:&lt;/b&gt; </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">"</span> </span>
+<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(value, pd.DataFrame):</span>
+<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a>            data <span class="op">=</span> [value.columns.tolist()] <span class="op">+</span> value.values.tolist()  <span class="co"># Include headers</span></span>
+<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a>            table <span class="op">=</span> Table(data, repeatRows<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb44-48"><a href="#cb44-48" aria-hidden="true" tabindex="-1"></a>            table.hAlign <span class="op">=</span> <span class="st">'LEFT'</span></span>
+<span id="cb44-49"><a href="#cb44-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-50"><a href="#cb44-50" aria-hidden="true" tabindex="-1"></a>            table.setStyle(TableStyle([</span>
+<span id="cb44-51"><a href="#cb44-51" aria-hidden="true" tabindex="-1"></a>                (<span class="st">'BACKGROUND'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), colors.lightgrey),</span>
+<span id="cb44-52"><a href="#cb44-52" aria-hidden="true" tabindex="-1"></a>                (<span class="st">'GRID'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="fl">0.5</span>, colors.black),</span>
+<span id="cb44-53"><a href="#cb44-53" aria-hidden="true" tabindex="-1"></a>                (<span class="st">'FONTNAME'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="st">'Helvetica'</span>),</span>
+<span id="cb44-54"><a href="#cb44-54" aria-hidden="true" tabindex="-1"></a>                (<span class="st">'FONTSIZE'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="dv">10</span>),</span>
+<span id="cb44-55"><a href="#cb44-55" aria-hidden="true" tabindex="-1"></a>                (<span class="st">'ALIGN'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="st">'LEFT'</span>),</span>
+<span id="cb44-56"><a href="#cb44-56" aria-hidden="true" tabindex="-1"></a>            ]))</span>
+<span id="cb44-57"><a href="#cb44-57" aria-hidden="true" tabindex="-1"></a>            elements.append(Paragraph(k, styles[<span class="st">'Normal'</span>]))</span>
+<span id="cb44-58"><a href="#cb44-58" aria-hidden="true" tabindex="-1"></a>            elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-59"><a href="#cb44-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-60"><a href="#cb44-60" aria-hidden="true" tabindex="-1"></a>            elements.append(table)</span>
+<span id="cb44-61"><a href="#cb44-61" aria-hidden="true" tabindex="-1"></a>            elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-62"><a href="#cb44-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb44-63"><a href="#cb44-63" aria-hidden="true" tabindex="-1"></a>            text <span class="op">=</span> <span class="ss">f"&lt;b&gt;</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">:&lt;/b&gt; </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> <span class="bu">isinstance</span>(value, <span class="bu">float</span>) <span class="cf">else</span> <span class="ss">f"&lt;b&gt;</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">:&lt;/b&gt; </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb44-64"><a href="#cb44-64" aria-hidden="true" tabindex="-1"></a>            elements.append(Paragraph(text, styles[<span class="st">"Normal"</span>]))</span>
+<span id="cb44-65"><a href="#cb44-65" aria-hidden="true" tabindex="-1"></a>    elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-66"><a href="#cb44-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-67"><a href="#cb44-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># images</span></span>
+<span id="cb44-68"><a href="#cb44-68" aria-hidden="true" tabindex="-1"></a>    folder <span class="op">=</span> <span class="st">"report_images"</span></span>
+<span id="cb44-69"><a href="#cb44-69" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(folder):</span>
+<span id="cb44-70"><a href="#cb44-70" aria-hidden="true" tabindex="-1"></a>        row_images <span class="op">=</span> []</span>
+<span id="cb44-71"><a href="#cb44-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> fname <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(folder)):</span>
+<span id="cb44-72"><a href="#cb44-72" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> modality <span class="kw">in</span> fname.lower() <span class="kw">and</span> subject <span class="kw">in</span> fname:</span>
+<span id="cb44-73"><a href="#cb44-73" aria-hidden="true" tabindex="-1"></a>                image_path <span class="op">=</span> os.path.join(folder, fname)</span>
+<span id="cb44-74"><a href="#cb44-74" aria-hidden="true" tabindex="-1"></a>                <span class="co"># get dimensions</span></span>
+<span id="cb44-75"><a href="#cb44-75" aria-hidden="true" tabindex="-1"></a>                image_reader <span class="op">=</span> ImageReader(image_path)</span>
+<span id="cb44-76"><a href="#cb44-76" aria-hidden="true" tabindex="-1"></a>                orig_width, orig_height <span class="op">=</span> image_reader.getSize()</span>
+<span id="cb44-77"><a href="#cb44-77" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> orig_width <span class="op">&gt;</span> <span class="dv">4000</span>:</span>
+<span id="cb44-78"><a href="#cb44-78" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">9</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">9</span>)</span>
+<span id="cb44-79"><a href="#cb44-79" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> orig_width <span class="op">&gt;</span> <span class="dv">3000</span>:</span>
+<span id="cb44-80"><a href="#cb44-80" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">7</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">7</span>)</span>
+<span id="cb44-81"><a href="#cb44-81" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> orig_width <span class="op">&gt;</span> <span class="dv">2000</span>:</span>
+<span id="cb44-82"><a href="#cb44-82" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">5</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">5</span>)</span>
+<span id="cb44-83"><a href="#cb44-83" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> orig_width <span class="op">&gt;</span> <span class="dv">1400</span>:</span>
+<span id="cb44-84"><a href="#cb44-84" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">3</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">3</span>)</span>
+<span id="cb44-85"><a href="#cb44-85" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb44-86"><a href="#cb44-86" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">2</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb44-87"><a href="#cb44-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-88"><a href="#cb44-88" aria-hidden="true" tabindex="-1"></a>                <span class="co"># If 'rsp' in image name, add to a row</span></span>
+<span id="cb44-89"><a href="#cb44-89" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="st">'rsp'</span> <span class="kw">in</span> fname.lower():</span>
+<span id="cb44-90"><a href="#cb44-90" aria-hidden="true" tabindex="-1"></a>                    img.drawWidth <span class="op">=</span> <span class="dv">250</span></span>
+<span id="cb44-91"><a href="#cb44-91" aria-hidden="true" tabindex="-1"></a>                    img.drawHeight <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb44-92"><a href="#cb44-92" aria-hidden="true" tabindex="-1"></a>                    row_images.append(img)</span>
+<span id="cb44-93"><a href="#cb44-93" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb44-94"><a href="#cb44-94" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> <span class="bu">len</span>(row_images) <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb44-95"><a href="#cb44-95" aria-hidden="true" tabindex="-1"></a>                        table <span class="op">=</span> Table([row_images], hAlign <span class="op">=</span> <span class="st">'CENTER'</span>, colWidths<span class="op">=</span>[<span class="dv">280</span>,<span class="dv">280</span>])</span>
+<span id="cb44-96"><a href="#cb44-96" aria-hidden="true" tabindex="-1"></a>                        table.setStyle(TableStyle([(<span class="st">'ALIGN'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>), <span class="st">'LEFT'</span>)]))</span>
+<span id="cb44-97"><a href="#cb44-97" aria-hidden="true" tabindex="-1"></a>                        elements.append(table)</span>
+<span id="cb44-98"><a href="#cb44-98" aria-hidden="true" tabindex="-1"></a>                        elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-99"><a href="#cb44-99" aria-hidden="true" tabindex="-1"></a>                        row_images <span class="op">=</span> []</span>
+<span id="cb44-100"><a href="#cb44-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-101"><a href="#cb44-101" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb44-102"><a href="#cb44-102" aria-hidden="true" tabindex="-1"></a>                    elements.append(img)</span>
+<span id="cb44-103"><a href="#cb44-103" aria-hidden="true" tabindex="-1"></a>                    elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-104"><a href="#cb44-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-105"><a href="#cb44-105" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If there's an unmatched image left in the row buffer</span></span>
+<span id="cb44-106"><a href="#cb44-106" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> row_images:</span>
+<span id="cb44-107"><a href="#cb44-107" aria-hidden="true" tabindex="-1"></a>            elements.append(Table([row_images], hAlign<span class="op">=</span><span class="st">'CENTER'</span>, colWidths<span class="op">=</span><span class="st">'*'</span>))</span>
+<span id="cb44-108"><a href="#cb44-108" aria-hidden="true" tabindex="-1"></a>            elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb44-109"><a href="#cb44-109" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb44-110"><a href="#cb44-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-111"><a href="#cb44-111" aria-hidden="true" tabindex="-1"></a>doc.build(elements, onFirstPage <span class="op">=</span> add_page_number, onLaterPages <span class="op">=</span> add_page_number)</span>
+<span id="cb44-112"><a href="#cb44-112" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'PDF created: </span><span class="sc">{</span>pdf_path<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PDF created: /Users/camilla.strauss/Desktop/CUNY_Data/Data/sub-P5526990/sub-P5526990_ses-S001_task-CUNY_run-001_QCReport.pdf</code></pre>
+</div>
+</div>
+<div id="cell-51" class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>error_log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>[]</code></pre>
+</div>
+</div>
+</section>
+<section id="table-for-quartiles" class="level1">
+<h1>Table for Quartiles</h1>
+<div id="cell-53" class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>eeg_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>ecg_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>eda_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>rsp_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>mic_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>et_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>webcam_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>duration_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>lsl_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>behavior_iqr_df <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> [<span class="st">'name'</span>, <span class="st">'value'</span>, <span class="st">'IQR'</span>])</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>iqr_map <span class="op">=</span> {</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'eeg'</span>: [eeg_vars, eeg_iqr_df],</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ecg'</span>: [ecg_vars, ecg_iqr_df],</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'eda'</span>: [eda_vars, eda_iqr_df],</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'rsp'</span>: [rsp_vars, rsp_iqr_df],</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mic'</span>: [mic_vars, mic_iqr_df],</span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'et'</span>: [et_vars, et_iqr_df],</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'webcam'</span>: [webcam_vars, webcam_iqr_df],</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'duration'</span>: [duration_vars, duration_iqr_df],</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'lsl'</span>: [lsl_vars, lsl_iqr_df],</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'behavior'</span>: [behavior_vars, behavior_iqr_df]</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-54" class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> stream <span class="kw">in</span> <span class="bu">list</span>(iqr_map.keys()):</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    vars_dict <span class="op">=</span> iqr_map[stream][<span class="dv">0</span>]</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    iqr_df <span class="op">=</span> iqr_map[stream][<span class="dv">1</span>]</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if stream is duration or lsl and if first item is a df</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (stream <span class="kw">in</span> [<span class="st">'duration'</span>, <span class="st">'lsl'</span>] <span class="kw">and</span> <span class="bu">isinstance</span>(<span class="bu">list</span>(vars_dict.values())[<span class="dv">0</span>], pd.DataFrame)):</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> df <span class="kw">in</span> vars_dict.values():</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>            df_to_dict <span class="op">=</span> df.to_dict(orient <span class="op">=</span> <span class="st">'records'</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>            stream_vars <span class="op">=</span> {}</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(df_to_dict)):</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>                stream_dict <span class="op">=</span> {<span class="ss">f"</span><span class="sc">{</span>df_to_dict[i][<span class="st">'stream'</span>]<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>: v <span class="cf">for</span> k, v <span class="kw">in</span> df_to_dict[i].items() <span class="cf">if</span> k <span class="kw">not</span> <span class="kw">in</span> [<span class="st">"stream"</span>, <span class="st">"subject"</span>]}</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>                stream_vars.update(stream_dict)</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>            iqr_df[<span class="st">'name'</span>] <span class="op">=</span> stream_vars.keys()</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>            iqr_df[<span class="st">'value'</span>] <span class="op">=</span> stream_vars.values()    </span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>        iqr_df[<span class="st">'name'</span>] <span class="op">=</span> vars_dict.keys()</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>        iqr_df[<span class="st">'value'</span>] <span class="op">=</span> [<span class="bu">round</span>(i, <span class="dv">4</span>) <span class="cf">if</span> <span class="bu">isinstance</span>(i, <span class="bu">float</span>) <span class="cf">else</span> i <span class="cf">for</span> i <span class="kw">in</span> vars_dict.values()]</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    iqr_df.fillna(<span class="st">""</span>, inplace <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-55" class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create pdf about it</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modalities and corresponding iqr dfs</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>metric_names <span class="op">=</span> [<span class="st">"EEG"</span>, <span class="st">"ECG"</span>, <span class="st">"EDA"</span>, <span class="st">"RSP"</span>, <span class="st">"MIC"</span>,<span class="st">"ET"</span>, <span class="st">"WEBCAM"</span>, <span class="st">"Stream Durations"</span>, <span class="st">"LSL"</span>, <span class="st">"BEHAVIOR"</span>]</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>iqr_list <span class="op">=</span> [eeg_iqr_df, ecg_iqr_df, eda_iqr_df, rsp_iqr_df, mic_iqr_df, et_iqr_df, webcam_iqr_df, duration_iqr_df, lsl_iqr_df, behavior_iqr_df]</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co"># PDF structure</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>parent_folder <span class="op">=</span> xdf_filename.split(<span class="st">'mobi'</span>)[<span class="dv">0</span>]</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>pdf_path <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>parent_folder<span class="sc">}</span><span class="ss">IQR_Report.pdf"</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> SimpleDocTemplate(pdf_path, pagesize<span class="op">=</span>A4)</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>elements <span class="op">=</span> []</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>styles <span class="op">=</span> getSampleStyleSheet()</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Define subtitle style if not already done</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>subtitle_style <span class="op">=</span> ParagraphStyle(</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"Subtitle"</span>,</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>    parent<span class="op">=</span>styles[<span class="st">"Heading2"</span>],</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>    fontSize<span class="op">=</span><span class="dv">14</span>,</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>    leading<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>    textColor<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>    spaceAfter<span class="op">=</span><span class="dv">12</span>,</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>    alignment<span class="op">=</span><span class="dv">1</span>  <span class="co"># Centered</span></span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a><span class="co"># page number function</span></span>
+<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_page_number(canvas, doc):</span>
+<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a>    page_num <span class="op">=</span> <span class="ss">f'</span><span class="sc">{</span>canvas<span class="sc">.</span>getPageNumber()<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a>    canvas.setFont(<span class="st">"Helvetica"</span>, <span class="dv">9</span>)</span>
+<span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a>    canvas.drawRightString(<span class="dv">570</span>, <span class="dv">20</span>, page_num)  <span class="co"># (x, y) from bottom-left</span></span>
+<span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>elements.append(Paragraph(<span class="ss">f"Subject Report: </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss">"</span>, styles[<span class="st">"Title"</span>]))</span>
+<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a>elements.append(Paragraph(<span class="ss">f"Collection Date: </span><span class="sc">{</span>get_collection_date(xdf_filename)<span class="sc">}</span><span class="ss">"</span>, subtitle_style))</span>
+<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a>elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb50-36"><a href="#cb50-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-37"><a href="#cb50-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Format each metrics dict</span></span>
+<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, iqr_df <span class="kw">in</span> <span class="bu">zip</span>(metric_names, iqr_list):</span>
+<span id="cb50-39"><a href="#cb50-39" aria-hidden="true" tabindex="-1"></a>    elements.append(Paragraph(name, styles[<span class="st">"Heading2"</span>]))</span>
+<span id="cb50-40"><a href="#cb50-40" aria-hidden="true" tabindex="-1"></a>    headers <span class="op">=</span> [<span class="bu">str</span>(col) <span class="cf">for</span> col <span class="kw">in</span> iqr_df.columns.tolist()]</span>
+<span id="cb50-41"><a href="#cb50-41" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> [[<span class="bu">str</span>(cell) <span class="cf">for</span> cell <span class="kw">in</span> row] <span class="cf">for</span> row <span class="kw">in</span> iqr_df.values.tolist()]</span>
+<span id="cb50-42"><a href="#cb50-42" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> [headers] <span class="op">+</span> rows  <span class="co"># Include headers</span></span>
+<span id="cb50-43"><a href="#cb50-43" aria-hidden="true" tabindex="-1"></a>    table <span class="op">=</span> Table(data, repeatRows<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb50-44"><a href="#cb50-44" aria-hidden="true" tabindex="-1"></a>    table.hAlign <span class="op">=</span> <span class="st">'LEFT'</span></span>
+<span id="cb50-45"><a href="#cb50-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-46"><a href="#cb50-46" aria-hidden="true" tabindex="-1"></a>    table.setStyle(TableStyle([</span>
+<span id="cb50-47"><a href="#cb50-47" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'BACKGROUND'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), colors.lightgrey),</span>
+<span id="cb50-48"><a href="#cb50-48" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'GRID'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="fl">0.5</span>, colors.black),</span>
+<span id="cb50-49"><a href="#cb50-49" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'FONTNAME'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="st">'Helvetica'</span>),</span>
+<span id="cb50-50"><a href="#cb50-50" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'FONTSIZE'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="dv">10</span>),</span>
+<span id="cb50-51"><a href="#cb50-51" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'ALIGN'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), <span class="st">'LEFT'</span>),</span>
+<span id="cb50-52"><a href="#cb50-52" aria-hidden="true" tabindex="-1"></a>    ]))</span>
+<span id="cb50-53"><a href="#cb50-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># elements.append(Paragraph(k, styles['Normal']))</span></span>
+<span id="cb50-54"><a href="#cb50-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># elements.append(Spacer(1, 12))</span></span>
+<span id="cb50-55"><a href="#cb50-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-56"><a href="#cb50-56" aria-hidden="true" tabindex="-1"></a>    elements.append(table)</span>
+<span id="cb50-57"><a href="#cb50-57" aria-hidden="true" tabindex="-1"></a>    elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb50-58"><a href="#cb50-58" aria-hidden="true" tabindex="-1"></a>    elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb50-59"><a href="#cb50-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-60"><a href="#cb50-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># images</span></span>
+<span id="cb50-61"><a href="#cb50-61" aria-hidden="true" tabindex="-1"></a>    folder <span class="op">=</span> <span class="st">"report_images"</span></span>
+<span id="cb50-62"><a href="#cb50-62" aria-hidden="true" tabindex="-1"></a>    image_keyword <span class="op">=</span> name.lower()</span>
+<span id="cb50-63"><a href="#cb50-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(folder):</span>
+<span id="cb50-64"><a href="#cb50-64" aria-hidden="true" tabindex="-1"></a>        row_images <span class="op">=</span> []</span>
+<span id="cb50-65"><a href="#cb50-65" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> fname <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(folder)):</span>
+<span id="cb50-66"><a href="#cb50-66" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> image_keyword <span class="kw">in</span> fname.lower() <span class="kw">and</span> subject <span class="kw">in</span> fname:</span>
+<span id="cb50-67"><a href="#cb50-67" aria-hidden="true" tabindex="-1"></a>                image_path <span class="op">=</span> os.path.join(folder, fname)</span>
+<span id="cb50-68"><a href="#cb50-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-69"><a href="#cb50-69" aria-hidden="true" tabindex="-1"></a>                <span class="co"># get dimensions</span></span>
+<span id="cb50-70"><a href="#cb50-70" aria-hidden="true" tabindex="-1"></a>                image_reader <span class="op">=</span> ImageReader(image_path)</span>
+<span id="cb50-71"><a href="#cb50-71" aria-hidden="true" tabindex="-1"></a>                orig_width, orig_height <span class="op">=</span> image_reader.getSize()</span>
+<span id="cb50-72"><a href="#cb50-72" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> orig_width <span class="op">&gt;</span> <span class="dv">4000</span>:</span>
+<span id="cb50-73"><a href="#cb50-73" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">9</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">9</span>)</span>
+<span id="cb50-74"><a href="#cb50-74" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> orig_width <span class="op">&gt;</span> <span class="dv">3000</span>:</span>
+<span id="cb50-75"><a href="#cb50-75" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">7</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">7</span>)</span>
+<span id="cb50-76"><a href="#cb50-76" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> orig_width <span class="op">&gt;</span> <span class="dv">2000</span>:</span>
+<span id="cb50-77"><a href="#cb50-77" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">5</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">5</span>)</span>
+<span id="cb50-78"><a href="#cb50-78" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> orig_width <span class="op">&gt;</span> <span class="dv">1400</span>:</span>
+<span id="cb50-79"><a href="#cb50-79" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">3</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">3</span>)</span>
+<span id="cb50-80"><a href="#cb50-80" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb50-81"><a href="#cb50-81" aria-hidden="true" tabindex="-1"></a>                    img <span class="op">=</span> Image(image_path, width<span class="op">=</span>orig_width<span class="op">/</span><span class="dv">2</span>, height<span class="op">=</span>orig_height<span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb50-82"><a href="#cb50-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-83"><a href="#cb50-83" aria-hidden="true" tabindex="-1"></a>                <span class="co"># If 'rsp' in image name, add to a row</span></span>
+<span id="cb50-84"><a href="#cb50-84" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="st">'rsp'</span> <span class="kw">in</span> fname.lower():</span>
+<span id="cb50-85"><a href="#cb50-85" aria-hidden="true" tabindex="-1"></a>                    img.drawWidth <span class="op">=</span> <span class="dv">250</span></span>
+<span id="cb50-86"><a href="#cb50-86" aria-hidden="true" tabindex="-1"></a>                    img.drawHeight <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb50-87"><a href="#cb50-87" aria-hidden="true" tabindex="-1"></a>                    row_images.append(img)</span>
+<span id="cb50-88"><a href="#cb50-88" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb50-89"><a href="#cb50-89" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> <span class="bu">len</span>(row_images) <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb50-90"><a href="#cb50-90" aria-hidden="true" tabindex="-1"></a>                        table <span class="op">=</span> Table([row_images], hAlign <span class="op">=</span> <span class="st">'CENTER'</span>, colWidths<span class="op">=</span>[<span class="dv">280</span>,<span class="dv">280</span>])</span>
+<span id="cb50-91"><a href="#cb50-91" aria-hidden="true" tabindex="-1"></a>                        table.setStyle(TableStyle([(<span class="st">'ALIGN'</span>, (<span class="dv">0</span>, <span class="dv">0</span>), (<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>), <span class="st">'LEFT'</span>)]))</span>
+<span id="cb50-92"><a href="#cb50-92" aria-hidden="true" tabindex="-1"></a>                        elements.append(table)</span>
+<span id="cb50-93"><a href="#cb50-93" aria-hidden="true" tabindex="-1"></a>                        elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb50-94"><a href="#cb50-94" aria-hidden="true" tabindex="-1"></a>                        row_images <span class="op">=</span> []</span>
+<span id="cb50-95"><a href="#cb50-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-96"><a href="#cb50-96" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb50-97"><a href="#cb50-97" aria-hidden="true" tabindex="-1"></a>                    elements.append(img)</span>
+<span id="cb50-98"><a href="#cb50-98" aria-hidden="true" tabindex="-1"></a>                    elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb50-99"><a href="#cb50-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-100"><a href="#cb50-100" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If there's an unmatched image left in the row buffer</span></span>
+<span id="cb50-101"><a href="#cb50-101" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> row_images:</span>
+<span id="cb50-102"><a href="#cb50-102" aria-hidden="true" tabindex="-1"></a>            elements.append(Table([row_images], hAlign<span class="op">=</span><span class="st">'CENTER'</span>, colWidths<span class="op">=</span><span class="st">'*'</span>))</span>
+<span id="cb50-103"><a href="#cb50-103" aria-hidden="true" tabindex="-1"></a>            elements.append(Spacer(<span class="dv">1</span>, <span class="dv">12</span>))</span>
+<span id="cb50-104"><a href="#cb50-104" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb50-105"><a href="#cb50-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-106"><a href="#cb50-106" aria-hidden="true" tabindex="-1"></a>doc.build(elements, onFirstPage <span class="op">=</span> add_page_number, onLaterPages <span class="op">=</span> add_page_number)</span>
+<span id="cb50-107"><a href="#cb50-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'PDF created: </span><span class="sc">{</span>pdf_path<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PDF created: /Users/camilla.strauss/Desktop/CUNY_Data/Data/sub-P5526990/sub-P5526990_ses-S001_task-CUNY_run-001_IQR_Report.pdf</code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,177 @@
+---
+title: "MoBI Data Quality Report"
+format:
+    #pdf:
+    #    geometry:
+    #    - top=30mm
+    #    - left=20mm
+    html:
+        code-fold: true
+number-sections: true
+highlight-style: pygments
+toc: true
+jupyter: python3
+---
+
+```{python}
+# Imports
+from utils import *
+from eeg_qc import compute_eeg_pipeline, test_eeg_pipeline
+from ecg_qc import ecg_qc 
+from eda_qc import eda_qc
+from rsp_qc import *
+from mic_qc import *
+from lsl_problem import *
+from et_qc import *
+from webcam_qc import *
+from behavior_qc import *
+from generate_csv import *
+from IPython.display import Markdown
+
+
+
+subject = "P5943825"
+xdf_filename = f'/Users/bryan.gonzalez/CUNY_subs/sub-{subject}/sub-{subject}_ses-S001_task-CUNY_run-001_mobi.xdf'
+
+stim_df = import_stim_data(xdf_filename)
+error_log = []
+
+behavior_vars, behavior_error = behavior_qc(xdf_filename, stim_df)
+if behavior_error and 'Offset_Experiment' in behavior_vars['missing_stimulus_markers']:
+    behavior_print = {'Missing data error': f"Missing stimulus markers including Offset_Experiment for participant {subject} in {xdf_filename}.", 
+                      'Missing stimulus markers': behavior_vars['missing_stimulus_markers']}
+    error_log.append(behavior_print['Missing data error'])
+
+# if missing stim markers but not missing Offset Experiment
+elif behavior_error:
+    behavior_print = {'Missing data error': f"Missing stimulus markers for participant {subject} in {xdf_filename}.", 
+                      'Missing stimulus markers': behavior_vars['missing_stimulus_markers']}
+    error_log.append(behavior_print['Missing data error'])
+else:
+    behavior_print = {
+        "Missing stimulus marker": behavior_vars['missing_stimulus_markers'],
+        "Duration of experiment": behavior_vars['total_duration'],
+        "Durations do not match expected length": behavior_vars['unexpected_durations'],
+        "Duration of impedence check": behavior_vars['impedance_check_duration'],
+        "Are all 10 seconds rest equal?": behavior_vars['ten_seconds_rest'],
+        "Average response time across all story listening task": behavior_vars['average_response_time']
+    }
+
+#Compute the eeg vars
+eeg_vars, eeg_df, eeg_error = compute_eeg_pipeline(xdf_filename, 
+                                                          stim_df=stim_df, 
+                                                          task='RestingState')
+
+
+if eeg_error:
+    eeg_print = f"No EEG data was found for participant {subject} in {xdf_filename}."
+    error_log.append(eeg_print)
+else:
+    eeg_print = {
+        "Event": f'{eeg_vars["event"]}',
+        "Bad channels before robust reference": eeg_vars["bad_channels_before"], 
+        "Interpolated channels": eeg_vars["interpolated_channels"], 
+        "Bad channels after interpolation": eeg_vars["bad_channels_after"], 
+        "Percent Good before artifact removal": f'{eeg_vars["percent_good"]:.4}%',
+        "Artifactual Components Excluded": f'{eeg_vars["excluded_components"]}'
+    }
+
+[ecg_vars, ps_df, ecg_error] = ecg_qc(xdf_filename = xdf_filename, stim_df = stim_df, task='RestingState')
+
+if ecg_error:
+    ecg_print = f"No ECG data was found for participant {subject} in {xdf_filename}."
+    error_log.append(ecg_print)
+else:
+    ecg_print = {
+        "Event": f'{ecg_vars["event"]}',
+        "Effective sampling rate": f'{ecg_vars["sampling_rate"]:.4f} Hz', 
+        "Percent of data missing": f'{ecg_vars["percent_missing"]:.4}%',
+        "Signal to Noise Ratio": f'{ecg_vars["SNR"]:.4f} dB',
+        "Average heart rate": f'{ecg_vars["average_heart_rate"]:.4f} bpm',
+        "Kurtosis signal quality index (kSQI)": f'{ecg_vars["kurtosis_SQI"]:.4f}',
+        "Power spectrum distribution (pSQI)": f'{ecg_vars["power_spectrum_distribution_SQI"]:.4f} mV²/Hz',
+        "Relative power in baseline (basSQI)": f'{ecg_vars["relative_baseline_power_sqi"]:.4f}%'
+}
+
+
+if ecg_error:
+    ecg_print = f"No ECG data was found for participant {subject} in {xdf_filename}."
+    error_log.append(ecg_print)
+else:
+    ecg_print = {
+        "Event": f'{ecg_vars["event"]}',
+        "Effective sampling rate": f'{ecg_vars["sampling_rate"]:.4f} Hz', 
+        "Percent of data missing": f'{ecg_vars["percent_missing"]:.4}%',
+        "Signal to Noise Ratio": f'{ecg_vars["SNR"]:.4f} dB',
+        "Average heart rate": f'{ecg_vars["average_heart_rate"]:.4f} bpm',
+        "Kurtosis signal quality index (kSQI)": f'{ecg_vars["kurtosis_SQI"]:.4f}',
+        "Power spectrum distribution (pSQI)": f'{ecg_vars["power_spectrum_distribution_SQI"]:.4f} mV²/Hz',
+        "Relative power in baseline (basSQI)": f'{ecg_vars["relative_baseline_power_sqi"]:.4f}%'
+}
+
+if eda_error:
+    eda_print = f"No EDA data was found for participant {subject} in {xdf_filename}."
+    error_log.append(eda_print)
+else:
+    eda_print = {
+        "Event": f'{eda_vars["event"]}',
+        "Effective sampling rate": f'{eda_vars["sampling_rate"]:.4f} Hz', 
+        "Percent of data missing": f'{eda_vars["percent_missing"]:.4}%',
+        "Signal to noise ratio": f'{eda_vars["snr"]:.4f} dB',
+        "Signal integrity check": f'{eda_vars["signal_integrity_check"]:.4f}%',
+        "Average skin conductance level": f'{eda_vars["average_scl"]:.4f} mS',
+        "Skin conductance level std": f'{eda_vars["scl_sd"]:.4f} mS',
+        "Skin conductance level coefficient of variation": f'{eda_vars["scl_cv"]:.4f}%',
+        "Average amplitude of skin conductance response": f'{eda_vars["average_scr_amplitude"]:.4f} mS',
+        "Skin conductance response validity": f'{eda_vars["scr_validity"]:.4f}%'
+    }
+
+rsp_vars, ps_df, rsp_error = rsp_qc(xdf_filename=xdf_filename, stim_df=stim_df, task='RestingState')
+
+
+
+Markdown(f"## Quality Report for subject {subject}")
+
+```
+
+for a Demonstration of a line plot on a polar axis, see @fig-polar
+
++-----------+-----------+--------------------+
+| Fruit     | Price     | Advantages         |
++===========+===========+====================+
+| Bananas   | $1.34     | - built-in wrapper |
+|           |           | - {}    |
++-----------+-----------+--------------------+
+| Oranges   | $2.10     | - cures scurvy     |
+|           |           | - tasty            |
++-----------+-----------+--------------------+
+
+: Sample grid table.
+
+```{python}
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+
+# Create a figure
+fig, ax = plt.subplots()
+ax.plot([0, 1, 2], [0, 1, 0])
+
+# Save figure to buffer in memory (not to disk)
+buf = BytesIO()
+fig.savefig(buf, format="png")
+buf.seek(0)
+encoded = base64.b64encode(buf.read()).decode("utf-8")
+
+# Create an HTML <img> tag
+img_tag = f'<img src="data:image/png;base64,{encoded}" width="200"/>'
+
+# Print table in Markdown with inline figure
+from IPython.display import display, Markdown
+display(Markdown(f"""
+| Column 1 | Column 2 |
+|----------|----------|
+| Some text | {img_tag} |
+"""))
+
+```
