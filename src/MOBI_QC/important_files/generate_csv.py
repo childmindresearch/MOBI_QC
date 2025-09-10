@@ -28,7 +28,7 @@ def unpack_vars(lsl_vars, duration_vars):
         if isinstance(lsl_vars[key], pd.DataFrame):
             lsl_k = lsl_vars[key].to_dict(orient='records')
             for i in range(len(lsl_k)):
-                lsl_dict = {f"{lsl_k[i]['stream']}_{k}": v for k, v in lsl_k[i].items() if k != "stream" and k!='subject'}
+                lsl_dict = {f"{key}_{lsl_k[i]['stream']}_{k}": v for k, v in lsl_k[i].items() if k != "stream" and k!='subject'}
                 lsl_prob_vars.update(lsl_dict)
         else:
             lsl_prob_vars.update({key:lsl_vars[key]})
