@@ -222,7 +222,7 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
         fig = ecg_report_plot(ecg_signals, info, subject)
 
         ecg_error = False
-        return vars, fig, whole_ps_df, ecg_error 
+        return vars, whole_ps_df, ecg_error 
 
     except KeyError:
         print(f'Error: No ECG data found for participant {subject} in {xdf_filename}.')

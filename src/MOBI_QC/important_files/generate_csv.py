@@ -133,8 +133,8 @@ def generate_csv(xdf_filename:str, modality_vars:dict):
         print ('Participant data already exists')
         return check_data_exists(csvfilename, subject_id)
     else:
-        modality_vars['lsl'], modality_vars['duration'] = unpack_vars(modality_vars['lsl'], modality_vars['duration'])
-        modality_vars = add_modality_name(modality_vars)
+        # modality_vars['lsl'], modality_vars['duration'] = unpack_vars(modality_vars['lsl'], modality_vars['duration'])
+        # modality_vars = add_modality_name(modality_vars)
         create_IQR = make_iqr_plots(subject_id, modality_vars)
         subject_csv_df = generate_qc_dataframe(subject_id, collection_date, modality_vars.values())
         status = save_to_csv(subject_csv_df)
