@@ -40,6 +40,27 @@ def unpack_vars(lsl_vars, duration_vars):
         stream_dict = {f"{stream[i]['stream']}_{k}": v for k, v in stream[i].items() if k != "stream"}
         stream_vars.update(stream_dict)
     return lsl_prob_vars, stream_vars
+def unpack_vars(lsl_vars, duration_vars):
+    # Unpack lsl vars
+    lsl_prob_vars = {}
+    stream_vars = {}
+
+    for key in lsl_vars.keys():
+        if isinstance(lsl_vars[key], pd.DataFrame):
+            lsl_k = lsl_vars[key].to_dict(orient='records')
+            for i in range(len(lsl_k)):
+                lsl_dict = {f"{lsl_k[i]['stream']}_{k}": v for k, v in lsl_k[i].items() if k != "stream" and k!='subject'}
+                lsl_prob_vars.update(lsl_dict)
+        else:
+            lsl_prob_vars.update({key:lsl_vars[key]})
+    
+    # Unpack stream durations
+    stream = duration_vars['Durations of each modality + comparison to expected duration:'].to_dict(orient='records')
+    stream_vars = {}
+    for i in range(len(stream)):
+        stream_dict = {f"{stream[i]['stream']}_{k}": v for k, v in stream[i].items() if k != "stream"}
+        stream_vars.update(stream_dict)
+    return lsl_prob_vars, stream_vars
 
 def add_modality_name(modality_vars):
     for key, vars in modality_vars.items():
