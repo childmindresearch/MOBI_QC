@@ -194,3 +194,8 @@ class DataStream:
     def __repr__(self) -> str:
         """Return a string representation of the DataStream."""
         return f"DataStream(name={self.stream_name}, num_records={len(self.data)})"
+    
+
+
+if __name__ == "__main__":
+    print("This is the MOBI_QC package. Please use it as a module.")    
