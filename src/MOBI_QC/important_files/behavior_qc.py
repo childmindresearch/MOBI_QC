@@ -52,9 +52,10 @@ def total_experiment_duration(stim_df: pd.DataFrame) -> str:
         total_duration (str): The total duration of the experiment in minutes:seconds   
     """    
     minutes_entire_experiment, seconds = divmod(get_seconds_between_triggers(stim_df, 201, 200), 60) 
-    total_duration = f"{int(minutes_entire_experiment):02}:{int(seconds):02}"
+    #total_duration = f"{int(minutes_entire_experiment):02}:{int(seconds):02}"
+    total_duration_in_seconds = float(minutes_entire_experiment*60) + float(seconds)
 
-    return total_duration
+    return total_duration_in_seconds
 
 def unexpected_durations(stim_df: pd.DataFrame, story_onsets: list, events: dict, audiofiles: list) -> list | None:
     """
@@ -71,7 +72,8 @@ def unexpected_durations(stim_df: pd.DataFrame, story_onsets: list, events: dict
     'trigger':story_onsets,
     'story':[events[x] for x in story_onsets],
     'lsl_duration': [get_seconds_between_triggers(stim_df, x+1, x) for x in story_onsets],
-    'audiofile_duration': [wave.open(x).getnframes()/wave.open(x).getframerate() for x in audiofiles] #duration of audio file is number of frames divided by the frame rate.
+    'audiofile_duration': [wave.open(x).getnframes()/wave.open(x).getframerate() for x in audiofiles], #duration of audio file is number of frames divided by the frame rate.
+    'audio_sampling_freq': [x.split('NEW_AUDIO_')[-1].split('/')[0] for x in audiofiles]
     })
 
     durations['difference(sec)'] = durations['audiofile_duration'] - durations['lsl_duration']
@@ -80,7 +82,10 @@ def unexpected_durations(stim_df: pd.DataFrame, story_onsets: list, events: dict
 
     # Calculating audiofile duration in 48kHz and then comparing with story listening durations from stim_df
     for i in range(len(durations.audiofile_duration)):
-        task_duration = (durations.audiofile_duration[i] * 44100) / 48000
+        if durations.audio_sampling_freq[i] == '44k':
+            task_duration = (durations.audiofile_duration[i] * 44100) / 48000
+        else:
+            task_duration = durations.audiofile_duration[i]
         if (durations.lsl_duration[i].round(3) -  task_duration.round(3)) > 0.5:
             task_duration_difference = task_duration_difference + [durations.story[i]]
 
@@ -116,9 +121,10 @@ def impedance_check_duration(stim_df: pd.DataFrame) -> str:
         impedance_duration (str): The duration of impedance check in minutes:seconds 
     """    
     impedance_check_mins, impedance_check_seconds = divmod(get_seconds_between_triggers(stim_df, 401, 400), 60)
-    impedance_duration = f"{int(impedance_check_mins):02}:{int(impedance_check_seconds):02}"
+    #impedance_duration = f"{int(impedance_check_mins):02}:{int(impedance_check_seconds):02}"
+    impedance_duration_in_seconds = float(impedance_check_mins*60) + float(impedance_check_seconds)
 
-    return impedance_duration
+    return impedance_duration_in_seconds
 
 def ten_seconds_rest(stim_df: pd.DataFrame) -> bool:
     """
@@ -163,9 +169,26 @@ def average_question_response_time(stim_df: pd.DataFrame) -> str:
             trial_response_times = trial_response_times + [sum(response_times)]
             response_times = []
     average_response_mins, average_response_seconds = divmod(sum(trial_response_times)/len(trial_response_times), 60)     
-    average_response_time = f"{int(average_response_mins):02}:{int(average_response_seconds):02}"
+    #average_response_time = f"{int(average_response_mins):02}:{int(average_response_seconds):02}"
+    average_response_time_in_seconds = float(average_response_mins*60) + float(average_response_seconds)
 
-    return average_response_time
+    return average_response_time_in_seconds
+
+def check_audio_file(xdf_filename):
+    behavior_filepath = glob('/'.join(xdf_filename.split('/')[:-1])+'/*_behavior.csv')[0]
+    behavior_csv = pd.read_csv(behavior_filepath, keep_default_na=False)
+    audio_files = behavior_csv['AudioFile'].unique()
+    audiofile_df = pd.DataFrame(columns = ['Story', 'SamplingFreq'])
+    for audio in audio_files:
+        if audio != '':
+            story = audio.split('/')[-1]
+            #audiofreq = audio.split('normalized_')[1].split('/')
+            if '48k' in (str)(audio):
+                audiofreq = '48k'
+            else:
+                audiofreq = '44k'
+            audiofile_df.loc[len(audiofile_df)] = {'Story': story, 'SamplingFreq': audiofreq}
+    return audiofile_df
 
 def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
     """
@@ -211,6 +234,12 @@ def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
 
     story_onsets = [20, 30, 40, 50, 60, 70]
 
+    audiofiles_df = check_audio_file(xdf_filename)
+    audiofiles=[]
+    for story in audiofiles_df['Story']:
+        freq = audiofiles_df.loc[audiofiles_df['Story'] == story, 'SamplingFreq'].iloc[0]
+        audiofiles = audiofiles + [f"../../../../MOBI_QC/src/NEW_AUDIO_{freq}/{story}"]
+    '''
     audiofiles= [
         "../../../../MOBI_QC/src/NEW_AUDIO_44/Camp_Lose_A_Friend.wav",
         "../../../../MOBI_QC/src/NEW_AUDIO_44/Frog_Dissection_Disaster.wav",
@@ -219,6 +248,7 @@ def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
         "../../../../MOBI_QC/src/NEW_AUDIO_44/Left_Home_Alone_in_a_Tornado.wav",
         "../../../../MOBI_QC/src/NEW_AUDIO_44/The_Birthday_Party_Prank_44.wav"
     ]
+    '''
         #xdf_filename = '/Users/apurva.gokhe/Documents/CUNY_QC/data/sub-P5029423/sub-P5029423_ses-S001_task-CUNY_run-001_mobi.xdf'
     subject = xdf_filename.split('sub-')[1].split('/')[0]
     vars = {}
@@ -226,17 +256,17 @@ def behavior_qc(xdf_filename, stim_df) -> tuple[dict[str,int], bool]:
     try:
         print(f"Missing stimulus markers: {get_missing_markers(events, stim_df)}")
         vars['missing_stimulus_markers'] = get_missing_markers(events, stim_df) 
-        print(f"Duration of experiment: {total_experiment_duration(stim_df)}")
+        print(f"Duration of experiment: {total_experiment_duration(stim_df)}s")
         vars['total_duration'] = total_experiment_duration(stim_df)
-        print(f"Durations do not match expected length: {unexpected_durations(stim_df, story_onsets, events, audiofiles)}")
+        print(f"Durations do not match expected stimuli length: {unexpected_durations(stim_df, story_onsets, events, audiofiles)}")
         vars['unexpected_durations'] = unexpected_durations(stim_df, story_onsets, events, audiofiles)
         print(f"Is Resting state of expected duration? {resting_state_social_script_durations(stim_df, 10)}") # immediate qc measure, not included in the report
         print(f"Is Social script of expected duration? {resting_state_social_script_durations(stim_df, 80)}") # immediate qc measure, not included in the report
-        print(f"Duration of Impedance check: {impedance_check_duration(stim_df)}")
+        print(f"Duration of Impedance check: {impedance_check_duration(stim_df)}s")
         vars['impedance_check_duration'] = impedance_check_duration(stim_df)
         print(f"Are all 10 seconds rest equal? {ten_seconds_rest(stim_df)}")
         vars['ten_seconds_rest'] = ten_seconds_rest(stim_df)
-        print(f"Average response time across all story listening tasks: {average_question_response_time(stim_df)}")
+        print(f"Average response time across all story listening tasks: {average_question_response_time(stim_df)}s")
         vars['average_response_time'] = average_question_response_time(stim_df)
         behavior_error = False
         return vars, behavior_error 
