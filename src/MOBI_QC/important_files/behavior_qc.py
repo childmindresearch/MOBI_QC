@@ -39,7 +39,7 @@ def get_missing_markers(events: dict[int, str], stim_df: pd.DataFrame) -> list |
         else:
             missing_markers = missing_markers + [event]
     if not missing_markers:
-        return None
+        return ['None'] # this (as opposed to NoneType) helps with report creation and readability
     else:   
         return missing_markers
 
