@@ -249,7 +249,7 @@ def get_durations(xdf_path: str,
             print(f"{i[1]['stream']} is shorter than expected for {task} by {exp_dur - i[1]['duration']:.4f} seconds")
     
     # print + return durations_df
-    durations_df.loc[durations_df.index.max() + 1] = ['expected', exp_dur, exp_dt_dur, '100.0000']
+    durations_df.loc[durations_df.index.max() + 1] = ['expected', exp_dur, exp_dt_dur, '100.0']
     durations_df.sort_values(by='duration', inplace=True)
     print('\n' + task + ' DataFrame')
     return durations_df
