@@ -39,6 +39,7 @@ class BaseProcessor:
         else:
             self.xdf_path = xdf_path
             self.subject_id = xdf_path.split('/')[-1].split('.')[0]
+            self.video_path = '/'.join(self.xdf_path.split('/')[:-1])+ f'/sub-{self.subject_id}_task-CUNY_run-001_video.avi'
         if stream_name is not None and not isinstance(stream_name, str | list):
             raise TypeError("Stream name must be a string")
         if stream_name is None:
@@ -107,6 +108,7 @@ class BaseProcessor:
                                              nominal_srate=stream['info']['nominal_srate'][0], source_id=stream['info']['source_id'][0],
                                              uid=stream['info']['uid'][0], created_at=stream['info']['created_at'][0], 
                                              effective_srate=stream['info']['effective_srate'], desc=stream['info']['desc'][0])
+                
     
             elif s_name in ['EEG', 'EGI NetAmp 0']:
                 ch_names = [f"E{i+1}" for i in range(stream['time_series'].shape[1])]
@@ -187,7 +189,7 @@ class DataStream:
     def subset(self, stim_df: pd.DataFrame, onset_label: str, offset_label: str):
         """Filter the data stream based on some criteria."""
         # Implement filtering logic here
-        self.data = self.data.loc[(self.data.time_stamp >= stim_df.loc[stim_df['event'] == onset_label, 'time_stamp'].values[0]) & 
+        return self.data.loc[(self.data.time_stamp >= stim_df.loc[stim_df['event'] == onset_label, 'time_stamp'].values[0]) & 
                   (self.data.time_stamp <= stim_df.loc[stim_df['event'] == offset_label, 'time_stamp'].values[0])]
 
 

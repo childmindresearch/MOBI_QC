@@ -15,14 +15,14 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 def trigger_recovery(stim_df, xdf_filename):
-    ''' This function recovers the trigger events in the stim_df DataFrame'''
+    ''' This function recovers the trigger events in the stim_df DataFrame'''   
     # Import the Mic data
     mic_data, _ = pyxdf.load_xdf(xdf_filename, select_streams=[{'name': 'Microphone'}], verbose = False)
     mic_df = pd.DataFrame(mic_data[0]['time_series'], columns=['int_array'])
-    mic_df['lsl_time_stamp'] = mic_data[0]['time_stamps']
+    mic_df['time_stamp'] = mic_data[0]['time_stamps']
     # Reduce the mic_data to only the story listening events, we have triggers for onset and offset of the story listening block
-    mic_df = mic_df.loc[(mic_df.lsl_time_stamp >= stim_df.loc[stim_df.event == 'Onset_StoryListening', 'lsl_time_stamp'].values[0]) & 
-                    (mic_df.lsl_time_stamp <= stim_df.loc[stim_df.event == 'Offset_StoryListening', 'lsl_time_stamp'].values[0])]
+    mic_df = mic_df.loc[(mic_df.time_stamp >= stim_df.loc[stim_df.event == 'Onset_StoryListening', 'time_stamp'].values[0]) & 
+                    (mic_df.time_stamp <= stim_df.loc[stim_df.event == 'Offset_StoryListening', 'time_stamp'].values[0])]
     mic = mic_df['int_array'].values
 
     # Import the behavior file from psychopy
@@ -66,7 +66,7 @@ def trigger_recovery(stim_df, xdf_filename):
     story_triggers = []
     for story in audio_order:
         # import the audio file and downsample to 44.1kHz
-        audio_file_path = '../../NEW_AUDIO_48/'+ story + '.wav'
+        audio_file_path = 'NEW_AUDIO_48/'+ story + '.wav'
         fs_audiofile, audiofile = wavfile.read(audio_file_path)
         audio_duration = len(audiofile) / fs_audiofile
         audiofile = resample(audiofile, int(audio_duration * 44100))
@@ -75,12 +75,12 @@ def trigger_recovery(stim_df, xdf_filename):
         corr = correlate(mic, audiofile, mode='full')
         best_index = np.argmax(corr)
         onset = best_index - len(audiofile) + 1
-        onset_timestamp = mic_df.lsl_time_stamp[onset]
+        onset_timestamp = mic_df.time_stamp[onset]
         story_triggers.append(onset_timestamp)
 
         # calculate the offset from the length of the audio file
         offset = onset + len(audiofile)
-        offset_timestamp = mic_df.lsl_time_stamp[offset]
+        offset_timestamp = mic_df.time_stamp[offset]
         story_triggers.append(offset_timestamp)
 
         # add to stim_df
@@ -98,13 +98,13 @@ def trigger_recovery(stim_df, xdf_filename):
             event_id = 70
 
         # Add the story onset to the stim_df
-        stim_df.loc[len(stim_df)] = [event_id, f'{events[event_id]}', onset_timestamp]
+        stim_df.loc[len(stim_df)] = [event_id, onset_timestamp, f'{events[event_id]}']
         # Add the story offset to the stim_df
-        stim_df.loc[len(stim_df)] = [event_id + 1, f'{events[event_id+1]}', offset_timestamp]
+        stim_df.loc[len(stim_df)] = [event_id + 1, offset_timestamp, f'{events[event_id+1]}', ]
 
 
-    #sort by the lsl_time_stamp
-    stim_df.sort_values('lsl_time_stamp')
+    #sort by the time_stamp
+    stim_df.sort_values('time_stamp', inplace=True)
 
     return stim_df
 
