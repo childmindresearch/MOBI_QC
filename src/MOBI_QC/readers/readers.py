@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 from tqdm import tqdm
 import numpy as np
+import cv2
 from .stim_correction import trigger_recovery
 
 class BaseProcessor:
@@ -38,7 +39,7 @@ class BaseProcessor:
             raise ValueError("XDF path must end with '.xdf'")   
         else:
             self.xdf_path = xdf_path
-            self.subject_id = xdf_path.split('/')[-1].split('.')[0]
+            self.subject_id = xdf_path.split('sub-')[1].split('/')[0]
             self.video_path = '/'.join(self.xdf_path.split('/')[:-1])+ f'/sub-{self.subject_id}_task-CUNY_run-001_video.avi'
         if stream_name is not None and not isinstance(stream_name, str | list):
             raise TypeError("Stream name must be a string")
@@ -149,6 +150,7 @@ class BaseProcessor:
                     'time_post': ts_array[:, 3],
                     'time_stamp': stream['time_stamps']
                 })
+                self.vid_recording = cv2.VideoCapture(self.video_path)
                 self.video = DataStream(stream_name=s_name, data=df, variables=['frame_num', 'time_pre', 'cap_time_ms', 'time_post', 'time_stamp'],
                                         type=stream['info']['type'][0], channel_count=stream['info']['channel_count'][0],
                                              nominal_srate=stream['info']['nominal_srate'][0], source_id=stream['info']['source_id'][0],
