@@ -1,0 +1,512 @@
+{
+    "Subject": {
+        "Description": "Subject ID",
+        "Print Name": "Subject",
+        "Unit": ""
+    },
+    "Collection Date": {
+        "Description": "Date and Time of data collection.",
+        "Print Name": "Collection Date",
+        "Unit": ""
+    },
+    "behavior_missing_stimulus_markers": {
+        "Description": "List of missing markers in Stimulus stream in the xdf file. Compares stimulus markers in the xdf with event dictionary and outputs list of missing markers in the xdf.",
+        "Print Name": "Missing stimulus markers",
+        "Unit": ""
+    },
+    "behavior_total_duration": {
+        "Description": "Total duration of the experiment. Calculated by getting the difference between the lsl timestamps of the first and last event triggers.",
+        "Print Name": "Duration of experiment",
+        "Unit": "s"
+    },
+    "behavior_unexpected_durations": {
+        "Description": "List of events that are not of expected length. Compares duration of story listening events with presented audio file duration and outputs a list of event that have lengths different from that of audio files.",
+        "Print Name": "Durations do not match expected length",
+        "Unit": ""
+    },
+    "behavior_impedance_check_duration": {
+        "Description": "Duration of Impedance check. Calculated from impedance check markers in the xdf file.",
+        "Print Name": "Duration of impedence check",
+        "Unit": "s"
+    },
+    "behavior_ten_seconds_rest": {
+        "Description": "Check for equal 10 seconds rest between story listenign sessions. Each rest duration is calculated from stimulus markers and checked whether all equate to 10s.",
+        "Print Name": "Are all 10 seconds rest equal?",
+        "Unit": ""
+    },
+    "behavior_average_response_time": {
+        "Description": "Average duration of question-answer session after story listening. Duration for each question-answer session is calculated from stimulus triggers and then the average is computed.",
+        "Print Name": "Average response time across all story listening task",
+        "Unit": "s"
+    },
+    "eeg_event": {
+        "Description": "",
+        "Print Name": "EEG Event",
+        "Unit": ""
+    },
+    "eeg_percent_good": {
+        "Description": "",
+        "Print Name": "Percent Good before artifact removal",
+        "Unit": "%"
+    },
+    "eeg_bad_channels_before": {
+        "Description": "",
+        "Print Name": "Bad channels before robust reference",
+        "Unit": ""
+    },
+    "eeg_interpolated_channels": {
+        "Description": "",
+        "Print Name": "Interpolated channels",
+        "Unit": ""
+    },
+    "eeg_bad_channels_after": {
+        "Description": "",
+        "Print Name": "Bad channels after interpolation",
+        "Unit": ""
+    },
+    "eeg_excluded_components": {
+        "Description": "",
+        "Print Name": "Artifactual Components Excluded",
+        "Unit": ""
+    },
+    "et_event": {
+        "Description": "",
+        "Print Name": "ET Event",
+        "Unit": ""
+    },
+    "et_sampling_rate": {
+        "Description": "",
+        "Print Name": "Effective sampling rate",
+        "Unit": "Hz"
+    },
+    "et_left_gaze_point_invalid": {
+        "Description": "",
+        "Print Name": "Percent invalid data in left gaze point",
+        "Unit": "%"
+    },
+    "et_right_gaze_point_invalid": {
+        "Description": "",
+        "Print Name": "Percent invalid data in right gaze point",
+        "Unit": "%"
+    },
+    "et_left_gaze_origin_invalid": {
+        "Description": "",
+        "Print Name": "Percent invalid data in left gaze origin",
+        "Unit": "%"
+    },
+    "et_right_gaze_origin_invalid": {
+        "Description": "",
+        "Print Name": "Percent invalid data in right gaze origin",
+        "Unit": "%"
+    },
+    "et_left_pupil_invalid": {
+        "Description": "",
+        "Print Name": "Percent invalid data in left pupil diameter",
+        "Unit": "%"
+    },
+    "et_right_pupil_invalid": {
+        "Description": "",
+        "Print Name": "Percent invalid data in right pupil diameter",
+        "Unit": "%"
+    },
+    "et_xyz_measures_check": {
+        "Description": "",
+        "Print Name": "Flag: all coordinates have the same % validity within each measure (LR, gaze point/origin/diameter)",
+        "Unit": ""
+    },
+    "et_coordinate_system_check": {
+        "Description": "",
+        "Print Name": "Flag: % of NaNs is the same between coordinate systems (UCS and TBCS (gaze origin) and between UCS and display area (gaze point))",
+        "Unit": ""
+    },
+    "et_LR_mean_diff": {
+        "Description": "",
+        "Print Name": "Mean difference in percent valid data between right and left eyes",
+        "Unit": "%"
+    },
+    "et_percent_over02": {
+        "Description": "",
+        "Print Name": "Percent of data with gaze point differences of over 0.2 mm",
+        "Unit": "%"
+    },
+    "ecg_event": {
+        "Description": "Event for which the QC measures were calculated.",
+        "Print Name": "ECG Event",
+        "Unit": ""
+    },
+    "ecg_sampling_rate": {
+        "Description": "Sampling rate of ECG signal. Calculated ",
+        "Print Name": "Effective sampling rate",
+        "Unit": "Hz"
+    },
+    "ecg_average_heart_rate": {
+        "Description": "",
+        "Print Name": "Average heart rate",
+        "Unit": "bpm"
+    },
+    "ecg_kurtosis_SQI": {
+        "Description": "",
+        "Print Name": "Kurtosis signal quality index (kSQI)",
+        "Unit": ""
+    },
+    "ecg_power_spectrum_distribution_SQI": {
+        "Description": "",
+        "Print Name": "Power spectrum distribution (pSQI)",
+        "Unit": "mV\u00b2/Hz"
+    },
+    "ecg_relative_baseline_power_sqi": {
+        "Description": "",
+        "Print Name": "Relative power in baseline (basSQI)",
+        "Unit": "%"
+    },
+    "ecg_SNR": {
+        "Description": "",
+        "Print Name": "Signal to Noise Ratio",
+        "Unit": "dB"
+    },
+    "eda_event": {
+        "Description": "",
+        "Print Name": "EDA Event",
+        "Unit": ""
+    },
+    "eda_sampling_rate": {
+        "Description": "",
+        "Print Name": "Effective sampling rate",
+        "Unit": "Hz"
+    },
+    "eda_signal_integrity_check": {
+        "Description": "",
+        "Print Name": "Signal integrity check",
+        "Unit": "%"
+    },
+    "eda_average_scl": {
+        "Description": "",
+        "Print Name": "Average skin conductance level",
+        "Unit": "mS"
+    },
+    "eda_scl_sd": {
+        "Description": "",
+        "Print Name": "Skin conductance level std",
+        "Unit": "mS"
+    },
+    "eda_scl_cv": {
+        "Description": "",
+        "Print Name": "Skin conductance level coefficient of variation",
+        "Unit": "%"
+    },
+    "eda_average_scr_amplitude": {
+        "Description": "",
+        "Print Name": "Average amplitude of skin conductance response",
+        "Unit": "mS"
+    },
+    "eda_scr_validity": {
+        "Description": "",
+        "Print Name": "Skin conductance response validity",
+        "Unit": "%"
+    },
+    "eda_snr": {
+        "Description": "",
+        "Print Name": "Signal to noise ratio",
+        "Unit": "dB"
+    },
+    "rsp_event": {
+        "Description": "",
+        "Print Name": "RSP Event",
+        "Unit": ""
+    },
+    "rsp_sampling_rate": {
+        "Description": "",
+        "Print Name": "Effective sampling rate",
+        "Unit": "Hz"
+    },
+    "rsp_percent_missing": {
+        "Description": "",
+        "Print Name": "Percent missing",
+        "Unit": "%"
+    },
+    "rsp_snr": {
+        "Description": "",
+        "Print Name": "Signal to noise ratio",
+        "Unit": "dB"
+    },
+    "rsp_breath_amplitude_mean": {
+        "Description": "",
+        "Print Name": "Breath amplitude mean",
+        "Unit": "V"
+    },
+    "rsp_breath_amplitude_std": {
+        "Description": "",
+        "Print Name": "Breath amplitude std",
+        "Unit": "V"
+    },
+    "rsp_breath_amplitude_min": {
+        "Description": "",
+        "Print Name": "Breath amplitude min",
+        "Unit": "V"
+    },
+    "rsp_breath_amplitude_max": {
+        "Description": "",
+        "Print Name": "Breath amplitude max",
+        "Unit": "V"
+    },
+    "rsp_rate_mean": {
+        "Description": "",
+        "Print Name": "Respiration rate mean",
+        "Unit": "bpm"
+    },
+    "rsp_rate_std": {
+        "Description": "",
+        "Print Name": "Respiration rate std",
+        "Unit": "bpm"
+    },
+    "rsp_rate_min": {
+        "Description": "",
+        "Print Name": "Respiration rate min",
+        "Unit": "bpm"
+    },
+    "rsp_rate_max": {
+        "Description": "",
+        "Print Name": "Respiration rate max",
+        "Unit": "bpm"
+    },
+    "rsp_ptp_mean": {
+        "Description": "",
+        "Print Name": "Peak to peak interval mean",
+        "Unit": "s"
+    },
+    "rsp_ptp_std": {
+        "Description": "",
+        "Print Name": "Peak to peak interval std",
+        "Unit": "s"
+    },
+    "rsp_ptp_min": {
+        "Description": "",
+        "Print Name": "Peak to peak interval min",
+        "Unit": "s"
+    },
+    "rsp_ptp_max": {
+        "Description": "",
+        "Print Name": "Peak to peak interval max",
+        "Unit": "s"
+    },
+    "rsp_baseline_drift": {
+        "Description": "",
+        "Print Name": "Baseline drift",
+        "Unit": "V"
+    },
+    "rsp_autocorrelation": {
+        "Description": "",
+        "Print Name": "Autocorrelation at typical breath cycle",
+        "Unit": ""
+    },
+    "mic_event": {
+        "Description": "",
+        "Print Name": "Mic Event",
+        "Unit": ""
+    },
+    "mic_sampling_rate": {
+        "Description": "",
+        "Print Name": "Effective sampling rate",
+        "Unit": "Hz"
+    },
+    "mic_lsl_wav_duration_diff": {
+        "Description": "",
+        "Print Name": "Difference between .wav file and lsl timestamps durations",
+        "Unit": "s"
+    },
+    "mic_num_NaN": {
+        "Description": "",
+        "Print Name": "Number of NaN's",
+        "Unit": ""
+    },
+    "mic_percent_NaN": {
+        "Description": "",
+        "Print Name": "Percent of NaN's",
+        "Unit": "%"
+    },
+    "mic_quan25": {
+        "Description": "",
+        "Print Name": "Mic samples first quartile",
+        "Unit": ""
+    },
+    "mic_quan75": {
+        "Description": "",
+        "Print Name": "Mic samples third quartile",
+        "Unit": ""
+    },
+    "mic_std": {
+        "Description": "",
+        "Print Name": "Mic samples std",
+        "Unit": ""
+    },
+    "mic_min": {
+        "Description": "",
+        "Print Name": "Mic samples min",
+        "Unit": ""
+    },
+    "mic_max": {
+        "Description": "",
+        "Print Name": "Mic samples max",
+        "Unit": ""
+    },
+    "cam_event": {
+        "Description": "",
+        "Print Name": "Video Event",
+        "Unit": ""
+    },
+    "cam_collected_full_RestingState": {
+        "Description": "",
+        "Print Name": "Effective sampling rate",
+        "Unit": ""
+    },
+    "cam_sampling_rate": {
+        "Description": "",
+        "Print Name": "Collected full resting state",
+        "Unit": "Hz"
+    },
+    "cam_face_perc": {
+        "Description": "",
+        "Print Name": "Percent of frames with face detected",
+        "Unit": "%"
+    },
+    "lsl_et_num_losses": {
+        "Description": "",
+        "Print Name": "Number of LSL losses in ET",
+        "Unit": ""
+    },
+    "lsl_et_percent_lost": {
+        "Description": "",
+        "Print Name": "Percentage of missing data in ET stream due to LSL",
+        "Unit": "%"
+    },
+    "lsl_ps_num_losses": {
+        "Description": "",
+        "Print Name": "Number of LSL losses in Physiological signals",
+        "Unit": ""
+    },
+    "lsl_ps_percent_lost": {
+        "Description": "",
+        "Print Name": "Percentage of missing data in Physiology stream due to LSL",
+        "Unit": "%"
+    },
+    "lsl_mic_num_losses": {
+        "Description": "",
+        "Print Name": "Number of LSL losses in Mic",
+        "Unit": ""
+    },
+    "lsl_mic_percent_lost": {
+        "Description": "",
+        "Print Name": "Percentage of missing data in Mic stream due to LSL",
+        "Unit": "%"
+    },
+    "lsl_cam_num_losses": {
+        "Description": "",
+        "Print Name": "Number of LSL losses in Video",
+        "Unit": ""
+    },
+    "lsl_cam_percent_lost": {
+        "Description": "",
+        "Print Name": "Percentage of missing data in Video stream due to LSL",
+        "Unit": "%"
+    },
+    "lsl_eeg_num_losses": {
+        "Description": "",
+        "Print Name": "Number of LSL losses in EEG",
+        "Unit": ""
+    },
+    "lsl_eeg_percent_lost": {
+        "Description": "",
+        "Print Name": "Percentage of missing data in EEG stream due to LSL",
+        "Unit": "%"
+    },
+    "duration_mic_duration": {
+        "Description": "",
+        "Print Name": "Duration of Mic stream in seconds",
+        "Unit": "s"
+    },
+    "duration_mic_mm:ss": {
+        "Description": "",
+        "Print Name": "Duration of Mic stream in minutes and seconds",
+        "Unit": ""
+    },
+    "duration_mic_percent": {
+        "Description": "",
+        "Print Name": "Percent of Mic stream duration compared to expected duration",
+        "Unit": "%"
+    },
+    "duration_cam_duration": {
+        "Description": "",
+        "Print Name": "Duration of Video stream in seconds",
+        "Unit": "s"
+    },
+    "duration_cam_mm:ss": {
+        "Description": "",
+        "Print Name": "Duration of Video stream in minutes and seconds",
+        "Unit": ""
+    },
+    "duration_cam_percent": {
+        "Description": "",
+        "Print Name": "Percent of Video stream duration compared to expected duration",
+        "Unit": "%"
+    },
+    "duration_et_duration": {
+        "Description": "",
+        "Print Name": "Duration of ET stream in seconds",
+        "Unit": "s"
+    },
+    "duration_et_mm:ss": {
+        "Description": "",
+        "Print Name": "Duration of ET stream in minutes and seconds",
+        "Unit": ""
+    },
+    "duration_et_percent": {
+        "Description": "",
+        "Print Name": "Percent of ET stream duration compared to expected duration",
+        "Unit": "%"
+    },
+    "duration_ps_duration": {
+        "Description": "",
+        "Print Name": "Duration of Physiology stream in seconds",
+        "Unit": "s"
+    },
+    "duration_ps_mm:ss": {
+        "Description": "",
+        "Print Name": "Duration of Physiology stream in minutes and seconds",
+        "Unit": ""
+    },
+    "duration_ps_percent": {
+        "Description": "",
+        "Print Name": "Percent of Physiology stream duration compared to expected duration",
+        "Unit": "%"
+    },
+    "duration_eeg_duration": {
+        "Description": "",
+        "Print Name": "Duration of EEG stream in seconds",
+        "Unit": "s"
+    },
+    "duration_eeg_mm:ss": {
+        "Description": "",
+        "Print Name": "Duration of EEG stream in minutes and seconds",
+        "Unit": ""
+    },
+    "duration_eeg_percent": {
+        "Description": "",
+        "Print Name": "Percent of EEG stream duration compared to expected duration",
+        "Unit": "%"
+    },
+    "duration_expected_duration": {
+        "Description": "",
+        "Print Name": "Expected Duration in seconds",
+        "Unit": "s"
+    },
+    "duration_expected_mm:ss": {
+        "Description": "",
+        "Print Name": "Expected Duration stream in minutes and seconds",
+        "Unit": ""
+    },
+    "duration_expected_percent": {
+        "Description": "",
+        "Print Name": "Percent of Expected Duration",
+        "Unit": "%"
+    }
+}
