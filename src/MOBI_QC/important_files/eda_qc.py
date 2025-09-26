@@ -78,12 +78,16 @@ def scl_trend_analysis(eda_signals: pd.DataFrame, eda_df: pd.DataFrame, eda_samp
     # Calculating rolling mean of SCL and Slope of SCL rolling mean
     rolling_mean = pd.Series(eda_signals['EDA_Tonic']).rolling(window=(int)(eda_sampling_rate), center=True).mean()
     slope_rolling_mean = np.gradient(rolling_mean)
-    
+    time_x_axis = pd.to_datetime(eda_df['lsl_time_stamp'], unit='s')
+    relative_time = (time_x_axis - time_x_axis.iat[0]).dt.total_seconds()
+    print(time_x_axis)
     plt.figure(figsize = (10,3)) # figsize=(10,5), 20,5
-    plt.plot(eda_df['lsl_time_stamp'], slope_rolling_mean, label='SCL Rolling_mean slope', color='orange', linestyle='-')
-    plt.plot(eda_df['lsl_time_stamp'], scl_df['EDA_Tonic_Slope'], label='Slope of SCL', color='blue')
+    #plt.plot(eda_df['lsl_time_stamp'], slope_rolling_mean, label='SCL Rolling_mean slope', color='orange', linestyle='-')
+    #plt.plot(eda_df['lsl_time_stamp'], scl_df['EDA_Tonic_Slope'], label='Slope of SCL', color='blue')
+    plt.plot(relative_time, slope_rolling_mean, label='SCL Rolling_mean slope', color='orange', linestyle='-')
+    plt.plot(relative_time, scl_df['EDA_Tonic_Slope'], label='Slope of SCL', color='blue')
     plt.title('SCL Slope and Rolling Mean Slope Over Time', fontsize=16)
-    plt.xlabel('Time', fontsize=14)
+    plt.xlabel('Time (seconds)', fontsize=14)
     plt.ylabel('Slope', fontsize=14)
     plt.legend(loc='upper right', fontsize=12)
     plt.savefig(f'report_images/{subject}_eda_slope.png', dpi = 100, bbox_inches='tight')
