@@ -85,7 +85,7 @@ def rsp_breath_amplitude(rsp_clean: np.ndarray, peaks_df: pd.DataFrame, rsp_df: 
     plt.axhline(np.mean(cleaned_breath_amplitude), color = 'yellowgreen', label = 'mean')
     plt.ylabel('Breath Amplitude (V)')
     plt.xlabel('Time (s)')
-    plt.title('Breath Amplitude Across Experiment')
+    plt.title('Breath Amplitude')
     plt.legend()
     plt.savefig(f'report_images/{sub_id}_rsp_breathamplitude.png')
 
@@ -108,7 +108,7 @@ def rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float, sub_
     rsp_rate = nk.rsp_rate(rsp_clean, peaks_dict, sampling_rate=sampling_rate, method = 'xcorr')
     nk.signal_plot(rsp_rate, sampling_rate=sampling_rate, alpha = 0.6)
     plt.ylabel('Breaths Per Minute')
-    plt.title('Respiration Rate Across Experiment')
+    plt.title('Respiration Rate')
     plt.savefig(f'report_images/{sub_id}_rsp_respirationrate.png') # {sub_id}_rsp_respirationrate.png
 
     mean = np.mean(rsp_rate)
@@ -151,7 +151,7 @@ def rsp_peak_to_peak(rsp_df: pd.DataFrame, peaks_df: pd.DataFrame, sub_id: str) 
     plt.axhline(np.nanmean(ptp), color = 'yellowgreen', label = 'mean')
     plt.ylabel('Time Between Breaths (s)')
     plt.xlabel('Time (s)')
-    plt.title('Peak to Peak Interval Across Experiment')
+    plt.title('Peak to Peak Interval')
     plt.legend()
     plt.savefig(f'report_images/{sub_id}_rsp_peaktopeak.png')
 
