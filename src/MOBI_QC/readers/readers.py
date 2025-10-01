@@ -110,7 +110,6 @@ class BaseProcessor:
                                              uid=stream['info']['uid'][0], created_at=stream['info']['created_at'][0], 
                                              effective_srate=stream['info']['effective_srate'], desc=stream['info']['desc'][0])
                 
-    
             elif s_name in ['EEG', 'EGI NetAmp 0']:
                 ch_names = [f"E{i+1}" for i in range(stream['time_series'].shape[1])]
                 df = pd.DataFrame(stream['time_series'], columns=ch_names) # index=stream['time_stamps']
@@ -199,7 +198,6 @@ class DataStream:
         """Return a string representation of the DataStream."""
         return f"DataStream(name={self.stream_name}, num_records={len(self.data)})"
     
-
 
 if __name__ == "__main__":
     print("This is the MOBI_QC package. Please use it as a module.")    
