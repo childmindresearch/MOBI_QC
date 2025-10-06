@@ -35,12 +35,12 @@ def mic_nans(mic_df: pd.DataFrame) -> tuple[int, float]:
         mic_df (pd.DataFrame): dataframe containing the microphone data
     Returns:
         num_NaN (int): number of NaN values in mic_df
-        percent_NaN (float): percentage of NaN values in mic_df
+        percent_valid (float): percentage of NaN values in mic_df
     """
     num_NaN = mic_df['int_array'].isna().sum()
-    percent_NaN = num_NaN/len(mic_df)
+    percent_valid = 1 - (num_NaN/len(mic_df))
 
-    return num_NaN, percent_NaN
+    return num_NaN, percent_valid
 
 def mic_samples_stats(mic_df: pd.DataFrame) -> tuple[float, float, float, int, int]:
     """
@@ -109,7 +109,7 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
 
     # initialize mic_vars keys as zeros
     vars = {}
-    vars['event'], vars['sampling_rate'], vars['lsl_wav_duration_diff'], vars['num_NaN'], vars['percent_NaN'], vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = np.zeros(10)
+    vars['event'], vars['sampling_rate'], vars['lsl_wav_duration_diff'], vars['num_NaN'], vars['percent_valid'], vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = np.zeros(10)
 
     try:
         # get data
@@ -118,6 +118,7 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
 
         # returns zeros in vars and data for entire exp in df if restingstate
         if task == 'RestingState':
+            mic_error = False
             return vars, whole_mic_df, mic_error
         
         # get metrics
@@ -129,8 +130,8 @@ def mic_qc(xdf_filename:str, stim_df:pd.DataFrame, task = 'Experiment') -> tuple
         vars['lsl_wav_duration_diff'] = mic_lsl_wav_durations(xdf_filename, mic_df)
         print(f"Difference between .wav file and lsl timestamps durations: {vars['lsl_wav_duration_diff']:.4f}")
 
-        vars['num_NaN'], vars['percent_NaN'] = mic_nans(mic_df)
-        print(f"number of NaN's: {vars['num_NaN']} \npercent of NaN's: {vars['percent_NaN']:.4%}")
+        vars['num_NaN'], vars['percent_valid'] = mic_nans(mic_df)
+        print(f"number of NaN's: {vars['num_NaN']} \npercent of NaN's: {vars['percent_valid']:.4%}")
         vars['quan25'], vars['quan75'], vars['std'], vars['min'], vars['max'] = mic_samples_stats(mic_df)
         print('mic samples first quartile: {} \nmic samples third quartile: {}'.format(vars['quan25'], vars['quan75']))
         print('mic samples standard deviation: {:.4f}'.format(vars['std']))

@@ -183,7 +183,7 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
     subject = xdf_filename.split('sub-')[1].split('/')[0]
     whole_ps_df = import_physio_data(xdf_filename)
     vars = {}
-    vars['event'], vars['sampling_rate'], vars['percent_missing'], vars['signal_integrity_check'], vars['average_scl'], vars['scl_sd'], vars['scl_cv'], vars['average_scr_amplitude'], vars['scr_validity'], vars['snr'] = np.zeros(10)
+    vars['event'], vars['sampling_rate'], vars['signal_integrity_check'], vars['average_scl'], vars['scl_sd'], vars['scl_cv'], vars['average_scr_amplitude'], vars['scr_validity'], vars['snr'] = np.zeros(9)
 
     try: 
         ps_df = get_event_data(event=task,
@@ -192,7 +192,6 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
         eda_df = ps_df[['EDA2', 'lsl_time_stamp', 'time']]
 
         eda_sampling_rate = get_sampling_rate(eda_df)
-        percent_missing = eda_df.EDA2.isnull().mean() 
         eda_signals, info = eda_preprocess(eda_df, eda_sampling_rate)
         average_scl, scl_sd, scl_cv = scl_stability(eda_signals['EDA_Tonic'])
         average_scr_amplitude, scr_amplitude_validity = scr_amplitudes(info)
@@ -200,8 +199,6 @@ def eda_qc(xdf_filename: str, stim_df:pd.DataFrame, task='RestingState') -> tupl
         vars['event'] = task
         print(f"Effective sampling rate: {eda_sampling_rate:.3f} Hz")
         vars['sampling_rate'] = eda_sampling_rate
-        print(f"Percent missing data: {percent_missing:.4f}%")
-        vars['percent_missing'] = percent_missing
         print(f"Signal Integrity Check: {eda_signal_integrity_check(eda_df):.3f} %")
         vars['signal_integrity_check'] = eda_signal_integrity_check(eda_df)
         print(f"Average Skin Conductance Level: {average_scl:.3f} mS")

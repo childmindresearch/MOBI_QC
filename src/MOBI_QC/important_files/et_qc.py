@@ -32,21 +32,21 @@ def et_val(et_df: pd.DataFrame) -> pd.DataFrame:
 
     return val_df
 
-def et_invalid_data(et_df: pd.DataFrame) -> tuple[float, float, float, float, float, float]:
+def et_valid_data(et_df: pd.DataFrame) -> tuple[float, float, float, float, float, float]:
     """
-    Calculate the percentage of invalid data for each eye tracking variables.
+    Calculate the percentage of valid data for each eye tracking variables.
     Args:
         et_df (pd.DataFrame): Dataframe containing the eye tracking data.
     Returns:
-        left_gaze_point_invalid, right_gaze_point_invalid, left_gaze_origin_invalid, right_gaze_origin_invalid, left_pupil_invalid, right_pupil_invalid (floats): Decimals representing amount of data invalid from each variable.
+        left_gaze_point_valid, right_gaze_point_valid, left_gaze_origin_valid, right_gaze_origin_valid, left_pupil_valid, right_pupil_valid (floats): Decimals representing amount of data valid from each variable.
     """
-    left_gaze_point_invalid = (1 - et_df.left_gaze_point_validity.mean()) * 100 
-    right_gaze_point_invalid = (1 - et_df.right_gaze_point_validity.mean()) * 100
-    left_gaze_origin_invalid = (1 - et_df.left_gaze_origin_validity.mean()) * 100
-    right_gaze_origin_invalid = (1 - et_df.right_gaze_origin_validity.mean()) * 100
-    left_pupil_invalid = (1 - et_df.left_pupil_validity.mean()) * 100
-    right_pupil_invalid = (1 - et_df.right_pupil_validity.mean()) * 100
-    return left_gaze_point_invalid, right_gaze_point_invalid, left_gaze_origin_invalid, right_gaze_origin_invalid, left_pupil_invalid, right_pupil_invalid 
+    left_gaze_point_valid = et_df.left_gaze_point_validity.mean() * 100 
+    right_gaze_point_valid = et_df.right_gaze_point_validity.mean() * 100
+    left_gaze_origin_valid = et_df.left_gaze_origin_validity.mean() * 100
+    right_gaze_origin_valid = et_df.right_gaze_origin_validity.mean() * 100
+    left_pupil_valid = et_df.left_pupil_validity.mean() * 100
+    right_pupil_valid = et_df.right_pupil_validity.mean() * 100
+    return left_gaze_point_valid, right_gaze_point_valid, left_gaze_origin_valid, right_gaze_origin_valid, left_pupil_valid, right_pupil_valid 
 
 def xyz_measures_check(val_df: pd.DataFrame) -> bool:
     """
@@ -203,7 +203,7 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
     """
     sub_id = xdf_filename.split('sub-')[1].split('/')[0]
     vars = {}
-    vars['event'], vars['sampling_rate'], vars['left_gaze_point_invalid'], vars['right_gaze_point_invalid'], vars['left_gaze_origin_invalid'], vars['right_gaze_origin_invalid'], vars['left_pupil_invalid'], vars['right_pupil_invalid'], vars['xyz_measures_check'], vars['coordinate_system_check'], vars['LR_mean_diff'], vars['percent_over02'] = np.zeros(12)
+    vars['event'], vars['sampling_rate'], vars['left_gaze_point_valid'], vars['right_gaze_point_valid'], vars['left_gaze_origin_valid'], vars['right_gaze_origin_valid'], vars['left_pupil_valid'], vars['right_pupil_valid'], vars['xyz_measures_check'], vars['coordinate_system_check'], vars['LR_mean_diff'], vars['percent_over02'] = np.zeros(12)
 
     try:
         whole_et_df = import_et_data(xdf_filename)
@@ -215,13 +215,13 @@ def et_qc(xdf_filename: str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
         vars['sampling_rate'] = sampling_rate
         print(f"Effective sampling rate: {sampling_rate:.4f}")
 
-        vars['left_gaze_point_invalid'], vars['right_gaze_point_invalid'], vars['left_gaze_origin_invalid'], vars['right_gaze_origin_invalid'], vars['left_pupil_invalid'], vars['right_pupil_invalid'] = et_invalid_data(et_df)
-        print(f"Percent invalid data in left gaze point: {vars['left_gaze_point_invalid']:.4}%")
-        print(f"Percent invalid data in right gaze point: {vars['right_gaze_point_invalid']:.4}%")
-        print(f"Percent invalid data in left gaze origin: {vars['left_gaze_origin_invalid']:.4}%")
-        print(f"Percent invalid data in right gaze origin: {vars['right_gaze_origin_invalid']:.4}%")
-        print(f"Percent invalid data in left pupil diameter: {vars['left_pupil_invalid']:.4}%")
-        print(f"Percent invalid data in right pupil diameter: {vars['right_pupil_invalid']:.4}%")
+        vars['left_gaze_point_valid'], vars['right_gaze_point_valid'], vars['left_gaze_origin_valid'], vars['right_gaze_origin_valid'], vars['left_pupil_valid'], vars['right_pupil_valid'] = et_valid_data(et_df)
+        print(f"Percent valid data in left gaze point: {vars['left_gaze_point_valid']:.4}%")
+        print(f"Percent valid data in right gaze point: {vars['right_gaze_point_valid']:.4}%")
+        print(f"Percent valid data in left gaze origin: {vars['left_gaze_origin_valid']:.4}%")
+        print(f"Percent valid data in right gaze origin: {vars['right_gaze_origin_valid']:.4}%")
+        print(f"Percent valid data in left pupil diameter: {vars['left_pupil_valid']:.4}%")
+        print(f"Percent valid data in right pupil diameter: {vars['right_pupil_valid']:.4}%")
 
         vars['xyz_measures_check'] = xyz_measures_check(val_df)
         print(f"Flag: all coordinates have the same % validity within each measure (LR, gaze point/origin/diameter): {vars['xyz_measures_check']}")

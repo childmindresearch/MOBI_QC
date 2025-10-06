@@ -218,6 +218,10 @@ def get_durations(xdf_path: str,
         if error_map[stream]: 
             subject = xdf_path.split('sub-')[-1].split('_')[0]#xdf_path.split('/')[6].split('-')[1]
             print(f'No {stream} data for participant {subject}')
+            dur = float('nan')
+            dt_dur = ''
+            percent = float('nan')
+            durations_df.loc[i] = [stream, dur, dt_dur, percent]
             continue
         # grab data for stream + experiment part
         event_data = get_event_data(task, df_map[stream], stim_df)
@@ -293,6 +297,9 @@ def whole_durations(xdf_path: str, stim_df: pd.DataFrame, df_map: dict, error_ma
         if error_map[stream]:
             subject = xdf_path.split('/')[6].split('-')[1]
             print(f'No {stream} data for participant {subject}')
+            duration = float('nan')
+            whole_dt_dur = ''
+            whole_durations_df.loc[i] = [stream, duration, whole_dt_dur]
             continue
         duration = df_map[stream]['lsl_time_stamp'].iloc[-1]- df_map[stream]['lsl_time_stamp'].iloc[0]
         duration = round(duration, 4)

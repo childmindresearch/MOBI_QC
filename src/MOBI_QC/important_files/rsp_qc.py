@@ -248,7 +248,7 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
     sub_id = xdf_filename.split('sub-')[1].split('/')[0]
     whole_ps_df = import_physio_data(xdf_filename)
     vars = {}
-    vars['event'], vars['sampling_rate'], vars['percent_missing'], vars['rsp_snr'], vars['breath_amplitude_mean'],vars['breath_amplitude_std'], vars['breath_amplitude_min'], vars['breath_amplitude_max'], vars['rsp_rate_mean'], vars['rsp_rate_std'], vars['rsp_rate_min'], vars['rsp_rate_max'], vars['ptp_mean'], vars['ptp_std'], vars['ptp_min'], vars['ptp_max'], vars['baseline_drift'], vars['autocorrelation'] = np.zeros(18)    
+    vars['event'], vars['sampling_rate'], vars['percent_valid'], vars['rsp_snr'], vars['breath_amplitude_mean'],vars['breath_amplitude_std'], vars['breath_amplitude_min'], vars['breath_amplitude_max'], vars['rsp_rate_mean'], vars['rsp_rate_std'], vars['rsp_rate_min'], vars['rsp_rate_max'], vars['ptp_mean'], vars['ptp_std'], vars['ptp_min'], vars['ptp_max'], vars['baseline_drift'], vars['autocorrelation'] = np.zeros(18)    
     
     try:
         ps_df = get_event_data(event = task, df = whole_ps_df, stim_df = stim_df)
@@ -258,7 +258,7 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
         rsp_df['time'] = rsp_df['lsl_time_stamp'] - rsp_df['lsl_time_stamp'][0]
         rsp = rsp_df.respiration
         sampling_rate = get_sampling_rate(rsp_df)
-        percent_missing = rsp.isnull().mean()
+        percent_valid = 1 - rsp.isnull().mean()
 
         # preprocess
         rsp_clean, peaks_df, peaks_dict = get_rsp_preprocess(rsp, sampling_rate)
@@ -267,8 +267,8 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
         vars['event'] = task
         vars['sampling_rate'] = sampling_rate
         print(f"Effective sampling rate: {sampling_rate:.4f}")
-        vars['percent_missing'] = percent_missing
-        print(f"Percent missing data: {percent_missing:.4f}%")
+        vars['percent_valid'] = percent_valid
+        print(f"Percent valid data: {percent_valid:.4f}%")
 
         vars['rsp_snr'] = get_rsp_snr(rsp, rsp_clean)
         print(f"Signal to Noise Ratio: {vars['rsp_snr']:.4f}")

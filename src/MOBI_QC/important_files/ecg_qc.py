@@ -190,7 +190,7 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
     subject = xdf_filename.split('sub-')[1].split('/')[0]
     whole_ps_df = import_physio_data(xdf_filename)
     vars = {}
-    vars['event'], vars['sampling_rate'], vars['percent_missing'], vars['average_heart_rate'], vars['kurtosis_SQI'], vars['power_spectrum_distribution_SQI'], vars['relative_baseline_power_sqi'], vars['SNR'] = np.zeros(8)  
+    vars['event'], vars['sampling_rate'], vars['percent_valid'], vars['average_heart_rate'], vars['kurtosis_SQI'], vars['power_spectrum_distribution_SQI'], vars['relative_baseline_power_sqi'], vars['SNR'] = np.zeros(8)  
 
     try:
         ps_df = get_event_data(event=task,
@@ -199,15 +199,15 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
         ecg_df = ps_df[['ECG1', 'lsl_time_stamp', 'time']]
 
         ecg_sampling_rate = get_sampling_rate(ecg_df)
-        percent_missing = ecg_df.ECG1.isnull().mean()  
+        percent_valid = 1 - (ecg_df.ECG1.isnull().mean()) * 100
         ecg_signals, info = ecg_preprocess(ecg_df, ecg_sampling_rate)
         ecg_cleaned = ecg_signals['ECG_Clean']
 
         vars['event'] = task
         print(f"Effective sampling rate: {ecg_sampling_rate}")
         vars['sampling_rate'] = ecg_sampling_rate
-        print(f"Percent missing data: {percent_missing:.4f}%")
-        vars['percent_missing'] = percent_missing
+        print(f"Percent valid data: {percent_valid:.4f}%")
+        vars['percent_valid'] = percent_valid
         print(f"Average heart rate: {average_heartrate(ecg_signals)}")
         vars['average_heart_rate'] = average_heartrate(ecg_signals)
         print(f"Kurtosis signal quality index: {ecg_quality_kurtosis_SQI(ecg_cleaned)}")

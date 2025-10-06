@@ -52,6 +52,9 @@ def lsl_loss_percentage(df_map: dict, error_map: dict, sub_id: str) -> pd.DataFr
     for modality in modalities:
         if error_map[modality]: 
             print(f'No {modality} data for participant {sub_id}')
+            loss_instances = float('nan')
+            percent_lost = float('nan')
+            percent_list.append({'subject': sub_id, 'stream': modality, 'num_losses': loss_instances, 'percent_lost': percent_lost})
             continue
         df = df_map[modality]
 
@@ -93,11 +96,16 @@ def lsl_loss_before_social(df_map: dict, error_map: dict, sub_id: str, offset_so
     for modality in modalities:
         if error_map[modality]: 
             print(f'No {modality} data for participant {sub_id}')
+            loss_instances = float('nan')
+            percent_lost = float('nan')
+            social_percent_list.append({'subject': sub_id, 'stream': modality, 'num_losses': loss_instances, 'percent_lost': percent_lost})
             continue
         df = df_map[modality]
+        df['diff'] = df['lsl_time_stamp'].diff()
         social_df = df.loc[df.lsl_time_stamp <= offset_social_timestamp]
 
         # median diff between lsl_time_stamp (with 1.05 margin) 
+        
         median1 = df['diff'].median() * 1.05
 
         # number of loss instances  
@@ -153,10 +161,10 @@ def lsl_problem_qc(xdf_filename:str, stim_df:pd.DataFrame, df_map:dict, error_ma
 
     vars = {}
 
-    vars['percent_loss'] = lsl_loss_percentage(df_map, error_map, sub_id)
-    if vars['percent_loss'].empty:
-        vars['percent_loss'] = f"no data loss detected for {sub_id} for entire experiment"
-    print(vars['percent_loss'])
+    # vars['percent_loss'] = lsl_loss_percentage(df_map, error_map, sub_id)
+    # if vars['percent_loss'].empty:
+    #     vars['percent_loss'] = f"no data loss detected for {sub_id} for entire experiment"
+    # print(vars['percent_loss'])
 
     vars['loss_before_social_task'] = lsl_loss_before_social(df_map, error_map, sub_id, offset_social_timestamp)
     if vars['loss_before_social_task'].empty:
