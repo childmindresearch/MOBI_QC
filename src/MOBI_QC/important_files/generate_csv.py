@@ -12,15 +12,15 @@ from webcam_qc import *
 from behavior_qc import *
 from lsl_problem import *
 
-def generate_qc_dataframe(csvfilename, subject_id:str, collection_date: str, modality_vars):
+def generate_qc_dataframe(csvfilename, subject_id:str, collection_date: str, modality_vars_values):
     csv_info = pd.read_csv(csvfilename)
     qc_columns = csv_info.columns
     subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
-    for modality in modality_vars:
-        subject_csv.update(modality)
+    for metric_pair in modality_vars_values:
+        subject_csv.update(metric_pair)
     print(subject_csv)
     if list(qc_columns) != list(subject_csv.keys()):
-        subject_csv = {k: subject_csv[k] for k in qc_columns}
+        subject_csv = {key: subject_csv[key] for key in qc_columns}
     print(subject_csv)
     subject_csv_df = pd.DataFrame([subject_csv])
 

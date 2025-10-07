@@ -199,7 +199,7 @@ def ecg_qc(xdf_filename:str, stim_df:pd.DataFrame, task='RestingState') -> tuple
         ecg_df = ps_df[['ECG1', 'lsl_time_stamp', 'time']]
 
         ecg_sampling_rate = get_sampling_rate(ecg_df)
-        percent_valid = 1 - (ecg_df.ECG1.isnull().mean()) * 100
+        percent_valid = (1 - ecg_df.ECG1.isnull().mean()) * 100
         ecg_signals, info = ecg_preprocess(ecg_df, ecg_sampling_rate)
         ecg_cleaned = ecg_signals['ECG_Clean']
 

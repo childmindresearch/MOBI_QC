@@ -258,7 +258,7 @@ def rsp_qc(xdf_filename:str, stim_df: pd.DataFrame, task = 'Experiment') -> tupl
         rsp_df['time'] = rsp_df['lsl_time_stamp'] - rsp_df['lsl_time_stamp'][0]
         rsp = rsp_df.respiration
         sampling_rate = get_sampling_rate(rsp_df)
-        percent_valid = 1 - rsp.isnull().mean()
+        percent_valid = (1 - rsp.isnull().mean()) * 100
 
         # preprocess
         rsp_clean, peaks_df, peaks_dict = get_rsp_preprocess(rsp, sampling_rate)
