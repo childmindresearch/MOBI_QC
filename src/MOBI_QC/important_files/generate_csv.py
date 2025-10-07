@@ -14,7 +14,7 @@ from lsl_problem import *
 
 def generate_qc_dataframe(csvfilename, subject_id:str, collection_date: str, modality_vars):
     csv_info = pd.read_csv(csvfilename)
-    qc_columns = csv_info.columns()
+    qc_columns = csv_info.columns
     subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
     for modality in modality_vars:
         subject_csv.update(modality)
