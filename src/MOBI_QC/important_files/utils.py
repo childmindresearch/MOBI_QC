@@ -198,6 +198,9 @@ def get_durations(xdf_path: str,
         pd.DataFrame: The durations of each stream in seconds and mm:ss and the percent that that duration 
             comprised of the length of that experiment arm.
     """    
+    if error_map['behavior']:
+        return None
+        
     streams = list(df_map.keys())
 
     # find expected duration (stim lsl_time_stamp length of experiment part)
@@ -287,6 +290,8 @@ def whole_durations(xdf_path: str, stim_df: pd.DataFrame, df_map: dict, error_ma
         pd.DataFrame: The durations of each stream in seconds and mm:ss and the percent that that duration comprised 
         of the max duration of all data streams. 
     """
+    if error_map['behavior']:
+        return None
 
     streams = list(df_map.keys())
 
