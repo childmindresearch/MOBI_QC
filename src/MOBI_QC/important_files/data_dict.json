@@ -70,62 +70,62 @@
         "Unit": ""
     },
     "et_event": {
-        "Description": "",
+        "Description": "Event for which eye tracking data was run (RestingState, Experiment, StoryListening, SocialTask, etc).",
         "Print Name": "ET Event",
         "Unit": ""
     },
     "et_sampling_rate": {
-        "Description": "",
+        "Description": "Effective sampling rate for eye tracking data.",
         "Print Name": "Effective sampling rate",
         "Unit": "Hz"
     },
-    "et_left_gaze_point_invalid": {
-        "Description": "",
-        "Print Name": "Percent invalid data in left gaze point",
+    "et_left_gaze_point_valid": {
+        "Description": "Percent of valid (non-NaN) data in left gaze point data.",
+        "Print Name": "Percent valid data in left gaze point",
         "Unit": "%"
     },
-    "et_right_gaze_point_invalid": {
-        "Description": "",
-        "Print Name": "Percent invalid data in right gaze point",
+    "et_right_gaze_point_valid": {
+        "Description": "Percent of valid (non-NaN) data in right gaze point data.",
+        "Print Name": "Percent valid data in right gaze point",
         "Unit": "%"
     },
-    "et_left_gaze_origin_invalid": {
-        "Description": "",
-        "Print Name": "Percent invalid data in left gaze origin",
+    "et_left_gaze_origin_valid": {
+        "Description": "Percent of valid (non-NaN) data in left gaze origin data.",
+        "Print Name": "Percent valid data in left gaze origin",
         "Unit": "%"
     },
-    "et_right_gaze_origin_invalid": {
-        "Description": "",
-        "Print Name": "Percent invalid data in right gaze origin",
+    "et_right_gaze_origin_valid": {
+        "Description": "Percent of valid (non-NaN) data in right gaze origin data.",
+        "Print Name": "Percent valid data in right gaze origin",
         "Unit": "%"
     },
-    "et_left_pupil_invalid": {
-        "Description": "",
-        "Print Name": "Percent invalid data in left pupil diameter",
+    "et_left_pupil_valid": {
+        "Description": "Percent of valid (non-NaN) data in left pupil diameter data.",
+        "Print Name": "Percent valid data in left pupil diameter",
         "Unit": "%"
     },
-    "et_right_pupil_invalid": {
-        "Description": "",
-        "Print Name": "Percent invalid data in right pupil diameter",
+    "et_right_pupil_valid": {
+        "Description": "Percent of valid (non-NaN) data in right pupil diameter data.",
+        "Print Name": "Percent valid data in right pupil diameter",
         "Unit": "%"
     },
     "et_xyz_measures_check": {
-        "Description": "",
+        "Description": "This check confirms that the amount of valid data is the same for x, y, and z coordinates for one measure. For example, left gaze point x, left gaze point y, and left gaze point z have the same amount of valid data.",
         "Print Name": "Flag: all coordinates have the same % validity within each measure (LR, gaze point/origin/diameter)",
         "Unit": ""
     },
     "et_coordinate_system_check": {
-        "Description": "",
+        "Description": "Since gaze origin and gaze point are reported in two coordinate systems, this check confirms that percent of valid data is consistent between coordinate systems. For example, gaze origin TBCS and gaze origin UCS have the same amount of valid data.",
         "Print Name": "Flag: % of NaNs is the same between coordinate systems (UCS and TBCS (gaze origin) and between UCS and display area (gaze point))",
         "Unit": ""
     },
     "et_LR_mean_diff": {
-        "Description": "",
+        "Description": "Absolute difference of mean percentage of valid data between left and right eyes.",
         "Print Name": "Mean difference in percent valid data between right and left eyes",
         "Unit": "%"
     },
     "et_percent_over02": {
-        "Description": "",
+        "Description": "Percent of data where the gaze point of the left and right eyes have a difference of over 0.2 mm.",
         "Print Name": "Percent of data with gaze point differences of over 0.2 mm",
         "Unit": "%"
     },
@@ -210,142 +210,142 @@
         "Unit": "dB"
     },
     "rsp_event": {
-        "Description": "",
+        "Description": "Event for which respiration data was run (RestingState, Experiment, StoryListening, SocialTask, etc).",
         "Print Name": "RSP Event",
         "Unit": ""
     },
     "rsp_sampling_rate": {
-        "Description": "",
+        "Description": "Effective sampling rate for respiration data.",
         "Print Name": "Effective sampling rate",
         "Unit": "Hz"
     },
-    "rsp_percent_missing": {
-        "Description": "",
-        "Print Name": "Percent missing",
+    "rsp_percent_valid": {
+        "Description": "Percent of valid (non-NaN) data in the respiration signal.",
+        "Print Name": "Percent valid",
         "Unit": "%"
     },
     "rsp_snr": {
-        "Description": "",
+        "Description": "Signal to noise ratio for respiration data",
         "Print Name": "Signal to noise ratio",
         "Unit": "dB"
     },
     "rsp_breath_amplitude_mean": {
-        "Description": "",
+        "Description": "Mean breath amplitude.",
         "Print Name": "Breath amplitude mean",
         "Unit": "V"
     },
     "rsp_breath_amplitude_std": {
-        "Description": "",
+        "Description": "Standard deviation of breath amplitude.",
         "Print Name": "Breath amplitude std",
         "Unit": "V"
     },
     "rsp_breath_amplitude_min": {
-        "Description": "",
+        "Description": "Minimum value in breath amplitude.",
         "Print Name": "Breath amplitude min",
         "Unit": "V"
     },
     "rsp_breath_amplitude_max": {
-        "Description": "",
+        "Description": "Maximum value in breath amplitude.",
         "Print Name": "Breath amplitude max",
         "Unit": "V"
     },
     "rsp_rate_mean": {
-        "Description": "",
+        "Description": "Mean respiration rate.",
         "Print Name": "Respiration rate mean",
         "Unit": "bpm"
     },
     "rsp_rate_std": {
-        "Description": "",
+        "Description": "Standard deviation of respiration rate.",
         "Print Name": "Respiration rate std",
         "Unit": "bpm"
     },
     "rsp_rate_min": {
-        "Description": "",
+        "Description": "Minimum value in respiration rate.",
         "Print Name": "Respiration rate min",
         "Unit": "bpm"
     },
     "rsp_rate_max": {
-        "Description": "",
+        "Description": "Maximum value in respiration rate.",
         "Print Name": "Respiration rate max",
         "Unit": "bpm"
     },
     "rsp_ptp_mean": {
-        "Description": "",
+        "Description": "Mean peak to peak interval.",
         "Print Name": "Peak to peak interval mean",
         "Unit": "s"
     },
     "rsp_ptp_std": {
-        "Description": "",
+        "Description": "Standard deviation of peak to peak interval.",
         "Print Name": "Peak to peak interval std",
         "Unit": "s"
     },
     "rsp_ptp_min": {
-        "Description": "",
+        "Description": "Minimum value in peak to peak interval.",
         "Print Name": "Peak to peak interval min",
         "Unit": "s"
     },
     "rsp_ptp_max": {
-        "Description": "",
+        "Description": "Maximum value in peak to peak interval.",
         "Print Name": "Peak to peak interval max",
         "Unit": "s"
     },
     "rsp_baseline_drift": {
-        "Description": "",
+        "Description": "Baseline drift, calculated as the standard deviation of a 0.05 Hz lowpass Butterworth filtered version of the respiration signal.",
         "Print Name": "Baseline drift",
         "Unit": "V"
     },
     "rsp_autocorrelation": {
-        "Description": "",
+        "Description": "Degree of autocorrelation of the respiration signal at a lag corresponding to a typical breath cycle, where typical breath cycle is calculated using the mean peak to peak interval.",
         "Print Name": "Autocorrelation at typical breath cycle",
         "Unit": ""
     },
     "mic_event": {
-        "Description": "",
+        "Description": "Event for which microphone data was run (RestingState, Experiment, StoryListening, SocialTask, etc).",
         "Print Name": "Mic Event",
         "Unit": ""
     },
     "mic_sampling_rate": {
-        "Description": "",
+        "Description": "Effective sampling rate for microphone data.",
         "Print Name": "Effective sampling rate",
         "Unit": "Hz"
     },
     "mic_lsl_wav_duration_diff": {
-        "Description": "",
+        "Description": "Difference between duration of .wav audio file and duration of microphone stream, calculated from LSL timestamps.",
         "Print Name": "Difference between .wav file and lsl timestamps durations",
         "Unit": "s"
     },
     "mic_num_NaN": {
-        "Description": "",
+        "Description": "Number of NaN values in microphone data.",
         "Print Name": "Number of NaN's",
         "Unit": ""
     },
-    "mic_percent_NaN": {
-        "Description": "",
-        "Print Name": "Percent of NaN's",
+    "mic_percent_valid": {
+        "Description": "Percentage of valid (non-NaN) data in microphone stream.",
+        "Print Name": "Percent of valid data",
         "Unit": "%"
     },
     "mic_quan25": {
-        "Description": "",
+        "Description": "First quartile of microphone samples.",
         "Print Name": "Mic samples first quartile",
         "Unit": ""
     },
     "mic_quan75": {
-        "Description": "",
+        "Description": "Third quartile of microphone samples.",
         "Print Name": "Mic samples third quartile",
         "Unit": ""
     },
     "mic_std": {
-        "Description": "",
+        "Description": "Standard deviation of microphone samples.",
         "Print Name": "Mic samples std",
         "Unit": ""
     },
     "mic_min": {
-        "Description": "",
+        "Description": "Minimum value in microphone samples.",
         "Print Name": "Mic samples min",
         "Unit": ""
     },
     "mic_max": {
-        "Description": "",
+        "Description": "Maximum value in microphone samples.",
         "Print Name": "Mic samples max",
         "Unit": ""
     },
@@ -370,143 +370,143 @@
         "Unit": "%"
     },
     "lsl_et_num_losses": {
-        "Description": "",
+        "Description": "Number of LSL timestamp gap occurances in eye tracking data.",
         "Print Name": "Number of LSL losses in ET",
         "Unit": ""
     },
     "lsl_et_percent_lost": {
-        "Description": "",
+        "Description": "Amount of eye tracking data missing due to LSL timestamp gaps divided by the difference between the last and first LSL timestamps in eye tracking data.",
         "Print Name": "Percentage of missing data in ET stream due to LSL",
         "Unit": "%"
     },
     "lsl_ps_num_losses": {
-        "Description": "",
+        "Description": "Number of LSL timestamp gap occurances in physio data.",
         "Print Name": "Number of LSL losses in Physiological signals",
         "Unit": ""
     },
     "lsl_ps_percent_lost": {
-        "Description": "",
+        "Description": "Amount of physio data missing due to LSL timestamp gaps divided by the difference between the last and first LSL timestamps in physio data.",
         "Print Name": "Percentage of missing data in Physiology stream due to LSL",
         "Unit": "%"
     },
     "lsl_mic_num_losses": {
-        "Description": "",
+        "Description": "Number of LSL timestamp gap occurances in microphone data.",
         "Print Name": "Number of LSL losses in Mic",
         "Unit": ""
     },
     "lsl_mic_percent_lost": {
-        "Description": "",
-        "Print Name": "Percentage of missing data in Mic stream due to LSL",
+        "Description": "Amount of microphone data missing due to LSL timestamp gaps divided by the difference between the last and first LSL timestamps in microphone data.",
+        "Print Name": "Percentage of missing data in mic stream due to LSL",
         "Unit": "%"
     },
     "lsl_cam_num_losses": {
-        "Description": "",
-        "Print Name": "Number of LSL losses in Video",
+        "Description": "Number of LSL timestamp gap occurances in webcam data.",
+        "Print Name": "Number of LSL losses in webcam",
         "Unit": ""
     },
     "lsl_cam_percent_lost": {
-        "Description": "",
-        "Print Name": "Percentage of missing data in Video stream due to LSL",
+        "Description": "Amount of webcam data missing due to LSL timestamp gaps divided by the difference between the last and first LSL timestamps in webcam data.",
+        "Print Name": "Percentage of missing data in webcam stream due to LSL",
         "Unit": "%"
     },
     "lsl_eeg_num_losses": {
-        "Description": "",
+        "Description": "Number of LSL timestamp gap occurances in EEG data.",
         "Print Name": "Number of LSL losses in EEG",
         "Unit": ""
     },
     "lsl_eeg_percent_lost": {
-        "Description": "",
+        "Description": "Amount of EEG data missing due to LSL timestamp gaps divided by the difference between the last and first LSL timestamps in EEG data.",
         "Print Name": "Percentage of missing data in EEG stream due to LSL",
         "Unit": "%"
     },
     "duration_mic_duration": {
-        "Description": "",
-        "Print Name": "Duration of Mic stream in seconds",
+        "Description": "Duration of microphone stream in seconds, calculated as the difference between the LSL timestamps of the onset and offset of a given experiment arm.",
+        "Print Name": "Duration of mic stream in seconds",
         "Unit": "s"
     },
     "duration_mic_mm:ss": {
-        "Description": "",
-        "Print Name": "Duration of Mic stream in minutes and seconds",
+        "Description": "Duration of microphone stream displayed in minutes and seconds.",
+        "Print Name": "Duration of mic stream in minutes and seconds",
         "Unit": ""
     },
     "duration_mic_percent": {
-        "Description": "",
-        "Print Name": "Percent of Mic stream duration compared to expected duration",
+        "Description": "Microphone duration over the expected duration of the experiment, calculated as the difference between the last and first event triggers in the stimulus stream.",
+        "Print Name": "Percent of mic stream duration compared to expected duration",
         "Unit": "%"
     },
     "duration_cam_duration": {
-        "Description": "",
-        "Print Name": "Duration of Video stream in seconds",
+        "Description": "Duration of webcam stream in seconds, calculated as the difference between the LSL timestamps of the onset and offset of a given experiment arm.",
+        "Print Name": "Duration of webcam stream in seconds",
         "Unit": "s"
     },
     "duration_cam_mm:ss": {
-        "Description": "",
-        "Print Name": "Duration of Video stream in minutes and seconds",
+        "Description": "Duration of webcam stream displayed in minutes and seconds.",
+        "Print Name": "Duration of webcam stream in minutes and seconds",
         "Unit": ""
     },
     "duration_cam_percent": {
-        "Description": "",
-        "Print Name": "Percent of Video stream duration compared to expected duration",
+        "Description": "Webcam duration over the expected duration of the experiment, calculated as the difference between the last and first event triggers in the stimulus stream.",
+        "Print Name": "Percent of webcam stream duration compared to expected duration",
         "Unit": "%"
     },
     "duration_et_duration": {
-        "Description": "",
+        "Description": "Duration of eye tracking stream in seconds, calculated as the difference between the LSL timestamps of the onset and offset of a given experiment arm.",
         "Print Name": "Duration of ET stream in seconds",
         "Unit": "s"
     },
     "duration_et_mm:ss": {
-        "Description": "",
+        "Description": "Duration of eye tracking stream displayed in minutes and seconds.",
         "Print Name": "Duration of ET stream in minutes and seconds",
         "Unit": ""
     },
     "duration_et_percent": {
-        "Description": "",
+        "Description": "Eye tracking duration over the expected duration of the experiment, calculated as the difference between the last and first event triggers in the stimulus stream.",
         "Print Name": "Percent of ET stream duration compared to expected duration",
         "Unit": "%"
     },
     "duration_ps_duration": {
-        "Description": "",
-        "Print Name": "Duration of Physiology stream in seconds",
+        "Description": "Duration of physio stream in seconds, calculated as the difference between the LSL timestamps of the onset and offset of a given experiment arm.",
+        "Print Name": "Duration of physio stream in seconds",
         "Unit": "s"
     },
     "duration_ps_mm:ss": {
-        "Description": "",
-        "Print Name": "Duration of Physiology stream in minutes and seconds",
+        "Description": "Duration of physio stream displayed in minutes and seconds.",
+        "Print Name": "Duration of physio stream in minutes and seconds",
         "Unit": ""
     },
     "duration_ps_percent": {
-        "Description": "",
-        "Print Name": "Percent of Physiology stream duration compared to expected duration",
+        "Description": "Physio duration over the expected duration of the experiment, calculated as the difference between the last and first event triggers in the stimulus stream.",
+        "Print Name": "Percent of physio stream duration compared to expected duration",
         "Unit": "%"
     },
     "duration_eeg_duration": {
-        "Description": "",
+        "Description": "Duration of EEG stream in seconds, calculated as the difference between the LSL timestamps of the onset and offset of a given experiment arm.",
         "Print Name": "Duration of EEG stream in seconds",
         "Unit": "s"
     },
     "duration_eeg_mm:ss": {
-        "Description": "",
+        "Description": "Duration of EEG stream displayed in minutes and seconds.",
         "Print Name": "Duration of EEG stream in minutes and seconds",
         "Unit": ""
     },
     "duration_eeg_percent": {
-        "Description": "",
+        "Description": "EEG duration over the expected duration of the experiment, calculated as the difference between the last and first event triggers in the stimulus stream.",
         "Print Name": "Percent of EEG stream duration compared to expected duration",
         "Unit": "%"
     },
     "duration_expected_duration": {
-        "Description": "",
-        "Print Name": "Expected Duration in seconds",
+        "Description": "Expected duration of the experiment in seconds, calculated as the difference between the LSL timestamps of the onset and offset of a given experiment arm.",
+        "Print Name": "Expected duration in seconds",
         "Unit": "s"
     },
     "duration_expected_mm:ss": {
-        "Description": "",
-        "Print Name": "Expected Duration stream in minutes and seconds",
+        "Description": "Expected duration displayed in minutes and seconds.",
+        "Print Name": "Expected duration stream in minutes and seconds",
         "Unit": ""
     },
     "duration_expected_percent": {
-        "Description": "",
-        "Print Name": "Percent of Expected Duration",
+        "Description": "Expected duration percent (will always be 100%)",
+        "Print Name": "Percent of expected duration",
         "Unit": "%"
     }
 }
