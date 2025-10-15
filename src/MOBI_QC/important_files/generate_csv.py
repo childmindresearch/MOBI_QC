@@ -13,15 +13,18 @@ from behavior_qc import *
 from lsl_problem import *
 
 def generate_qc_dataframe(csvfilename, subject_id:str, collection_date: str, modality_vars_values):
-    csv_info = pd.read_csv(csvfilename)
-    qc_columns = csv_info.columns
-    subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
-    for metric_pair in modality_vars_values:
-        subject_csv.update(metric_pair)
-    print(subject_csv)
-    if list(qc_columns) != list(subject_csv.keys()):
-        subject_csv = {key: subject_csv[key] for key in qc_columns}
-    print(subject_csv)
+    if os.path.exists(csvfilename) == True:
+        #csv_info = pd.read_csv(csvfilename)
+        qc_columns = (pd.read_csv(csvfilename)).columns
+        subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
+        for metric_pair in modality_vars_values:
+            subject_csv.update(metric_pair)
+        if list(qc_columns) != list(subject_csv.keys()):
+            subject_csv = {key: subject_csv[key] for key in qc_columns}
+    else:
+        subject_csv = {'Subject': subject_id, 'Collection Date': collection_date}
+        for metric_pair in modality_vars_values:
+            subject_csv.update(metric_pair)
     subject_csv_df = pd.DataFrame([subject_csv])
 
     return subject_csv_df
