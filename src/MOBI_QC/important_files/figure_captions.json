@@ -1,0 +1,62 @@
+{
+    "EEG Cleaned":{
+        "filename": "eeg_cleaned",
+        "caption" : ""
+    },
+
+    "EEG Cleaned PSD":{
+        "filename": "eeg_cleaned_psd",
+        "caption" : ""
+    },
+
+    "EEG ICA":{
+        "filename": "eeg_ica_components",
+        "caption" : ""
+    },
+    
+    "Electrocardiogram (ECG) Plot": {
+        "filename": "ecg_report",
+        "caption" : "Figure #. Summary of ECG signal. This figure shows summary of the ECG signal during {event}. ECG signal and peaks plot (top left) shows comparison between raw and cleaned signal in volts with cleaned signal. The heart rate plot (bottom left) shows the heart rate in beats per minute for each time point and the mean through out {event}. Individual Heart Beats plot shows average heart beat shape with QRS complex of each heart beat superimposed and the average heart rate in beats per minute for {event}."
+    },
+
+    "Electrodermal (EDA) Plot": {
+        "filename": "eda_report",
+        "caption" : "Figure #. Summary of EDA signal. This figure shows summary of the EDA signal during {event}. The first plot shows the raw and cleaned signal after preprocessing. The second plot shows   skin conductance response (SCR), the phasic component of the EDA signal, and it's attributes - SCR onsets, SCR peaks and SCR half recovery. The third plot shows skin conductance level (SCL), the tonic component of the EDA signal."
+    },
+
+    "Skin Conductance Level slope and rolling mean slope over time": {
+        "filename": "eda_slope",
+        "caption" : "Figure #. Slope of Skin Conductance Level. This figure shows the slope of the skin conductance level (blue) and the rolling mean of slope of skin conductance level (yellow) over time for the entire EDA signal for {event}. This represents long-term drift in the EDA signal due to sweat accumulation."
+    },
+
+    "Eye Tracking Gaze Difference Line Plot": {
+        "filename": "et_gazedifference",
+        "caption" : "Figure #. Euclidian difference in millimeters between gaze point of right and left eyes. While it is expected that the difference between the gaze point of the right and left eyes is consistent and small, that has been shown not to be the case. Variability in this difference might indicate system error. Differences over 0.2 mm are shown; such differences are especially concerning, as it is expected that the two eyes are directed toward the same point on the computer screen."
+    },
+
+    "Microphone Sample Distribution": {
+        "filename": "mic_histogram",
+        "caption" : "Figure #. Distribution of microphone samples. Distribution should be centered around 0, with no outlier peaks and no samples below -32,000 or above 32,000."
+    },
+
+    "Microphone Sample Line Plot": {
+        "filename": "mic_lineplot",
+        "caption" : "Figure #. Microphone samples over time. Onset and offset of Story Listening and Social Task events of the experiment are marked. Microphone samples should show activity within these events; a flat line or missing data within these events may indicate system error."
+    },
+
+    "Respiration Autocorrelation Plot": {
+        "filename": "rsp_autocorrelation",
+        "caption" : "Figure #. The respiration signal, in Volts, is correlated with itself at different lag intervals. Lag represents the number of samples by which the signal is shifted when computing the correlation. Besides the peak at lag 0, a signal with a regular breathing pattern detected will show multiple other peaks."
+    },
+
+    "Respiration Line Plots": {
+        "filename": "rsp_plot",
+        "caption" : "Figure #. Respiration rate, breath amplitude, and peak to peak interval are plotted over time. Trendlines are created by fitting a 3rd degree polynomial over the data. A relatively even respiration rate, breath amplitude, and peak to peak interval are expected for normal data, where the trendline does not deviate much from the mean."
+    },
+
+    "Face detection":{
+        "filename": "eeg_cleaned",
+        "caption" : ""
+    }
+
+}
