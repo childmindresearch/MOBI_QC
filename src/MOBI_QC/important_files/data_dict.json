@@ -130,82 +130,87 @@
         "Unit": "%"
     },
     "ecg_event": {
-        "Description": "Event for which the QC measures were calculated.",
+        "Description": "Event for which ECG QC measures were calculated. This is input taken from the user.",
         "Print Name": "ECG Event",
         "Unit": ""
     },
+    "ecg_percent_missing": {
+        "Description": "Percentage of missing data in the ECG stream. It is calculated from the number of NaN values divided by total values in the data",
+        "Print Name": "Percentage of Missing ECG data",
+        "Unit": "%"
+    },
     "ecg_sampling_rate": {
-        "Description": "Sampling rate of ECG signal. Calculated ",
+        "Description": "Sampling rate of ECG signal. Effective sampling rate is calculated from the LSL time stamps.",
         "Print Name": "Effective sampling rate",
         "Unit": "Hz"
     },
     "ecg_average_heart_rate": {
-        "Description": "",
+        "Description": "Average heart rate. The average of heart rate is calculated from ECG signal that was processed using neurokit2.",
         "Print Name": "Average heart rate",
         "Unit": "bpm"
     },
     "ecg_kurtosis_SQI": {
-        "Description": "",
+        "Description": "The kurtosis of cleaned ECG signal. It is computed using Fisher's definition of kurtosis by subtracting 3.0 from the fourth central movement divided by the square of the variance.",
         "Print Name": "Kurtosis signal quality index (kSQI)",
         "Unit": ""
     },
     "ecg_power_spectrum_distribution_SQI": {
-        "Description": "",
+        "Description": "The power spectrum distribution of the QRS complex. It is calculated using signal_power() function in the signal processing module of neurokit2. It uses Welch's method to compute power spectral density.",
         "Print Name": "Power spectrum distribution (pSQI)",
         "Unit": "mV\u00b2/Hz"
     },
     "ecg_relative_baseline_power_sqi": {
-        "Description": "",
+        "Description": "The relative power of baseline of the cleaned ECG signal. It is calculated using signal_power() function in the signal processing module of neurokit2. It uses Welch's method to compute power spectral density.",
         "Print Name": "Relative power in baseline (basSQI)",
         "Unit": "%"
     },
     "ecg_SNR": {
-        "Description": "",
+        "Description": "Signal to Noise Ratio for ECG signal. Calculated by dividing the power of cleaned ECG signal by power of the noise then taking the logarithm of the result and multiplying by 10.",
         "Print Name": "Signal to Noise Ratio",
         "Unit": "dB"
     },
     "eda_event": {
-        "Description": "",
+        "Description": "Event for which EDA QC measures were calculated. This is input taken from the user.",
         "Print Name": "EDA Event",
         "Unit": ""
     },
     "eda_sampling_rate": {
-        "Description": "",
+        "Description": "Sampling rate of EDA signal. Effective sampling rate is calculated from the LSL time stamps.",
         "Print Name": "Effective sampling rate",
         "Unit": "Hz"
     },
     "eda_signal_integrity_check": {
-        "Description": "",
+        "Description": "Percentage of valid EDA signal. Computed by dividing numbe of NaN values in the EDA data with total number of EDA data values and then multiplying with 100.",
         "Print Name": "Signal integrity check",
         "Unit": "%"
     },
     "eda_average_scl": {
-        "Description": "",
+        "Description": "Average Skin Conductance Level. The average is computed for the skin conductance level component of EDA signal after cleaning and preprocessing it using neurokit2.eda_process function.",
         "Print Name": "Average skin conductance level",
         "Unit": "mS"
     },
     "eda_scl_sd": {
-        "Description": "",
+        "Description": "Standard deviation Skin Conductance Level. The standard deviation is computed for the skin conductance level component of EDA signal after cleaning and preprocessing it using neurokit2.eda_process function.",
         "Print Name": "Skin conductance level std",
         "Unit": "mS"
     },
     "eda_scl_cv": {
-        "Description": "",
+        "Description": "Coefficient of Variation Skin Conductance Level. The coefficient of variation of skin conductance level (SCL) is computed by dividing SCL standard deviation by average SCL and then multiplying with 100.",
         "Print Name": "Skin conductance level coefficient of variation",
         "Unit": "%"
     },
     "eda_average_scr_amplitude": {
-        "Description": "",
+        "Description": "Average amplitude of Skin Conductance Response. The average is computed from the skin conductance response amplitudes estimated by the neurokit2.eda_process function from the cleaned EDA signal.",
         "Print Name": "Average amplitude of skin conductance response",
         "Unit": "mS"
     },
     "eda_scr_validity": {
-        "Description": "",
+        "Description": "Percentage of valid of Skin Conductance Response amplitudes. First total number of skin conductance response (SCR) amplitudes between 0.01 - 3.0 µS is calculated. It is divided by the total number of SCR amplitudes and multiplied with 100 to give percantage of valid SCR amplitudes.",
         "Print Name": "Skin conductance response validity",
         "Unit": "%"
     },
     "eda_snr": {
-        "Description": "",
+        "Description": "Signal to Noise Ratio for ECG signal. Calculated by dividing the power of cleaned EDA signal by power of the noise then taking the logarithm of the result and multiplying by 10.",
         "Print Name": "Signal to noise ratio",
         "Unit": "dB"
     },
