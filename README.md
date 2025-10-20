@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/657341621.svg)](https://zenodo.org/doi/10.5281/zenodo.10383685)
+
 
 # A Python Pipeline for Quality Control of Multimodal Datasets
 
@@ -47,16 +47,3 @@ Or get the newest development version via:
 pip install git+https://github.com/childmindresearch/MOBI_QC
 ```
 
-## Quick start (TBA)
-
-Short tutorial, maybe with a
-
-```Python
-import MOBI_QC
-
-MOBI_QC.short_example()
-```
-
-## Links or References (TBA)
-
-- [https://www.wikipedia.de](https://www.wikipedia.de)
