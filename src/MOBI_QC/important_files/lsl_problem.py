@@ -20,20 +20,6 @@ def lsl_quick_check(ps_df: pd.DataFrame):
     quickcheck = sum([not math.isclose(x, 1/sampling_rate, abs_tol=1e-2) for x in ps_df.lsl_time_stamp.diff()]) - 1
     return quickcheck
 
-# def lsl_problem_plot(plot_df: pd.DataFrame, sub_id: str, modality_to_plot: str):
-#     """
-#     Plot the LSL timestamps for the physio data.
-#     Args:
-#         plot_df (pd.DataFrame): Dataframe with data to be plotted.
-#         sub_id (str): Subject ID.
-#     """
-#     plt.figure()
-#     plt.plot(plot_df['lsl_time_stamp'], color = 'g')
-#     plt.xlabel('Index')
-#     plt.ylabel('LSL Time Stamp (s)')
-#     plt.title(f'LSL Time Stamps ({modality_to_plot.upper()} Data)')
-#     plt.tight_layout()
-#     plt.savefig(f'report_images/{sub_id}_LSL_timestamps.png')
     
 def lsl_loss_percentage(df_map: dict, error_map: dict, sub_id: str) -> pd.DataFrame:
     """
@@ -47,20 +33,25 @@ def lsl_loss_percentage(df_map: dict, error_map: dict, sub_id: str) -> pd.DataFr
     """
     # df with percent loss (diff greater than median)
     modalities = list(df_map.keys())
-    percent_list = []
+    lsl_dict = {}
 
     for modality in modalities:
+        num_losses_name = f'{modality}_num_losses'
+        percent_name = f'{modality}_percent_lost'
+
         if error_map[modality]: 
             print(f'No {modality} data for participant {sub_id}')
             loss_instances = float('nan')
             percent_lost = float('nan')
-            percent_list.append({'stream': modality, 'num_losses': loss_instances, 'percent_lost': percent_lost})
+            lsl_dict[num_losses_name] = loss_instances
+            lsl_dict[percent_name] = percent_lost
             continue
         df = df_map[modality]
 
         # median diff between lsl_time_stamp (with 1.05 margin) 
         df['diff'] = df['lsl_time_stamp'].diff()
         median = df['diff'].median() * 1.05
+        
         # number of loss instances  
         loss_instances = (df['diff'] > median).sum()
         if loss_instances != 0:
@@ -72,12 +63,11 @@ def lsl_loss_percentage(df_map: dict, error_map: dict, sub_id: str) -> pd.DataFr
             percent_lost = amt_data_lost/amt_data_total * 100
         else:
             percent_lost = 0
-        percent_list.append({'stream': modality, 'num_losses': loss_instances, 'percent_lost': round(percent_lost, 4)})
-        
-    percent_data_loss = pd.DataFrame(percent_list)
-    percent_data_loss.sort_values(by='percent_lost', inplace=True, ascending=False)
-    nonzero_loss = percent_data_loss[percent_data_loss['num_losses'] != 0]
-    return percent_data_loss
+    
+        lsl_dict[num_losses_name] = loss_instances
+        lsl_dict[percent_name] = round(percent_lost, 4)
+
+    return lsl_dict
     
 def lsl_loss_before_social(df_map: dict, error_map: dict, sub_id: str, offset_social_timestamp: float) -> pd.DataFrame:
     """
@@ -88,36 +78,39 @@ def lsl_loss_before_social(df_map: dict, error_map: dict, sub_id: str, offset_so
         sub_id (str): Subject ID.
         offset_social_timestamp (float): Timestamp of  social task offset.
     Returns:
-        percent_data_loss_social (pd.DataFrame): Dataframe containing the percentage of data loss before the social task offset for each modality.
+        lsl_social_dict (dict): Dictionary containing the number and percentage of data loss before the social task offset for each modality.
     """
 
     modalities = list(df_map.keys())
-    social_percent_list = []
+    lsl_social_dict = {}
 
     for modality in modalities:
+        num_losses_name = f'{modality}_num_losses'
+        percent_name = f'{modality}_percent_lost'
+
         if error_map[modality]: 
             print(f'No {modality} data for participant {sub_id}')
             loss_instances = float('nan')
             percent_lost = float('nan')
-            social_percent_list.append({'stream': modality, 'num_losses': loss_instances, 'percent_lost': percent_lost})
+            lsl_social_dict[num_losses_name] = loss_instances
+            lsl_social_dict[percent_name] = percent_lost
             continue
         df = df_map[modality]
         df['diff'] = df['lsl_time_stamp'].diff()
         social_df = df.loc[df.lsl_time_stamp <= offset_social_timestamp]
 
         # median diff between lsl_time_stamp (with 1.05 margin) 
-        
-        median1 = df['diff'].median() * 1.05
+        median = df['diff'].median() * 1.05
 
         # number of loss instances  
-        loss_instances = (social_df['diff'] > median1).sum()
+        loss_instances = (social_df['diff'] > median).sum()
         percent_lost = 0
         amt_data_lost = 0
 
         # LSL loss starts and ends before offset_social
         if loss_instances != 0:
             # amount of data skipped: values for which diff>median 
-            amt_data_lost = social_df.loc[social_df['diff'] > median1, 'diff'].values[0].sum()
+            amt_data_lost = social_df.loc[social_df['diff'] > median, 'diff'].values[0].sum()
 
         # offset social is between LSL loss onset + offset
         remaining_lost = offset_social_timestamp - social_df['lsl_time_stamp'].values[-1]
@@ -128,12 +121,11 @@ def lsl_loss_before_social(df_map: dict, error_map: dict, sub_id: str, offset_so
         amt_data_total = offset_social_timestamp - social_df['lsl_time_stamp'].values[0]
         percent_lost = amt_data_lost/amt_data_total * 100
 
-        social_percent_list.append({'stream': modality, 'num_losses': loss_instances, 'percent_lost': round(percent_lost, 4)})
-            
-    percent_data_loss_social = pd.DataFrame(social_percent_list)
-    percent_data_loss_social.sort_values(by='percent_lost', inplace=True, ascending=False)
-    nonzero_loss_social = percent_data_loss_social[percent_data_loss_social['num_losses'] != 0]
-    return percent_data_loss_social
+
+        lsl_social_dict[num_losses_name] = loss_instances
+        lsl_social_dict[percent_name] = round(percent_lost, 4)  
+
+    return lsl_social_dict
 
 def lsl_problem_qc(xdf_filename:str, stim_df:pd.DataFrame, df_map:dict, error_map:dict) -> dict:
     """
@@ -150,8 +142,16 @@ def lsl_problem_qc(xdf_filename:str, stim_df:pd.DataFrame, df_map:dict, error_ma
     # load data 
     sub_id = xdf_filename.split('sub-')[1].split('/')[0]
 
+    # behavior error handling 
     if error_map['behavior']:
-        return None
+        lsl_behavior_error_dict = {}
+        modalities = list(df_map.keys())
+        for modality in modalities:
+            num_losses_name = f'{modality}_num_losses'
+            percent_name = f'{modality}_percent_lost'
+            lsl_behavior_error_dict[num_losses_name] = float('nan')
+            lsl_behavior_error_dict[percent_name] = float('nan')
+        return lsl_behavior_error_dict
 
     offset_social_timestamp = stim_df.loc[stim_df['event'] == 'Offset_SocialTask', 'lsl_time_stamp'].values[0]
 
@@ -163,18 +163,11 @@ def lsl_problem_qc(xdf_filename:str, stim_df:pd.DataFrame, df_map:dict, error_ma
     # plot_df = df_map[modality_to_plot]
     # lsl_problem_plot(plot_df, sub_id, modality_to_plot)
 
-    vars = {}
-    # vars['percent_loss'] = lsl_loss_percentage(df_map, error_map, sub_id)
-    # if vars['percent_loss'].empty:
-    #     vars['percent_loss'] = f"no data loss detected for {sub_id} for entire experiment"
-    # print(vars['percent_loss'])
+    # loss_in_experiment_vars = lsl_loss_percentage(df_map, error_map, sub_id)
 
-    vars['loss_before_social_task'] = lsl_loss_before_social(df_map, error_map, sub_id, offset_social_timestamp)
-    if vars['loss_before_social_task'].empty: # fuck!
-        vars['loss_before_social_task'] = f"no data loss detected for {sub_id} before social task"
-    print(vars['loss_before_social_task'])
+    loss_before_social_vars = lsl_loss_before_social(df_map, error_map, sub_id, offset_social_timestamp)
 
-    return vars
+    return loss_before_social_vars
 
 # allow the functions in this script to be imported into other scripts
 if __name__ == "__main__":
