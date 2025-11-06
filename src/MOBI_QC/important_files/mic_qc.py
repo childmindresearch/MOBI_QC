@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from glob import glob
 import librosa
-import datetime
 import matplotlib.pyplot as plt
 from utils import *
 
@@ -20,11 +19,11 @@ def mic_lsl_wav_durations(xdf_filename:str, mic_df: pd.DataFrame) -> float:
     wav_path = glob(os.path.join(os.path.dirname(xdf_filename), '*.wav'))[0]
     
     # calculate wav and lsl durations
-    wav_dur = round(librosa.get_duration(path=wav_path), 3)
-    lsl_dur = round(mic_df['lsl_time_stamp'].iloc[-1]- mic_df['lsl_time_stamp'].iloc[0], 3)
+    wav_dur = librosa.get_duration(path=wav_path)
+    lsl_dur = mic_df['lsl_time_stamp'].iloc[-1]- mic_df['lsl_time_stamp'].iloc[0]
 
     # diff
-    dur_diff = abs(wav_dur - lsl_dur)
+    dur_diff = round(abs(wav_dur - lsl_dur), 4)
 
     return dur_diff
 

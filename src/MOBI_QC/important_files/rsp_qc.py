@@ -112,7 +112,7 @@ def make_rsp_plots(sub_id: str, rsp_df: pd.DataFrame, sampling_rate: float, peak
     plt.savefig(f'report_images/{sub_id}_rsp_autocorrelation.png')
 
 # breath amplitude 
-def get_rsp_breath_amplitude(rsp_clean: np.ndarray, peaks_df: pd.DataFrame, rsp_df: pd.DataFrame, sub_id: str) -> tuple[float, float, float, float, np.ndarray]:
+def get_rsp_breath_amplitude(rsp_clean: np.ndarray, peaks_df: pd.DataFrame) -> tuple[float, float, float, float, np.ndarray]:
     """
     Calculates and plots the breath amplitude of the respiration signal.
     Args:
@@ -141,9 +141,9 @@ def get_rsp_breath_amplitude(rsp_clean: np.ndarray, peaks_df: pd.DataFrame, rsp_
     return mean, std, rmin, rmax, cleaned_breath_amplitude
 
 # respiration rate
-def get_rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float, sub_id: str) -> tuple[float, float, float, float, np.ndarray]:
+def get_rsp_rate(rsp_clean: np.ndarray, peaks_dict: dict, sampling_rate: float) -> tuple[float, float, float, float, np.ndarray]:
     """
-    Calculates and plots the respiration rate of the respiration signal.
+    Calculates the respiration rate of the respiration signal.
     Args:
         rsp_clean (np.ndarray): Cleaned respiration signal.
         peaks_dict (dict): Dictionary containing samples where peaks and troughs are.
