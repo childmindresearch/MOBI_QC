@@ -21,7 +21,7 @@ def lsl_quick_check(ps_df: pd.DataFrame):
     return quickcheck
 
     
-def lsl_loss_percentage(df_map: dict, error_map: dict, sub_id: str) -> pd.DataFrame:
+def lsl_loss_percentage(df_map: dict, error_map: dict, sub_id: str) -> dict:
     """
     Calculate the percentage of data loss for each modality based on LSL timestamps.
     Args:

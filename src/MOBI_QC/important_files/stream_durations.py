@@ -11,7 +11,7 @@ def get_durations(xdf_path: str,
     stim_df: pd.DataFrame,
     df_map: dict, 
     error_map: dict
-    ) -> pd.DataFrame:
+    ) -> dict:
     
     """
     Get the durations of each data stream and compare to their expected duration, given an experiment arm, where the expected duration is calculated from the LSL timestamps of the stimulus markers.

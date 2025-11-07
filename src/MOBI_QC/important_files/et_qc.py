@@ -1,8 +1,6 @@
 import pyxdf
 import pandas as pd
 import numpy as np
-from glob import glob
-import datetime
 import re
 import matplotlib.pyplot as plt
 from utils import *
