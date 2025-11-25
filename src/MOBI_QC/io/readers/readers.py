@@ -20,23 +20,24 @@ def read_xdf(xdf_path: str | pathlib.Path,
     -------
     list
         A list of data streams contained in the xdf file.
+
+    Raises:
+    ------
+    ValueError
+        If xdf_path does not end with '.xdf'.
+    TypeError
+        If xdf_path is not a string or pathlib.Path, or if stream_names is not a list of strings.
+    FileNotFoundError
+        If the xdf file does not exist.
     """
-    if xdf_path is None:
-        raise ValueError("XDF path must be provided")
-    if not isinstance(xdf_path, str | pathlib.Path):
-        raise TypeError("XDF path must be a string or pathlib.Path")
-    if not str(xdf_path).endswith('.xdf'):
+    xdf_path = pathlib.Path(xdf_path)
+
+    if xdf_path.suffix != ".xdf":
         raise ValueError("XDF path must end with '.xdf'")  
     
-    if stream_names is not None and not isinstance(stream_names, list):
-        raise TypeError("Stream names must be a list of strings")
-    
-
-    xdf_path = pathlib.Path(xdf_path)
     if not xdf_path.exists():
         raise FileNotFoundError(f"XDF file not found: {xdf_path}")
-
-
+    
     if stream_names is None:
         streams, _ = pyxdf.load_xdf(xdf_path)
 
