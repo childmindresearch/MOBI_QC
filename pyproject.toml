@@ -12,12 +12,8 @@ readme = "README.md"
 packages = [{include = "MOBI_QC", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.11, <3.14"
-pandas = "^2.3.3"
+python = ">3.11, <3.14"
 pyxdf = "^1.17.0"
-numpy = "^2.3.5"
-pylsl = "^1.17.6"
-ruff = "^0.14.6"
 
 
 
@@ -44,7 +40,7 @@ testpaths = [
 ignore_missing_imports = true
 
 [tool.ruff]
-line-length = 120
+line-length = 88
 indent-width = 4
 src = ["src"]
 target-version = "py311"
