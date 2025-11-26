@@ -28,7 +28,8 @@ def read_xdf(
     ValueError
         If xdf_path does not end with '.xdf'.
     TypeError
-        If xdf_path is not a string or pathlib.Path, or if stream_names is not a list of strings.
+        If xdf_path is not a string or pathlib.Path, or if stream_names is not a
+        list of strings.
     FileNotFoundError
         If the xdf file does not exist.
     """
