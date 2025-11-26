@@ -12,8 +12,8 @@ readme = "README.md"
 packages = [{include = "MOBI_QC", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">3.11"
-pandas = "^2.3.3"
+python = ">3.11, <3.14"
+pyxdf = "^1.17.0"
 
 
 
