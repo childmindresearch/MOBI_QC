@@ -29,15 +29,24 @@ def test_raises_file_not_found_for_missing_file(tmp_path: pathlib.Path) -> None:
         readers.read_xdf(str(missing))
 
 
-def test_reads_all_streams_when_stream_names_is_none(sample_xdf_file: pathlib.Path) -> None:
+def test_reads_all_streams_when_stream_names_is_none(
+    sample_xdf_file: pathlib.Path,
+) -> None:
     """Test that read_xdf reads all streams when stream_names is None."""
-    expected_stream_names = ["AudioMarkerStream", "GazeStream", "PhysioStream", "EEGStream"]
+    expected_stream_names = [
+        "AudioMarkerStream",
+        "GazeStream",
+        "PhysioStream",
+        "EEGStream",
+    ]
     streams = readers.read_xdf(sample_xdf_file, stream_names=None)
     stream_names = [streams[i]["info"]["name"][0] for i in range(len(streams))]
     assert stream_names == expected_stream_names
 
 
-def test_reads_selected_streams_and_builds_select_streams(sample_xdf_file: pathlib.Path) -> None:
+def test_reads_selected_streams_and_builds_select_streams(
+    sample_xdf_file: pathlib.Path,
+) -> None:
     """Test that read_xdf reads selected streams and builds select_streams correctly."""
     requested_names = ["AudioMarkerStream", "GazeStream"]
     streams = readers.read_xdf(sample_xdf_file, stream_names=requested_names)

@@ -6,7 +6,9 @@ from typing import Optional
 import pyxdf
 
 
-def read_xdf(xdf_path: str | pathlib.Path, stream_names: Optional[list[str]] = None) -> list:
+def read_xdf(
+    xdf_path: str | pathlib.Path, stream_names: Optional[list[str]] = None
+) -> list:
     """Reads a MOBI xdf file and returns a list containing the data streams.
 
     Args:
@@ -42,6 +44,10 @@ def read_xdf(xdf_path: str | pathlib.Path, stream_names: Optional[list[str]] = N
         streams, _ = pyxdf.load_xdf(xdf_path)
 
     else:
-        streams, _ = pyxdf.load_xdf(xdf_path, select_streams=[{"name": name} for name in stream_names], verbose=False)
+        streams, _ = pyxdf.load_xdf(
+            xdf_path,
+            select_streams=[{"name": name} for name in stream_names],
+            verbose=False,
+        )
 
     return streams
