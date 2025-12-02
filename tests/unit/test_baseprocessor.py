@@ -5,7 +5,7 @@ import pathlib
 from MOBI_QC.core.models import BaseProcessor
 
 
-def test_baseprocessor_initialization(sample_xdf_file: str | pathlib.Path) -> None:
+def test_baseprocessor_initialization(sample_xdf_file: pathlib.Path) -> None:
     """Test BaseProcessor initialization and attribute assignments."""
     processor = BaseProcessor.BaseProcessor(xdf_path=sample_xdf_file)
 
