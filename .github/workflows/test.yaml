@@ -1,6 +1,5 @@
 name: Python Tests
-permissions:
-  contents: read
+
 
 on:
   push:
@@ -10,6 +9,8 @@ on:
 
 jobs:
   unit:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -38,8 +39,11 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         verbose: true
 
+
   ruff:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
     - uses: actions/checkout@v4
     - name: Install poetry
@@ -58,6 +62,8 @@ jobs:
 
   mypy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
     - uses: actions/checkout@v4
     - name: Install poetry
