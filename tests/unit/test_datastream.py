@@ -16,8 +16,9 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     info = stream['info']
     channels = info['desc'][0]['channels'][0]['channel']
     column_labels = [channel['label'][0] for channel in channels]
-    df = pl.DataFrame(stream['time_series'], schema=column_labels)    
-
+    df = pl.DataFrame(
+        stream['time_series'], schema=column_labels
+    ).with_columns(pl.Series("time_stamps", stream['time_stamps']))
 
     ds = DataStream.DataStream(stream_name=info['name'][0], 
                                        data=df, variables=column_labels, 
