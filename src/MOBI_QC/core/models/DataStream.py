@@ -1,10 +1,11 @@
 """DataStream class module."""
+
 import polars as pl
 
 
 class DataStream:
     """Class representing a data stream.
-    
+
     Attributes:
         stream_name: String representing the name of the stream assigned at collection.
         data: polars.DataFrame containing the collected data.
@@ -24,16 +25,27 @@ class DataStream:
         desc: Dictionary containing extended description and metadata about the
             data stream.
         qc: Dictionary to hold quality control metrics and results.
-        error: Boolean flag indicating if there was an error during processing or 
+        error: Boolean flag indicating if there was an error during processing or
             collection.
-        
+
     """
-    def __init__(self, stream_name: str, data: pl.DataFrame, variables: list,
-                 data_type: str, channel_count: int, nominal_srate: float, 
-                 source_id: str, uid: str, created_at: str, effective_srate: float, 
-                 desc: dict) -> None:
+
+    def __init__(
+        self,
+        stream_name: str,
+        data: pl.DataFrame,
+        variables: list,
+        data_type: str,
+        channel_count: int,
+        nominal_srate: float,
+        source_id: str,
+        uid: str,
+        created_at: str,
+        effective_srate: float,
+        desc: dict,
+    ) -> None:
         """Initialize the DataStream with provided attributes.
-        
+
         Args:
             stream_name: Name of the stream assigned at collection.
             data: polars.DataFrame containing the collected data.
@@ -58,5 +70,5 @@ class DataStream:
         self.uid = uid
         self.created_at = created_at
         self.desc = desc
-        self.qc = {}
+        self.qc = dict[str, object]()
         self.error = False
