@@ -70,5 +70,5 @@ class DataStream:
         self.uid = uid
         self.created_at = created_at
         self.desc = desc
-        self.qc_metrics:dict[str, object] = {}
+        self.qc_metrics: dict[str, object] = {}
         self.error = False
