@@ -23,7 +23,7 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
         stream_name=info["name"][0],
         data=df,
         variables=column_labels,
-        data_type=info["type"][0],
+        data_modality=info["type"][0],
         channel_count=int(info["channel_count"][0]),
         nominal_srate=float(info["nominal_srate"][0]),
         source_id=info["source_id"][0],
@@ -36,7 +36,7 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     assert isinstance(ds.stream_name, str)
     assert isinstance(ds.data, pl.DataFrame)
     assert isinstance(ds.variables, list)
-    assert isinstance(ds.data_type, str)
+    assert isinstance(ds.data_modality, str)
     assert isinstance(ds.channel_count, int)
     assert isinstance(ds.nominal_srate, float)
     assert isinstance(ds.source_id, str)
@@ -44,7 +44,7 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     assert isinstance(ds.created_at, str)
     assert isinstance(ds.effective_srate, float)
     assert isinstance(ds.desc, dict)
-    assert hasattr(ds, "qc")
-    assert isinstance(ds.qc, dict)
+    assert hasattr(ds, "qc_metrics")
+    assert isinstance(ds.qc_metrics, dict)
     assert hasattr(ds, "error")
     assert not ds.error

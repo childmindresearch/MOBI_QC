@@ -10,7 +10,7 @@ class DataStream:
         stream_name: String representing the name of the stream assigned at collection.
         data: polars.DataFrame containing the collected data.
         variables: List of variable names in the data stream.
-        data_type: String indicating the type of data stream (e.g., EEG, ECG).
+        data_modality: String indicating the type of data stream (e.g., EEG, ECG).
         channel_count: Integer representing the number of channels per channel.
         nominal_srate: Float indicating the sampling rate as advertised by the data
             source.
@@ -24,7 +24,7 @@ class DataStream:
             determined via lsl::local_clock()).
         desc: Dictionary containing extended description and metadata about the
             data stream.
-        qc: Dictionary to hold quality control metrics and results.
+        qc_metrics: Dictionary to hold quality control metrics and results.
         error: Boolean flag indicating if there was an error during processing or
             collection.
 
@@ -34,8 +34,8 @@ class DataStream:
         self,
         stream_name: str,
         data: pl.DataFrame,
-        variables: list,
-        data_type: str,
+        variables: list[str],
+        data_modality: str,
         channel_count: int,
         nominal_srate: float,
         source_id: str,
@@ -50,7 +50,7 @@ class DataStream:
             stream_name: Name of the stream assigned at collection.
             data: polars.DataFrame containing the collected data.
             variables: List of variable names in the data stream.
-            data_type: Type of data stream (e.g., EEG, ECG).
+            data_modality: Type of data stream (e.g., EEG, ECG).
             channel_count: Number of channels per channel.
             nominal_srate: Sampling rate as advertised by the data source.
             source_id: String, unique identifier of the device / data source.
@@ -62,7 +62,7 @@ class DataStream:
         self.stream_name = stream_name
         self.data = data
         self.variables = variables
-        self.data_type = data_type
+        self.data_modality = data_modality
         self.channel_count = channel_count
         self.nominal_srate = nominal_srate
         self.source_id = source_id
@@ -70,5 +70,5 @@ class DataStream:
         self.uid = uid
         self.created_at = created_at
         self.desc = desc
-        self.qc = dict[str, object]()
+        self.qc_metrics:dict[str, object] = {}
         self.error = False
