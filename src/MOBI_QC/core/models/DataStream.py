@@ -11,7 +11,7 @@ class DataStream:
         data: polars.DataFrame containing the collected data.
         variables: List of variable names in the data stream.
         data_modality: String indicating the type of data stream (e.g., EEG, ECG).
-        channel_count: Integer representing the number of channels per channel.
+        channel_count: Integer representing the number of channels per stream.
         nominal_srate: Float indicating the sampling rate as advertised by the data
             source.
         source_id: String representing the unique identifier of the device / data
@@ -20,8 +20,6 @@ class DataStream:
         uid: String, unique ID of the stream outlet instance. Guaranteed to be
             different across multiple instantiations of the same outlet (e.g., after
             restart).
-        created_at: String, timestamp when the stream was first created (as
-            determined via lsl::local_clock()).
         desc: Dictionary containing extended description and metadata about the
             data stream.
         qc_metrics: Dictionary to hold quality control metrics and results.
@@ -40,7 +38,6 @@ class DataStream:
         nominal_srate: float,
         source_id: str,
         uid: str,
-        created_at: str,
         effective_srate: float,
         desc: dict,
     ) -> None:
@@ -55,7 +52,6 @@ class DataStream:
             nominal_srate: Sampling rate as advertised by the data source.
             source_id: String, unique identifier of the device / data source.
             uid: Unique ID of the stream outlet instance.
-            created_at: Timestamp when the stream was first created.
             effective_srate: Measured sampling rate of the data stream.
             desc: Extended description and metadata about the data stream.
         """
@@ -68,7 +64,6 @@ class DataStream:
         self.source_id = source_id
         self.effective_srate = effective_srate
         self.uid = uid
-        self.created_at = created_at
         self.desc = desc
         self.qc_metrics: dict[str, object] = {}
         self.error = False

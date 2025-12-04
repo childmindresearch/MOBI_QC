@@ -28,7 +28,6 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
         nominal_srate=float(info["nominal_srate"][0]),
         source_id=info["source_id"][0],
         uid=info["uid"][0],
-        created_at=info["created_at"][0],
         effective_srate=float(info["effective_srate"]),
         desc=dict(info["desc"][0]),
     )
@@ -41,7 +40,6 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     assert isinstance(ds.nominal_srate, float)
     assert isinstance(ds.source_id, str)
     assert isinstance(ds.uid, str)
-    assert isinstance(ds.created_at, str)
     assert isinstance(ds.effective_srate, float)
     assert isinstance(ds.desc, dict)
     assert hasattr(ds, "qc_metrics")
