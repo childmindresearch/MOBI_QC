@@ -1,7 +1,10 @@
 """BaseProcessor class module."""
-
+import os
+import platform
 import pathlib
 from typing import Optional
+
+import datetime
 
 from MOBI_QC.io.readers import readers
 
@@ -31,3 +34,24 @@ class BaseProcessor:
         self.stream_names = stream_names or [
             stream["info"]["name"][0] for stream in self.raw_data
         ]
+
+    def get_collection_date(self) -> str:
+        """Extract the collection date from the XDF file name.
+
+        Returns:
+            A string representing the collection date in 'YYYY-MM-DD HH:MM:SS' format.
+        """
+        if platform.system() == "Windows":
+            return datetime.datetime.fromtimestamp(os.path.getctime(self.xdf_path))
+        else:
+            stat = os.stat(self.xdf_path)
+            try:
+                timestamp = datetime.datetime.fromtimestamp(stat.st_birthtime)
+                self.collection_date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                return self.collection_date
+            except AttributeError:
+                # Fallback: use modification time instead
+                timestamp = datetime.datetime.fromtimestamp(stat.st_mtime)
+                return timestamp.strftime('%Y-%m-%d %H:%M:%S')
+
+
