@@ -1,10 +1,10 @@
 """BaseProcessor class module."""
-import os
-import platform
-import pathlib
-from typing import Optional
 
 import datetime
+import os
+import pathlib
+import platform
+from typing import Optional
 
 from MOBI_QC.io.readers import readers
 
@@ -42,16 +42,15 @@ class BaseProcessor:
             A string representing the collection date in 'YYYY-MM-DD HH:MM:SS' format.
         """
         if platform.system() == "Windows":
-            return datetime.datetime.fromtimestamp(os.path.getctime(self.xdf_path))
+            dt = datetime.datetime.fromtimestamp(os.path.getctime(self.xdf_path))
+            return dt.strftime("%Y-%m-%d %H:%M:%S")
         else:
             stat = os.stat(self.xdf_path)
             try:
                 timestamp = datetime.datetime.fromtimestamp(stat.st_birthtime)
-                self.collection_date = timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                self.collection_date = timestamp.strftime("%Y-%m-%d %H:%M:%S")
                 return self.collection_date
             except AttributeError:
                 # Fallback: use modification time instead
                 timestamp = datetime.datetime.fromtimestamp(stat.st_mtime)
-                return timestamp.strftime('%Y-%m-%d %H:%M:%S')
-
-
+                return timestamp.strftime("%Y-%m-%d %H:%M:%S")

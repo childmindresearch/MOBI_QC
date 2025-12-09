@@ -1,6 +1,5 @@
 """Unit tests for BaseProcessor class."""
 
-import datetime
 import pathlib
 
 from MOBI_QC.core.models import BaseProcessor
@@ -30,7 +29,7 @@ def test_baseprocessor_with_stream_names(sample_xdf_file: str | pathlib.Path) ->
 
 def test_get_collection_date(sample_xdf_file: str | pathlib.Path) -> None:
     """Test the get_collection_date method of BaseProcessor."""
-    expected_date = '2025-12-02 16:24:52'
+    expected_date = "2025-12-02 16:24:52"
     processor = BaseProcessor.BaseProcessor(xdf_path=sample_xdf_file)
     collection_date = processor.get_collection_date()
 
