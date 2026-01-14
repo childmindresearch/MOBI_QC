@@ -39,7 +39,7 @@ def test_reads_all_streams_when_stream_names_is_none(
         "GazeStream",
         "CameraFrameStream",
         "EEGStream",
-        "MicrophoneStream"
+        "MicrophoneStream",
     ]
     streams = readers.read_xdf(sample_xdf_file, stream_names=None)
     stream_names = [streams[i]["info"]["name"][0] for i in range(len(streams))]

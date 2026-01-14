@@ -42,26 +42,22 @@ class BaseProcessor:
         objects and assigns them as attributes of the processor instance.
         """
         for stream in self.raw_data:
-            channels = stream['info']['desc'][0]['channels'][0]['channel']
-            column_labels = [
-                channels[i]['label'][0] for i in range(len(channels))
-            ]
-            df = pl.DataFrame(stream['time_series'], schema=column_labels, orient="row")
-            df = df.with_columns(pl.Series('time_stamp', stream['time_stamps']))
-            
+            channels = stream["info"]["desc"][0]["channels"][0]["channel"]
+            column_labels = [channels[i]["label"][0] for i in range(len(channels))]
+            df = pl.DataFrame(stream["time_series"], schema=column_labels, orient="row")
+            df = df.with_columns(pl.Series("time_stamp", stream["time_stamps"]))
+
             ds = DataStream(
-                stream_name=stream['info']['name'][0],
+                stream_name=stream["info"]["name"][0],
                 data=df,
-                variables=column_labels + ['time_stamp'],
-                data_modality=stream['info']['type'][0],
-                channel_count=stream['info']['channel_count'][0],
-                nominal_srate=stream['info']['nominal_srate'][0],
-                source_id=stream['info']['source_id'][0],
-                uid=stream['info']['uid'][0],
-                effective_srate=stream['info']['effective_srate'],
-                desc=stream['info']['desc'][0],
+                variables=column_labels + ["time_stamp"],
+                data_modality=stream["info"]["type"][0],
+                channel_count=stream["info"]["channel_count"][0],
+                nominal_srate=stream["info"]["nominal_srate"][0],
+                source_id=stream["info"]["source_id"][0],
+                uid=stream["info"]["uid"][0],
+                effective_srate=stream["info"]["effective_srate"],
+                desc=stream["info"]["desc"][0],
             )
-           
-            setattr(self, stream['info']['type'][0], ds)        
-            
-            
+
+            setattr(self, stream["info"]["type"][0], ds)
