@@ -34,10 +34,12 @@ def test_reads_all_streams_when_stream_names_is_none(
 ) -> None:
     """Test that read_xdf reads all streams when stream_names is None."""
     expected_stream_names = [
-        "AudioMarkerStream",
-        "GazeStream",
+        "EventMarkerStream",
         "PhysioStream",
+        "GazeStream",
+        "CameraFrameStream",
         "EEGStream",
+        "MicrophoneStream"
     ]
     streams = readers.read_xdf(sample_xdf_file, stream_names=None)
     stream_names = [streams[i]["info"]["name"][0] for i in range(len(streams))]
@@ -48,7 +50,7 @@ def test_reads_selected_streams_and_builds_select_streams(
     sample_xdf_file: pathlib.Path,
 ) -> None:
     """Test that read_xdf reads selected streams and builds select_streams correctly."""
-    requested_names = ["AudioMarkerStream", "GazeStream"]
+    requested_names = ["EventMarkerStream", "GazeStream"]
     streams = readers.read_xdf(sample_xdf_file, stream_names=requested_names)
     stream_names = [streams[i]["info"]["name"][0] for i in range(len(streams))]
     assert stream_names == requested_names

@@ -46,7 +46,7 @@ class BaseProcessor:
             column_labels = [
                 channels[i]['label'][0] for i in range(len(channels))
             ]
-            df = pl.DataFrame(stream['time_series'], schema=column_labels)
+            df = pl.DataFrame(stream['time_series'], schema=column_labels, orient="row")
             df = df.with_columns(pl.Series('time_stamp', stream['time_stamps']))
             
             ds = DataStream(
