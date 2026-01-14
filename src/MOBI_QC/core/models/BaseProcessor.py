@@ -42,15 +42,15 @@ class BaseProcessor:
             A string representing the collection date in 'YYYY-MM-DD HH:MM:SS' format.
         """
         if platform.system() == "Windows":
-            dt = datetime.datetime.fromtimestamp(os.path.getctime(self.xdf_path))
-            return dt.strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = datetime.datetime.fromtimestamp(os.path.getctime(self.xdf_path))   
         else:
             stat = os.stat(self.xdf_path)
             try:
                 timestamp = datetime.datetime.fromtimestamp(stat.st_birthtime)
-                self.collection_date = timestamp.strftime("%Y-%m-%d %H:%M:%S")
-                return self.collection_date
+                
             except AttributeError:
                 # Fallback: use modification time instead
                 timestamp = datetime.datetime.fromtimestamp(stat.st_mtime)
-                return timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        
+        self.collection_date = timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        return self.collection_date
