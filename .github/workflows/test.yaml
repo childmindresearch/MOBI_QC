@@ -25,6 +25,8 @@ jobs:
         poetry install
     - name: Run tests
       id: run-tests
+      with:
+        lfs: true
       run: >
         poetry run pytest \
           --junitxml=pytest.xml \
