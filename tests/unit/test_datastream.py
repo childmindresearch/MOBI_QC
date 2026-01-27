@@ -12,25 +12,7 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     """Test DataStream initialization and attribute assignments."""
     stream = readers.read_xdf(xdf_path=sample_xdf_file, stream_names=["GazeStream"])[0]
 
-    info = stream["info"]
-    channels = info["desc"][0]["channels"][0]["channel"]
-    column_labels = [channel["label"][0] for channel in channels]
-    df = pl.DataFrame(stream["time_series"], schema=column_labels).with_columns(
-        pl.Series("time_stamps", stream["time_stamps"])
-    )
-
-    ds = DataStream.DataStream(
-        stream_name=info["name"][0],
-        data=df,
-        variables=column_labels,
-        data_modality=info["type"][0],
-        channel_count=int(info["channel_count"][0]),
-        nominal_srate=float(info["nominal_srate"][0]),
-        source_id=info["source_id"][0],
-        uid=info["uid"][0],
-        effective_srate=float(info["effective_srate"]),
-        desc=dict(info["desc"][0]),
-    )
+    ds = DataStream.DataStream(stream=stream)
 
     assert isinstance(ds.stream_name, str)
     assert isinstance(ds.data, pl.DataFrame)

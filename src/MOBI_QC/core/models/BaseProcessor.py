@@ -3,6 +3,7 @@
 import pathlib
 from typing import Optional
 
+from MOBI_QC.core.models.DataStream import DataStream
 from MOBI_QC.io.readers import readers
 
 
@@ -31,3 +32,13 @@ class BaseProcessor:
         self.stream_names = stream_names or [
             stream["info"]["name"][0] for stream in self.raw_data
         ]
+
+    def format_data(self) -> None:
+        """Format the raw data.
+
+        This method organizes the streams in the raw data into DataStream
+        objects and assigns them as attributes of the processor instance.
+        """
+        for stream in self.raw_data:
+            ds = DataStream(stream=stream)
+            setattr(self, stream["info"]["type"][0], ds)
