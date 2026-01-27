@@ -3,8 +3,6 @@
 import pathlib
 from typing import Optional
 
-import polars as pl
-
 from MOBI_QC.core.models.DataStream import DataStream
 from MOBI_QC.io.readers import readers
 
@@ -34,8 +32,6 @@ class BaseProcessor:
         self.stream_names = stream_names or [
             stream["info"]["name"][0] for stream in self.raw_data
         ]
-
-
 
     def format_data(self) -> None:
         """Format the raw data.

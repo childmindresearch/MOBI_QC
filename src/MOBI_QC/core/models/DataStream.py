@@ -28,7 +28,7 @@ class DataStream:
 
     """
 
-    def __init__(self, stream:dict) -> None:
+    def __init__(self, stream: dict) -> None:
         """Initialize the DataStream with provided attributes from the raw stream data.
 
         Sets the following attributes:
@@ -45,13 +45,17 @@ class DataStream:
 
         Args:
             stream: Raw stream data dictionary. Containing all time series and metadata.
-            
+
         """
         channels = stream["info"]["desc"][0]["channels"][0]["channel"]
         column_labels = [channels[i]["label"][0] for i in range(len(channels))]
 
-        time_series_data = pl.DataFrame(stream["time_series"], schema=column_labels, orient="row")
-        full_df = time_series_data.with_columns(pl.Series("time_stamp", stream["time_stamps"]))
+        time_series_data = pl.DataFrame(
+            stream["time_series"], schema=column_labels, orient="row"
+        )
+        full_df = time_series_data.with_columns(
+            pl.Series("time_stamp", stream["time_stamps"])
+        )
 
         self.stream_name = stream["info"]["name"][0]
         self.data = full_df
