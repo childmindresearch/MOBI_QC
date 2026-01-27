@@ -12,7 +12,7 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     """Test DataStream initialization and attribute assignments."""
     stream = readers.read_xdf(xdf_path=sample_xdf_file, stream_names=["GazeStream"])[0]
 
-    ds = DataStream.DataStream(stream=stream[0])
+    ds = DataStream.DataStream(stream=stream)
 
     assert isinstance(ds.stream_name, str)
     assert isinstance(ds.data, pl.DataFrame)

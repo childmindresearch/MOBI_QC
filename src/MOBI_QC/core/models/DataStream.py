@@ -61,8 +61,8 @@ class DataStream:
         self.data = full_df
         self.variables = column_labels + ["time_stamp"]
         self.data_modality = stream["info"]["type"][0]
-        self.channel_count = stream["info"]["channel_count"][0]
-        self.nominal_srate = stream["info"]["nominal_srate"][0]
+        self.channel_count = int(stream["info"]["channel_count"][0])
+        self.nominal_srate = float(stream["info"]["nominal_srate"][0])
         self.source_id = stream["info"]["source_id"][0]
         self.effective_srate = stream["info"]["effective_srate"]
         self.uid = stream["info"]["uid"][0]
