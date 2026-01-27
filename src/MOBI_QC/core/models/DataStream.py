@@ -28,22 +28,10 @@ class DataStream:
 
     """
 
-    def __init__(
-        self,
-        stream_name: str,
-        data: pl.DataFrame,
-        variables: list[str],
-        data_modality: str,
-        channel_count: int,
-        nominal_srate: float,
-        source_id: str,
-        uid: str,
-        effective_srate: float,
-        desc: dict,
-    ) -> None:
-        """Initialize the DataStream with provided attributes.
+    def __init__(self, stream:dict) -> None:
+        """Initialize the DataStream with provided attributes from the raw stream data.
 
-        Args:
+        Sets the following attributes:
             stream_name: Name of the stream assigned at collection.
             data: polars.DataFrame containing the collected data.
             variables: List of variable names in the data stream.
@@ -54,16 +42,26 @@ class DataStream:
             uid: Unique ID of the stream outlet instance.
             effective_srate: Measured sampling rate of the data stream.
             desc: Extended description and metadata about the data stream.
+
+        Args:
+            stream: Raw stream data dictionary. Containing all time series and metadata.
+            
         """
-        self.stream_name = stream_name
-        self.data = data
-        self.variables = variables
-        self.data_modality = data_modality
-        self.channel_count = channel_count
-        self.nominal_srate = nominal_srate
-        self.source_id = source_id
-        self.effective_srate = effective_srate
-        self.uid = uid
-        self.desc = desc
+        channels = stream["info"]["desc"][0]["channels"][0]["channel"]
+        column_labels = [channels[i]["label"][0] for i in range(len(channels))]
+
+        time_series_data = pl.DataFrame(stream["time_series"], schema=column_labels, orient="row")
+        full_df = time_series_data.with_columns(pl.Series("time_stamp", stream["time_stamps"]))
+
+        self.stream_name = stream["info"]["name"][0]
+        self.data = full_df
+        self.variables = column_labels + ["time_stamp"]
+        self.data_modality = stream["info"]["type"][0]
+        self.channel_count = stream["info"]["channel_count"][0]
+        self.nominal_srate = stream["info"]["nominal_srate"][0]
+        self.source_id = stream["info"]["source_id"][0]
+        self.effective_srate = stream["info"]["effective_srate"]
+        self.uid = stream["info"]["uid"][0]
+        self.desc = stream["info"]["desc"][0]
         self.qc_metrics: dict[str, object] = {}
         self.error = False
