@@ -42,7 +42,7 @@ def test_datastream_filter_time_range(sample_xdf_file: pathlib.Path) -> None:
     ds.filter_time_range(onset_timestamp, offset_timestamp)
     duration = ds.data.item(-1, "time_stamp") - ds.data.item(0, "time_stamp")
 
-    expected_fs = 1/ (ds.data.select(pl.col("time_stamp").diff()).mean().item())
+    expected_fs = 1 / (ds.data.select(pl.col("time_stamp").diff()).mean().item())
 
     assert duration == expected_duration
     assert ds.effective_srate == expected_fs

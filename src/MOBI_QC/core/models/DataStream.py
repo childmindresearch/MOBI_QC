@@ -74,10 +74,10 @@ class DataStream:
         self, onset_timestamp: float, offset_timestamp: float
     ) -> None:
         """Filter DataStream.data attribute.
-        
+
         Reassign the DataStream.data attribute to only include data within
         a specified time range. Recalculates sampling rate based on filtered data.
-        
+
         Args:
             onset_timestamp: float, start time for filtering the data
             offset_timestamp: float, end time for filtering the data
