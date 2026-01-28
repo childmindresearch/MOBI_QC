@@ -28,3 +28,21 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
     assert isinstance(ds.qc_metrics, dict)
     assert hasattr(ds, "error")
     assert not ds.error
+
+
+def test_datastream_filter_time_range(sample_xdf_file: pathlib.Path) -> None:
+    """Test DataStream filter_time_range method."""
+    stream = readers.read_xdf(xdf_path=sample_xdf_file, stream_names=["GazeStream"])[0]
+
+    ds = DataStream.DataStream(stream=stream)
+    onset_timestamp = ds.data.item(2, "time_stamp")
+    offset_timestamp = ds.data.item(200, "time_stamp")
+
+    expected_duration = offset_timestamp - onset_timestamp
+    ds.filter_time_range(onset_timestamp, offset_timestamp)
+    duration = ds.data.item(-1, "time_stamp") - ds.data.item(0, "time_stamp")
+
+    expected_fs = 1/ (ds.data.select(pl.col("time_stamp").diff()).mean().item())
+
+    assert duration == expected_duration
+    assert ds.effective_srate == expected_fs

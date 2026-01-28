@@ -69,3 +69,23 @@ class DataStream:
         self.desc = stream["info"]["desc"][0]
         self.qc_metrics: dict[str, object] = {}
         self.error = False
+
+    def filter_time_range(
+        self, onset_timestamp: float, offset_timestamp: float
+    ) -> None:
+        """Filter DataStream.data attribute.
+        
+        Reassign the DataStream.data attribute to only include data within
+        a specified time range. Recalculates sampling rate based on filtered data.
+        
+        Args:
+            onset_timestamp: float, start time for filtering the data
+            offset_timestamp: float, end time for filtering the data
+        """
+        self.data = self.data.filter(
+            (pl.col("time_stamp") >= onset_timestamp)
+            & (pl.col("time_stamp") <= offset_timestamp)
+        ).clone()
+        self.effective_srate = (
+            1 / self.data.select(pl.col("time_stamp").diff()).mean().item()
+        )
