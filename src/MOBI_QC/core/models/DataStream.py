@@ -76,16 +76,27 @@ class DataStream:
         """Filter DataStream.data attribute.
 
         Reassign the DataStream.data attribute to only include data within
-        a specified time range. Recalculates sampling rate based on filtered data.
+        a specified time range, based on LSL timestamps. 
+        Recalculates sampling rate based on filtered data.
 
         Args:
-            onset_timestamp: float, start time for filtering the data
-            offset_timestamp: float, end time for filtering the data
+            onset_timestamp: start time (seconds) for filtering the data
+            offset_timestamp: end time (seconds) for filtering the data
         """
+        if offset_timestamp < 0 or onset_timestamp < 0:
+            raise ValueError("Onset and offset timestamps must be positive values.")
+            
+        if offset_timestamp <= onset_timestamp:
+            raise ValueError("Offset timestamp must be greater than onset timestamp.")
+
         self.data = self.data.filter(
             (pl.col("time_stamp") >= onset_timestamp)
             & (pl.col("time_stamp") <= offset_timestamp)
-        ).clone()
+        )
+
+        # what if there is no data within the onset + offset 
+
+        time_stamp_diff = float(self.data.select(pl.col("time_stamp").diff()).mean().item())
         self.effective_srate = (
-            1 / self.data.select(pl.col("time_stamp").diff()).mean().item()
+            1 / time_stamp_diff
         )
