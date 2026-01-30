@@ -33,7 +33,6 @@ def test_datastream_initialization(sample_xdf_file: pathlib.Path) -> None:
 
 def test_raises_value_error_if_offset_less(sample_datastream_obj: DataStream.DataStream) -> None:
     """Test that ValueError is raised when offset timestamp is less than onset."""
-
     # rand float btw 1 + n
     # rand float btw 0 + onset
     onset_timestamp = 20
