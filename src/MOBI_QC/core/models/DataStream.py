@@ -2,7 +2,6 @@
 
 import polars as pl
 
-
 class DataStream:
     """Class representing a data stream.
 
@@ -85,18 +84,20 @@ class DataStream:
         """
         if offset_timestamp < 0 or onset_timestamp < 0:
             raise ValueError("Onset and offset timestamps must be positive values.")
-            
+
         if offset_timestamp <= onset_timestamp:
             raise ValueError("Offset timestamp must be greater than onset timestamp.")
+        
 
         self.data = self.data.filter(
             (pl.col("time_stamp") >= onset_timestamp)
             & (pl.col("time_stamp") <= offset_timestamp)
         )
 
-        # what if there is no data within the onset + offset 
-
-        time_stamp_diff = float(self.data.select(pl.col("time_stamp").diff()).mean().item())
+        # if length>=2, else fs = 0
+        time_stamp_diff = float(
+            self.data.select(pl.col("time_stamp").diff()).mean().item()
+            )
         self.effective_srate = (
             1 / time_stamp_diff
         )
