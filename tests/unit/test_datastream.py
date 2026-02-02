@@ -58,7 +58,7 @@ def test_raises_value_error_if_timestamps_negative(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when onset or offset timestamps are negative."""
-    onset_timestamp = np.random.uniform(high=-2.0)
+    onset_timestamp = np.random.uniform(low = -10000, high=-2.0)
     offset_timestamp = np.random.uniform(low=onset_timestamp, high=-1.0)
     with pytest.raises(
         ValueError, match="Onset and offset timestamps must be positive values."
@@ -70,9 +70,9 @@ def test_fs_zero_if_df_empty(
 ) -> None:
     """Test that empty DF yields sampling rate of 0."""
     onset_timestamp = np.random.uniform(
-        low = sample_datastream_obj.data.item(-1, "time_stamp")
+        low = sample_datastream_obj.data.item(-1, "time_stamp"), high = 10000
         )
-    offset_timestamp = np.random.uniform(low = onset_timestamp)
+    offset_timestamp = np.random.uniform(low = onset_timestamp, high = 10000)
     sample_datastream_obj.filter_time_range(onset_timestamp, offset_timestamp)
     assert sample_datastream_obj.effective_srate == 0
 
