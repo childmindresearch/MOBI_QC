@@ -17,9 +17,9 @@ def sample_xdf_file() -> pathlib.Path:
         / "sub-P001_ses-S001_task-Default_run-001_mobi.xdf"
     )
 
+
 @pytest.fixture
 def sample_datastream_obj(sample_xdf_file: pathlib.Path) -> DataStream.DataStream:
     """Create test DataStream object from sample XDF file."""
     stream = readers.read_xdf(xdf_path=sample_xdf_file, stream_names=["GazeStream"])[0]
     return DataStream.DataStream(stream=stream)
-    

@@ -2,6 +2,7 @@
 
 import polars as pl
 
+
 class DataStream:
     """Class representing a data stream.
 
@@ -75,7 +76,7 @@ class DataStream:
         """Filter DataStream.data attribute.
 
         Reassign the DataStream.data attribute to only include data within
-        a specified time range, based on LSL timestamps. 
+        a specified time range, based on LSL timestamps.
         Recalculates sampling rate based on filtered data.
 
         Args:
@@ -87,17 +88,16 @@ class DataStream:
 
         if offset_timestamp <= onset_timestamp:
             raise ValueError("Offset timestamp must be greater than onset timestamp.")
-        
 
         self.data = self.data.filter(
             (pl.col("time_stamp") >= onset_timestamp)
             & (pl.col("time_stamp") <= offset_timestamp)
         )
 
-        # if length>=2, else fs = 0
-        time_stamp_diff = float(
-            self.data.select(pl.col("time_stamp").diff()).mean().item()
+        if len(self.data) >= 2:
+            time_stamp_diff = float(
+                self.data.select(pl.col("time_stamp").diff()).mean().item()
             )
-        self.effective_srate = (
-            1 / time_stamp_diff
-        )
+            self.effective_srate = 1 / time_stamp_diff
+        else:
+            self.effective_srate = 0
