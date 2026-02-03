@@ -81,11 +81,8 @@ class DataStream:
 
         DataStream.data will be empty if onset_timestamp is greater than the
         last value of data['time_stamp'], if offset_timestamp is less than the first
-        value of data['time_stamp'], or if onset_timestamp and offset_timestamp are in
-        between two values of data['time_stamp'].
-
-        DataStream.data will be an empty dataframe if:
-            
+        value of data['time_stamp'], or if onset_timestamp and offset_timestamp are 
+        in between two values of data['time_stamp'].
 
         Args:
             onset_timestamp: start time (seconds) for filtering the data

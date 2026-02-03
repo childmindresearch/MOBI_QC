@@ -90,5 +90,6 @@ def test_datastream_filter_time_range(
     ) - sample_datastream_obj.data.item(0, "time_stamp")
 
     assert new_duration == expected_duration
-    assert math.isclose(sample_datastream_obj.effective_srate, expected_fs, \
-        rel_tol=10e-7)
+    assert math.isclose(
+        sample_datastream_obj.effective_srate, expected_fs, rel_tol=10e-7
+    )
