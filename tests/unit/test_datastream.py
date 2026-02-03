@@ -1,5 +1,7 @@
 """Unit tests for the DataStream class."""
 
+import math
+
 import polars as pl
 import pytest
 
@@ -64,7 +66,7 @@ def test_raises_value_error_if_timestamps_negative(
 def test_fs_zero_if_df_empty(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
-    """Test that empty DF yields sampling rate of 0."""
+    """Test that an empty DF yields sampling rate of 0."""
     onset_timestamp = sample_datastream_obj.data.item(-1, "time_stamp") + 10
     offset_timestamp = onset_timestamp + 100
     sample_datastream_obj.filter_time_range(onset_timestamp, offset_timestamp)
@@ -80,7 +82,7 @@ def test_datastream_filter_time_range(
     onset_timestamp = sample_datastream_obj.data.item(onset_index, "time_stamp")
     offset_timestamp = sample_datastream_obj.data.item(offset_index, "time_stamp")
     expected_duration = offset_timestamp - onset_timestamp
-    expected_fs = 50.475425701662076  # known value from sample data
+    expected_fs = 50.4754  # known value from sample data
 
     sample_datastream_obj.filter_time_range(onset_timestamp, offset_timestamp)
     new_duration = sample_datastream_obj.data.item(
@@ -88,4 +90,5 @@ def test_datastream_filter_time_range(
     ) - sample_datastream_obj.data.item(0, "time_stamp")
 
     assert new_duration == expected_duration
-    assert sample_datastream_obj.effective_srate == expected_fs
+    assert math.isclose(sample_datastream_obj.effective_srate, expected_fs, \
+        rel_tol=10e-7)

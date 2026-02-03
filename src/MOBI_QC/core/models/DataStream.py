@@ -84,6 +84,9 @@ class DataStream:
         value of data['time_stamp'], or if onset_timestamp and offset_timestamp are in
         between two values of data['time_stamp'].
 
+        DataStream.data will be an empty dataframe if:
+            
+
         Args:
             onset_timestamp: start time (seconds) for filtering the data
             offset_timestamp: end time (seconds) for filtering the data
