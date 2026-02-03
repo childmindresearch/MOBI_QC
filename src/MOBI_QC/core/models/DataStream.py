@@ -81,13 +81,13 @@ class DataStream:
 
         DataStream.data will be empty if onset_timestamp is greater than the
         last value of data['time_stamp'], if offset_timestamp is less than the first
-        value of data['time_stamp'], or if onset_timestamp and offset_timestamp are in 
+        value of data['time_stamp'], or if onset_timestamp and offset_timestamp are in
         between two values of data['time_stamp'].
 
         Args:
             onset_timestamp: start time (seconds) for filtering the data
             offset_timestamp: end time (seconds) for filtering the data
-        
+
         Raises:
             ValueError: If offset_timestamp is less than or equal to onset_timestamp.
                         If either onset_timestamp or offset_timestamp is negative.
