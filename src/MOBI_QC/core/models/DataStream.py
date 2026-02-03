@@ -78,7 +78,7 @@ class DataStream:
         Reassign the DataStream.data attribute to only include data within
         a specified time range, based on LSL timestamps.
         Recalculates sampling rate based on filtered data.
-        
+
         DataStream.data will be empty if onset_timestamp is greater than the
         last value of data['time_stamp'], if offset_timestamp is less than the first
         value of data['time_stamp'], or if onset_timestamp and offset_timestamp are in 
@@ -87,6 +87,10 @@ class DataStream:
         Args:
             onset_timestamp: start time (seconds) for filtering the data
             offset_timestamp: end time (seconds) for filtering the data
+        
+        Raises:
+            ValueError: If offset_timestamp is less than or equal to onset_timestamp.
+                        If either onset_timestamp or offset_timestamp is negative.
         """
         if offset_timestamp < 0 or onset_timestamp < 0:
             raise ValueError("Onset and offset timestamps must be positive values.")
