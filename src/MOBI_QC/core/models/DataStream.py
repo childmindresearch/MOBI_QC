@@ -69,3 +69,44 @@ class DataStream:
         self.desc = stream["info"]["desc"][0]
         self.qc_metrics: dict[str, object] = {}
         self.error = False
+
+    def filter_time_range(
+        self, onset_timestamp: float, offset_timestamp: float
+    ) -> None:
+        """Filter DataStream.data attribute.
+
+        Reassign the DataStream.data attribute to only include data within
+        a specified time range, based on LSL timestamps.
+        Recalculates sampling rate based on filtered data.
+
+        DataStream.data will be empty if onset_timestamp is greater than the
+        last value of data['time_stamp'], if offset_timestamp is less than the
+        first value of data['time_stamp'], or if onset_timestamp and offset_timestamp
+        are in between two values of data['time_stamp'].
+
+        Args:
+            onset_timestamp: start time (seconds) for filtering the data
+            offset_timestamp: end time (seconds) for filtering the data
+
+        Raises:
+            ValueError: If offset_timestamp is less than or equal to onset_timestamp.
+                        If either onset_timestamp or offset_timestamp is negative.
+        """
+        if offset_timestamp < 0 or onset_timestamp < 0:
+            raise ValueError("Onset and offset timestamps must be positive values.")
+
+        if offset_timestamp <= onset_timestamp:
+            raise ValueError("Offset timestamp must be greater than onset timestamp.")
+
+        self.data = self.data.filter(
+            (pl.col("time_stamp") >= onset_timestamp)
+            & (pl.col("time_stamp") <= offset_timestamp)
+        )
+
+        if len(self.data) >= 2:
+            time_stamp_diff = float(
+                self.data.select(pl.col("time_stamp").diff()).mean().item()
+            )
+            self.effective_srate = 1 / time_stamp_diff
+        else:
+            self.effective_srate = 0
