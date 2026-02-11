@@ -44,3 +44,12 @@ def test_baseprocessor_format_data(sample_xdf_file: str | pathlib.Path) -> None:
             data_stream.data.get_column("time_stamp").to_numpy()
             == stream["time_stamps"]
         ).all()
+
+
+def test_get_collection_date(sample_xdf_file: str | pathlib.Path) -> None:
+    """Test the get_collection_date method of BaseProcessor."""
+    expected_date = "2026-02-11 19:46:04" #"2026-02-11 13:57:37"#"2026-01-14 16:08:07"
+    processor = BaseProcessor.BaseProcessor(xdf_path=sample_xdf_file)
+    collection_date = processor.get_collection_date()
+
+    assert collection_date == expected_date
