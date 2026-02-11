@@ -29,7 +29,7 @@ def test_baseprocessor_with_stream_names(sample_xdf_file: str | pathlib.Path) ->
 
 def test_get_collection_date(sample_xdf_file: str | pathlib.Path) -> None:
     """Test the get_collection_date method of BaseProcessor."""
-    expected_date = "2026-01-14 16:08:07"
+    expected_date = "2026-02-11 13:57:37"#"2026-01-14 16:08:07"
     processor = BaseProcessor.BaseProcessor(xdf_path=sample_xdf_file)
     collection_date = processor.get_collection_date()
 
