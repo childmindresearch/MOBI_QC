@@ -19,15 +19,15 @@ polars = "^1.35.2"
 
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-mypy = "^1.15.0"
-pre-commit = "^4.2.0"
+pytest = "^9.0.2"
+mypy = "^1.19.1"
+pre-commit = "^4.5.1"
 pytest-cov = "^7.0.0"
-ruff = "^0.14.2"
+ruff = "^0.14.14"
 
 
 [tool.poetry.group.docs.dependencies]
-pdoc = "^15.0.1"
+pdoc = "^16.0.0"
 
 [tool.pytest.ini_options]
 pythonpath = [
