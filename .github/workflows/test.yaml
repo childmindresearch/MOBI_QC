@@ -28,7 +28,8 @@ jobs:
       run: pipx install poetry
     - uses: actions/setup-python@v5
       with:
-        python-version-file: pyproject.toml
+        #python-version-file: pyproject.toml
+        python-version: ${{ matrix.python_version }}
         cache: poetry
     - name: Install dependencies
       run: |
