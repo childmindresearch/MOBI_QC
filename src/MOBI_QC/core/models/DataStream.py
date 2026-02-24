@@ -125,7 +125,9 @@ class DataStream:
             self.qc_metrics["dropped_samples"] = None
             return
 
-        duration_seconds = (self.data["time_stamp"].max() - self.data["time_stamp"].min()).item()
+        duration_seconds = float(self.data["time_stamp"].max()) - float(
+            self.data["time_stamp"].min()
+        )
         expected_samples = int(self.nominal_srate * duration_seconds)
         actual_samples = len(self.data)
         dropped_samples = expected_samples - actual_samples
