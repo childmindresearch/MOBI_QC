@@ -110,3 +110,23 @@ class DataStream:
             self.effective_srate = 1 / time_stamp_diff
         else:
             self.effective_srate = 0
+
+    def calculate_dropped_samples(self) -> None:
+        """Calculate the number of dropped samples in the data stream.
+
+        This method calculates the number of dropped samples based on the nominal
+        sampling rate, effective sampling rate, and the duration of the data stream.
+        The result is stored in the qc_metrics dictionary under the key 'dropped_samples'.
+
+        Returns:
+            None: The method updates the qc_metrics attribute of the DataStream instance.
+        """
+        if self.effective_srate == 0:
+            self.qc_metrics["dropped_samples"] = None
+            return
+
+        duration_seconds = (self.data["time_stamp"].max() - self.data["time_stamp"].min()).item()
+        expected_samples = int(self.nominal_srate * duration_seconds)
+        actual_samples = len(self.data)
+        dropped_samples = expected_samples - actual_samples
+        self.qc_metrics["dropped_samples"] = dropped_samples
