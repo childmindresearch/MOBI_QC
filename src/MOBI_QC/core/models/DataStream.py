@@ -110,3 +110,53 @@ class DataStream:
             self.effective_srate = 1 / time_stamp_diff
         else:
             self.effective_srate = 0
+
+    def calculate_durations_within_range(
+        self, onset_timestamp: float, offset_timestamp: float
+    ) -> tuple[float, float]:
+        """Calculate duration within time range.
+
+        Calculate duration of filtered modality data within specified time range, 
+        based on LSL timestamps, and compares it with the expected duration within 
+        that time range.
+
+        Args:
+            onset_timestamp: start time (seconds) of time range for calculating duration
+            offset_timestamp: end time (seconds) of time range for calculating duration
+
+        Returns:
+            A tuple containing:
+                - modality_duration: Duration of modality data within the specified 
+                time range (in seconds).
+                - duration_percent: Percentage of expected duration that the modality
+                duration represents.
+
+        Raises:
+            ValueError: If offset_timestamp is less than or equal to onset_timestamp.
+                        If either onset_timestamp or offset_timestamp is negative.
+                        If onset and offset timestamps are out of bounds.
+                        If data has not been filtered to the specified time range.
+        """
+        if offset_timestamp < 0 or onset_timestamp < 0:
+            raise ValueError("Onset and offset timestamps must be positive values.")
+
+        if offset_timestamp <= onset_timestamp:
+            raise ValueError("Offset timestamp must be greater than onset timestamp.")
+
+        if (onset_timestamp > self.data.select(pl.last("time_stamp")).item()
+            or offset_timestamp < self.data.select(pl.first("time_stamp")).item()):
+            raise ValueError("Onset or offset timestamps are out of bounds.")
+
+        if (self.data.select(pl.first("time_stamp")).item() < onset_timestamp 
+            or self.data.select(pl.last("time_stamp")).item() > offset_timestamp):
+            raise ValueError("Data has not been filtered to specified time range.")
+
+        modality_duration = self.data.select(
+        (pl.last("time_stamp") - pl.first("time_stamp")).alias("difference")
+        ).item()
+
+        timestamp_duration = offset_timestamp - onset_timestamp
+
+        duration_percent = (modality_duration / timestamp_duration) * 100
+
+        return modality_duration, duration_percent
