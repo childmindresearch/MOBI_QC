@@ -116,8 +116,8 @@ class DataStream:
     ) -> tuple[float, float]:
         """Calculate amount of data within time range.
 
-        Calculate amount of data within filtered modality data for specified time 
-        range, based on LSL timestamps, and compare it with the expected amount in 
+        Calculate amount of data within filtered modality data for specified time
+        range, based on LSL timestamps, and compare it with the expected amount in
         that time range which is calculated from input onset and offset timestamps.
 
         Args:
@@ -126,7 +126,7 @@ class DataStream:
 
         Returns:
             A tuple containing:
-                - modality_amount: Amount of modality data within the specified 
+                - modality_amount: Amount of modality data within the specified
                 time range (in seconds).
                 - amount_percent: Percentage of expected amount that the modality
                 amount represents.
@@ -143,16 +143,20 @@ class DataStream:
         if offset_timestamp <= onset_timestamp:
             raise ValueError("Offset timestamp must be greater than onset timestamp.")
 
-        if (onset_timestamp > self.data.select(pl.last("time_stamp")).item()
-            or offset_timestamp < self.data.select(pl.first("time_stamp")).item()):
+        if (
+            onset_timestamp > self.data.select(pl.last("time_stamp")).item()
+            or offset_timestamp < self.data.select(pl.first("time_stamp")).item()
+        ):
             raise ValueError("Onset or offset timestamps are out of bounds.")
 
-        if (self.data.select(pl.first("time_stamp")).item() < onset_timestamp 
-            or self.data.select(pl.last("time_stamp")).item() > offset_timestamp):
+        if (
+            self.data.select(pl.first("time_stamp")).item() < onset_timestamp
+            or self.data.select(pl.last("time_stamp")).item() > offset_timestamp
+        ):
             raise ValueError("Data has not been filtered to specified time range.")
 
         modality_amount = self.data.select(
-        (pl.last("time_stamp") - pl.first("time_stamp")).alias("difference")
+            (pl.last("time_stamp") - pl.first("time_stamp")).alias("difference")
         ).item()
 
         timestamp_amount = offset_timestamp - onset_timestamp

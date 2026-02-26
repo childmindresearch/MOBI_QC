@@ -104,9 +104,7 @@ def test_amount_of_data_raises_value_error_if_offset_less(
     with pytest.raises(
         ValueError, match="Offset timestamp must be greater than onset timestamp."
     ):
-        sample_datastream_obj.amount_of_data(
-            onset_timestamp, offset_timestamp
-        )
+        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
 
 
 def test_amount_of_data_raises_value_error_if_offset_onset_equal(
@@ -129,22 +127,20 @@ def test_amount_of_data_raises_value_error_if_timestamps_negative(
     with pytest.raises(
         ValueError, match="Onset and offset timestamps must be positive values."
     ):
-        sample_datastream_obj.amount_of_data(
-            onset_timestamp, offset_timestamp
-        )
+        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
+
 
 def test_amount_of_data_raises_value_error_if_onset_out_of_bounds(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when onset timestamp is out of bounds."""
     onset_timestamp = sample_datastream_obj.data.item(-1, "time_stamp") + 10
-    offset_timestamp = sample_datastream_obj.data.item(-1, "time_stamp") +20
+    offset_timestamp = sample_datastream_obj.data.item(-1, "time_stamp") + 20
     with pytest.raises(
         ValueError, match="Onset or offset timestamps are out of bounds."
     ):
-        sample_datastream_obj.amount_of_data(
-            onset_timestamp, offset_timestamp
-        )
+        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
+
 
 def test_amount_of_data_raises_value_error_if_offset_out_of_bounds(
     sample_datastream_obj: DataStream.DataStream,
@@ -155,9 +151,8 @@ def test_amount_of_data_raises_value_error_if_offset_out_of_bounds(
     with pytest.raises(
         ValueError, match="Onset or offset timestamps are out of bounds."
     ):
-        sample_datastream_obj.amount_of_data(
-            onset_timestamp, offset_timestamp
-        )
+        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
+
 
 def test_raises_value_error_if_data_not_filtered(
     sample_datastream_obj: DataStream.DataStream,
@@ -168,9 +163,8 @@ def test_raises_value_error_if_data_not_filtered(
     with pytest.raises(
         ValueError, match="Data has not been filtered to specified time range."
     ):
-        sample_datastream_obj.amount_of_data(
-            onset_timestamp, offset_timestamp
-        )
+        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
+
 
 def test_datastream_amount_of_data(
     sample_datastream_obj: DataStream.DataStream,
@@ -188,11 +182,9 @@ def test_datastream_amount_of_data(
         & (pl.col("time_stamp") <= offset_timestamp)
     )
 
-    modality_amount, amount_percent = (
-        sample_datastream_obj.amount_of_data(
-            onset_timestamp,
-            offset_timestamp,
-        )
+    modality_amount, amount_percent = sample_datastream_obj.amount_of_data(
+        onset_timestamp,
+        offset_timestamp,
     )
 
     assert modality_amount == expected_amount
