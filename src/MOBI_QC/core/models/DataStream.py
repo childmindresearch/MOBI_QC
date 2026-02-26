@@ -111,25 +111,25 @@ class DataStream:
         else:
             self.effective_srate = 0
 
-    def calculate_durations_within_range(
+    def amount_of_data(
         self, onset_timestamp: float, offset_timestamp: float
     ) -> tuple[float, float]:
-        """Calculate duration within time range.
+        """Calculate amount of data within time range.
 
-        Calculate duration of filtered modality data within specified time range, 
-        based on LSL timestamps, and compares it with the expected duration within 
-        that time range.
+        Calculate amount of data within filtered modality data for specified time 
+        range, based on LSL timestamps, and compare it with the expected amount in 
+        that time range which is calculated from input onset and offset timestamps.
 
         Args:
-            onset_timestamp: start time (seconds) of time range for calculating duration
-            offset_timestamp: end time (seconds) of time range for calculating duration
+            onset_timestamp: start time (seconds) of time range for calculating amount
+            offset_timestamp: end time (seconds) of time range for calculating amount
 
         Returns:
             A tuple containing:
-                - modality_duration: Duration of modality data within the specified 
+                - modality_amount: Amount of modality data within the specified 
                 time range (in seconds).
-                - duration_percent: Percentage of expected duration that the modality
-                duration represents.
+                - amount_percent: Percentage of expected amount that the modality
+                amount represents.
 
         Raises:
             ValueError: If offset_timestamp is less than or equal to onset_timestamp.
@@ -151,12 +151,12 @@ class DataStream:
             or self.data.select(pl.last("time_stamp")).item() > offset_timestamp):
             raise ValueError("Data has not been filtered to specified time range.")
 
-        modality_duration = self.data.select(
+        modality_amount = self.data.select(
         (pl.last("time_stamp") - pl.first("time_stamp")).alias("difference")
         ).item()
 
-        timestamp_duration = offset_timestamp - onset_timestamp
+        timestamp_amount = offset_timestamp - onset_timestamp
 
-        duration_percent = (modality_duration / timestamp_duration) * 100
+        amount_percent = (modality_amount / timestamp_amount) * 100
 
-        return modality_duration, duration_percent
+        return modality_amount, amount_percent

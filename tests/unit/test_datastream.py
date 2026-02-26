@@ -95,7 +95,7 @@ def test_datastream_filter_time_range(
     )
 
 
-def test_calculate_durations_raises_value_error_if_offset_less(
+def test_amount_of_data_raises_value_error_if_offset_less(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when offset timestamp is less than onset."""
@@ -104,12 +104,12 @@ def test_calculate_durations_raises_value_error_if_offset_less(
     with pytest.raises(
         ValueError, match="Offset timestamp must be greater than onset timestamp."
     ):
-        sample_datastream_obj.calculate_durations_within_range(
+        sample_datastream_obj.amount_of_data(
             onset_timestamp, offset_timestamp
         )
 
 
-def test_calculate_durations_raises_value_error_if_offset_onset_equal(
+def test_amount_of_data_raises_value_error_if_offset_onset_equal(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when offset and onset timestamps are equal."""
@@ -117,10 +117,10 @@ def test_calculate_durations_raises_value_error_if_offset_onset_equal(
     with pytest.raises(
         ValueError, match="Offset timestamp must be greater than onset timestamp."
     ):
-        sample_datastream_obj.calculate_durations_within_range(timestamp, timestamp)
+        sample_datastream_obj.amount_of_data(timestamp, timestamp)
 
 
-def test_calculate_durations_raises_value_error_if_timestamps_negative(
+def test_amount_of_data_raises_value_error_if_timestamps_negative(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when onset or offset timestamps are negative."""
@@ -129,11 +129,11 @@ def test_calculate_durations_raises_value_error_if_timestamps_negative(
     with pytest.raises(
         ValueError, match="Onset and offset timestamps must be positive values."
     ):
-        sample_datastream_obj.calculate_durations_within_range(
+        sample_datastream_obj.amount_of_data(
             onset_timestamp, offset_timestamp
         )
 
-def test_calculate_durations_raises_value_error_if_onset_out_of_bounds(
+def test_amount_of_data_raises_value_error_if_onset_out_of_bounds(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when onset timestamp is out of bounds."""
@@ -142,11 +142,11 @@ def test_calculate_durations_raises_value_error_if_onset_out_of_bounds(
     with pytest.raises(
         ValueError, match="Onset or offset timestamps are out of bounds."
     ):
-        sample_datastream_obj.calculate_durations_within_range(
+        sample_datastream_obj.amount_of_data(
             onset_timestamp, offset_timestamp
         )
 
-def test_calculate_durations_raises_value_error_if_offset_out_of_bounds(
+def test_amount_of_data_raises_value_error_if_offset_out_of_bounds(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
     """Test that ValueError is raised when offset timestamp is out of bounds."""
@@ -155,7 +155,7 @@ def test_calculate_durations_raises_value_error_if_offset_out_of_bounds(
     with pytest.raises(
         ValueError, match="Onset or offset timestamps are out of bounds."
     ):
-        sample_datastream_obj.calculate_durations_within_range(
+        sample_datastream_obj.amount_of_data(
             onset_timestamp, offset_timestamp
         )
 
@@ -168,19 +168,19 @@ def test_raises_value_error_if_data_not_filtered(
     with pytest.raises(
         ValueError, match="Data has not been filtered to specified time range."
     ):
-        sample_datastream_obj.calculate_durations_within_range(
+        sample_datastream_obj.amount_of_data(
             onset_timestamp, offset_timestamp
         )
 
-def test_calculate_durations_within_range(
+def test_datastream_amount_of_data(
     sample_datastream_obj: DataStream.DataStream,
 ) -> None:
-    """Test DataStream calculate_durations_within_range method."""
+    """Test DataStream amount_of_data method."""
     onset_index = 10
     offset_index = 100
     onset_timestamp = sample_datastream_obj.data.item(onset_index, "time_stamp")
     offset_timestamp = sample_datastream_obj.data.item(offset_index, "time_stamp")
-    expected_duration = offset_timestamp - onset_timestamp
+    expected_amount = offset_timestamp - onset_timestamp
     expected_percent = 100.0
 
     sample_datastream_obj.data = sample_datastream_obj.data.filter(
@@ -188,12 +188,12 @@ def test_calculate_durations_within_range(
         & (pl.col("time_stamp") <= offset_timestamp)
     )
 
-    modality_duration, duration_percent = (
-        sample_datastream_obj.calculate_durations_within_range(
+    modality_amount, amount_percent = (
+        sample_datastream_obj.amount_of_data(
             onset_timestamp,
             offset_timestamp,
         )
     )
 
-    assert modality_duration == expected_duration
-    assert math.isclose(duration_percent, expected_percent, rel_tol=10e-7)
+    assert modality_amount == expected_amount
+    assert math.isclose(amount_percent, expected_percent, rel_tol=10e-7)
