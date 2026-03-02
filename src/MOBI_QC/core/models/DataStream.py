@@ -58,7 +58,7 @@ class DataStream:
         )
 
         self.stream_name = stream["info"]["name"][0]
-        self.data = full_df
+        self.data = full_df.sort("time_stamp")
         self.variables = column_labels + ["time_stamp"]
         self.data_modality = stream["info"]["type"][0]
         self.channel_count = int(stream["info"]["channel_count"][0])
@@ -111,7 +111,8 @@ class DataStream:
         else:
             self.effective_srate = 0
 
-    def calculate_dropped_samples(self) -> None:
+
+    def calculate_dropped_samples(self, onset_timestamp: float, offset_timestamp: float) -> None:
         """Calculate the number of dropped samples in the data stream.
 
         This method calculates the number of dropped samples based on the nominal
@@ -124,10 +125,24 @@ class DataStream:
         if self.effective_srate == 0:
             self.qc_metrics["dropped_samples"] = None
             return
+        
+        
+        self.data.with_columns(pl.col("time_stamp")
+                               .diff()
+                               .alias("time_diff")
+                               )
+        expected_interval = self.data.select(pl.col("time_diff").median()).item()
 
-        duration_seconds = float(self.data["time_stamp"].max()) - float(
-            self.data["time_stamp"].min()
-        )
+        threshold = expected_interval * 1.05 
+
+
+        gaps = self.data.filter(pl.col("time_diff") > threshold).select("time_diff")
+        if gaps.height == 0:
+            self.qc_metrics["dropped_samples"] = 0
+            return
+        excess_gaps = gaps.select(pl.col("time_diff") - expected_interval).sum().item()
+
+        duration_seconds = offset_timestamp - onset_timestamp
         expected_samples = int(self.nominal_srate * duration_seconds)
         actual_samples = len(self.data)
         dropped_samples = expected_samples - actual_samples
