@@ -147,7 +147,6 @@ class DataStream:
             & (pl.col("time_stamp") <= offset_timestamp)
         )
 
-        # Return 0 if no data found in range
         if filtered_data.height < 1:
             raise ValueError("No data found in the specified time range.")
 
