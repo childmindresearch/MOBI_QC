@@ -112,38 +112,83 @@ class DataStream:
             self.effective_srate = 0
 
 
-    def calculate_dropped_samples(self, onset_timestamp: float, offset_timestamp: float) -> None:
-        """Calculate the number of dropped samples in the data stream.
+    def calculate_dropped_samples(
+        self, onset_timestamp: float, offset_timestamp: float
+    ) -> float:
+        """Calculate the percentage of time lost due to dropped samples.
 
-        This method calculates the number of dropped samples based on the nominal
-        sampling rate, effective sampling rate, and the duration of the data stream.
-        The result is stored in the qc_metrics dictionary under the key 'dropped_samples'.
+        This method analyzes gaps between consecutive samples in the data stream
+        and calculates the total time lost due to gaps exceeding the expected
+        sampling interval. Gaps at the beginning (onset to first sample) and end
+        (last sample to offset) are automatically included by adding virtual
+        boundary timestamps.
+
+        Args:
+            onset_timestamp: Start time (seconds) for the analysis window.
+            offset_timestamp: End time (seconds) for the analysis window.
 
         Returns:
-            None: The method updates the qc_metrics attribute of the DataStream instance.
+            None. Updates the qc_metrics dictionary with the percentage of time lost
+            due to dropped samples under the key "percent_lost".
+
+        Raises:
+            ValueError: If offset_timestamp <= onset_timestamp or if either is negative.
         """
-        if self.effective_srate == 0:
-            self.qc_metrics["dropped_samples"] = None
-            return
+        # Validate inputs
+        if offset_timestamp < 0 or onset_timestamp < 0:
+            raise ValueError("Onset and offset timestamps must be positive values.")
+
+        if offset_timestamp <= onset_timestamp:
+            raise ValueError("Offset timestamp must be greater than onset timestamp.")
+
+        # Filter data to the specified time range
+        filtered_data = self.data.filter(
+            (pl.col("time_stamp") >= onset_timestamp)
+            & (pl.col("time_stamp") <= offset_timestamp)
+        )
+
+        # Return 0 if no data found in range
+        if filtered_data.height < 1:
+            raise ValueError("No data found in the specified time range.")
+
+        # Calculate expected interval based on nominal sampling rate
+        expected_interval = 1.0 / self.nominal_srate
+
+        # Add tolerance (5%) to account for minor timing variations
+        tolerance_threshold = expected_interval * 1.05
+
+        # Extract timestamps and add virtual boundaries at onset and offset
+        # This automatically handles gaps at the start and end
+        timestamps = filtered_data.select("time_stamp").to_series().to_list()
+        extended_timestamps = [onset_timestamp] + timestamps + [offset_timestamp]
+
+        # Create DataFrame with extended timestamps
+        df_extended = pl.DataFrame({"time_stamp": extended_timestamps})
+
+        # Calculate time differences between consecutive timestamps
+        df_with_diffs = df_extended.with_columns(
+            pl.col("time_stamp").diff().alias("time_diff")
+        )
+
+        # Filter for gaps exceeding the tolerance threshold
+        # Calculate excess time for each gap (gap - expected_interval)
+        # Sum all excess times
+        gaps_excess = (
+            df_with_diffs.filter(pl.col("time_diff") > tolerance_threshold)
+            .select((pl.col("time_diff") - expected_interval).alias("excess"))
+            .sum()
+            .item()
+        )
+
+        # Handle None case when no gaps are found
+        total_lost_time = float(gaps_excess) if gaps_excess is not None else 0.0
+
+        # Calculate total time window
+        total_time = offset_timestamp - onset_timestamp
+
+        # Calculate percentage of time lost
+        self.qc_metrics["percent_lost"] = (total_lost_time / total_time) * 100.0
+
+        return 
+
         
-        
-        self.data.with_columns(pl.col("time_stamp")
-                               .diff()
-                               .alias("time_diff")
-                               )
-        expected_interval = self.data.select(pl.col("time_diff").median()).item()
-
-        threshold = expected_interval * 1.05 
-
-
-        gaps = self.data.filter(pl.col("time_diff") > threshold).select("time_diff")
-        if gaps.height == 0:
-            self.qc_metrics["dropped_samples"] = 0
-            return
-        excess_gaps = gaps.select(pl.col("time_diff") - expected_interval).sum().item()
-
-        duration_seconds = offset_timestamp - onset_timestamp
-        expected_samples = int(self.nominal_srate * duration_seconds)
-        actual_samples = len(self.data)
-        dropped_samples = expected_samples - actual_samples
-        self.qc_metrics["dropped_samples"] = dropped_samples
