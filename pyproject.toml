@@ -3,7 +3,7 @@ name = "MOBI_QC"
 version = "0.1.0"
 description = "mobi qc"
 authors = ["Bryan Gonzalez <bryan.gonzalez@childmind.org>",
-"Apurva Goekhe <apurva.goekhe@hildmind.org>",
+"Apurva Gokhe <apurva.gokhe@hildmind.org>",
 "Camilla Strauss <camilla.strauss@childmind.org",
 "Adam Santorelli <adam.santorelli@childmind.org>"
 ]

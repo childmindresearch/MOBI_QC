@@ -11,7 +11,13 @@ on:
 
 jobs:
   unit:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python_version: ['3.10', '3.11', '3.12', '3.13']
+        resolution: [lowest-direct, highest]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -22,7 +28,7 @@ jobs:
       run: pipx install poetry
     - uses: actions/setup-python@v5
       with:
-        python-version-file: pyproject.toml
+        python-version: ${{ matrix.python_version }}
         cache: poetry
     - name: Install dependencies
       run: |
@@ -37,6 +43,7 @@ jobs:
           --cov=src tests \
           --log-level=DEBUG \
           --verbose
+      shell: bash
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7
       with:
