@@ -27,40 +27,26 @@ def test_datastream_initialization(
     assert hasattr(sample_datastream_obj, "error")
     assert not sample_datastream_obj.error
 
-
-def test_raises_value_error_if_offset_less(
+@pytest.mark.parametrize(
+    "onset_timestamp, offset_timestamp, expected_message",
+    [
+        (-100.0, -10.0, "Onset and offset timestamps must be positive values."),
+        (10.0, -100.0, "Onset and offset timestamps must be positive values."),
+        (100.0, 10.0, "Offset timestamp must be greater than onset timestamp."), 
+        (100.0, 100.0, "Offset timestamp must be greater than onset timestamp.")
+    ]
+)
+def test_check_timestamp_args_raises_value_error(
     sample_datastream_obj: DataStream.DataStream,
+    onset_timestamp: float,
+    offset_timestamp: float,
+    expected_message: str,
 ) -> None:
-    """Test that ValueError is raised when offset timestamp is less than onset."""
-    onset_timestamp = 100.0
-    offset_timestamp = 10.0
-    with pytest.raises(
-        ValueError, match="Offset timestamp must be greater than onset timestamp."
-    ):
-        sample_datastream_obj.filter_time_range(onset_timestamp, offset_timestamp)
+    """Test that _check_timestamp_args raises ValueError for invalid timestamps."""
 
+    with pytest.raises(ValueError, match=expected_message):
+        sample_datastream_obj._check_timestamp_args(onset_timestamp, offset_timestamp)
 
-def test_raises_value_error_if_offset_onset_equal(
-    sample_datastream_obj: DataStream.DataStream,
-) -> None:
-    """Test that ValueError is raised when offset and onset timestamps are equal."""
-    timestamp = 100.0
-    with pytest.raises(
-        ValueError, match="Offset timestamp must be greater than onset timestamp."
-    ):
-        sample_datastream_obj.filter_time_range(timestamp, timestamp)
-
-
-def test_raises_value_error_if_timestamps_negative(
-    sample_datastream_obj: DataStream.DataStream,
-) -> None:
-    """Test that ValueError is raised when onset or offset timestamps are negative."""
-    onset_timestamp = -100.0
-    offset_timestamp = -10.0
-    with pytest.raises(
-        ValueError, match="Onset and offset timestamps must be positive values."
-    ):
-        sample_datastream_obj.filter_time_range(onset_timestamp, offset_timestamp)
 
 
 def test_fs_zero_if_df_empty(
@@ -93,41 +79,6 @@ def test_datastream_filter_time_range(
     assert math.isclose(
         sample_datastream_obj.effective_srate, expected_fs, rel_tol=10e-7
     )
-
-
-def test_amount_of_data_raises_value_error_if_offset_less(
-    sample_datastream_obj: DataStream.DataStream,
-) -> None:
-    """Test that ValueError is raised when offset timestamp is less than onset."""
-    onset_timestamp = 100.0
-    offset_timestamp = 10.0
-    with pytest.raises(
-        ValueError, match="Offset timestamp must be greater than onset timestamp."
-    ):
-        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
-
-
-def test_amount_of_data_raises_value_error_if_offset_onset_equal(
-    sample_datastream_obj: DataStream.DataStream,
-) -> None:
-    """Test that ValueError is raised when offset and onset timestamps are equal."""
-    timestamp = 100.0
-    with pytest.raises(
-        ValueError, match="Offset timestamp must be greater than onset timestamp."
-    ):
-        sample_datastream_obj.amount_of_data(timestamp, timestamp)
-
-
-def test_amount_of_data_raises_value_error_if_timestamps_negative(
-    sample_datastream_obj: DataStream.DataStream,
-) -> None:
-    """Test that ValueError is raised when onset or offset timestamps are negative."""
-    onset_timestamp = -100.0
-    offset_timestamp = -10.0
-    with pytest.raises(
-        ValueError, match="Onset and offset timestamps must be positive values."
-    ):
-        sample_datastream_obj.amount_of_data(onset_timestamp, offset_timestamp)
 
 
 def test_amount_of_data_raises_value_error_if_onset_out_of_bounds(
