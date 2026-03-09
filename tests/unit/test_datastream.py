@@ -27,20 +27,25 @@ def test_datastream_initialization(
     assert hasattr(sample_datastream_obj, "error")
     assert not sample_datastream_obj.error
 
+
 @pytest.mark.parametrize(
     "onset_timestamp, offset_timestamp, expected_message",
     [
         (-100.0, -10.0, "Onset and offset timestamps must be positive values."),
         (10.0, -100.0, "Onset and offset timestamps must be positive values."),
-        (100.0, 10.0, "Offset timestamp must be greater than onset timestamp."), 
+        (100.0, 10.0, "Offset timestamp must be greater than onset timestamp."),
         (100.0, 100.0, "Offset timestamp must be greater than onset timestamp."),
-        ("sample_datastream_obj.data.select(pl.last('time_stamp')).item() + 10",
-         "sample_datastream_obj.data.select(pl.last('time_stamp')).item() + 20",
-         "Onset timestamp is out of bounds."),
-        ("sample_datastream_obj.data.select(pl.first('time_stamp')).item() - 20",
-         "sample_datastream_obj.data.select(pl.first('time_stamp')).item() - 10",
-         "Offset timestamp is out of bounds.")
-    ]
+        (
+            "sample_datastream_obj.data.select(pl.last('time_stamp')).item() + 10",
+            "sample_datastream_obj.data.select(pl.last('time_stamp')).item() + 20",
+            "Onset timestamp is out of bounds.",
+        ),
+        (
+            "sample_datastream_obj.data.select(pl.first('time_stamp')).item() - 20",
+            "sample_datastream_obj.data.select(pl.first('time_stamp')).item() - 10",
+            "Offset timestamp is out of bounds.",
+        ),
+    ],
 )
 def test_check_timestamp_args_raises_value_error(
     sample_datastream_obj: DataStream.DataStream,
@@ -50,9 +55,9 @@ def test_check_timestamp_args_raises_value_error(
 ) -> None:
     """Test that _check_timestamp_args raises ValueError for invalid timestamps."""
     if isinstance(onset_timestamp, str):
-         onset_timestamp = eval(onset_timestamp)
+        onset_timestamp = eval(onset_timestamp)
     if isinstance(offset_timestamp, str):
-         offset_timestamp = eval(offset_timestamp)
+        offset_timestamp = eval(offset_timestamp)
     with pytest.raises(ValueError, match=expected_message):
         sample_datastream_obj._check_timestamp_args(onset_timestamp, offset_timestamp)
 
@@ -99,7 +104,8 @@ def test_raises_value_error_if_data_not_filtered(
         ValueError, match="Data has not been filtered to specified time range."
     ):
         sample_datastream_obj.calculate_amount_of_data(
-            onset_timestamp, offset_timestamp)
+            onset_timestamp, offset_timestamp
+        )
 
 
 def test_datastream_calculate_amount_of_data(

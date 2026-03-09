@@ -71,8 +71,8 @@ class DataStream:
         self.error = False
 
     def _check_timestamp_args(
-            self, onset_timestamp: float, offset_timestamp: float
-            ) -> None:
+        self, onset_timestamp: float, offset_timestamp: float
+    ) -> None:
         """Helper function to check timestamp arguments."""
         if offset_timestamp < 0 or onset_timestamp < 0:
             raise ValueError("Onset and offset timestamps must be positive values.")
@@ -80,10 +80,10 @@ class DataStream:
         if offset_timestamp <= onset_timestamp:
             raise ValueError("Offset timestamp must be greater than onset timestamp.")
 
-        if (onset_timestamp > self.data.select(pl.last("time_stamp")).item()):
-            raise ValueError("Onset timestamp is out of bounds.") 
-             
-        if (offset_timestamp < self.data.select(pl.first("time_stamp")).item()):
+        if onset_timestamp > self.data.select(pl.last("time_stamp")).item():
+            raise ValueError("Onset timestamp is out of bounds.")
+
+        if offset_timestamp < self.data.select(pl.first("time_stamp")).item():
             raise ValueError("Offset timestamp is out of bounds.")
 
     def filter_time_range(
@@ -162,7 +162,8 @@ class DataStream:
             raise ValueError("Data has not been filtered to specified time range.")
 
         modality_amount = self.data.select(
-            pl.last("time_stamp") - pl.first("time_stamp")).item()
+            pl.last("time_stamp") - pl.first("time_stamp")
+        ).item()
 
         timestamp_amount = offset_timestamp - onset_timestamp
 
