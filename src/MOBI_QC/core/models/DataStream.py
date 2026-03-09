@@ -74,7 +74,6 @@ class DataStream:
             self, onset_timestamp: float, offset_timestamp: float
             ) -> None:
         """Helper function to check timestamp arguments."""
-
         if offset_timestamp < 0 or onset_timestamp < 0:
             raise ValueError("Onset and offset timestamps must be positive values.")
 
@@ -86,7 +85,6 @@ class DataStream:
              
         if (offset_timestamp < self.data.select(pl.first("time_stamp")).item()):
             raise ValueError("Offset timestamp is out of bounds.")
-
 
     def filter_time_range(
         self, onset_timestamp: float, offset_timestamp: float
@@ -129,7 +127,7 @@ class DataStream:
         else:
             self.effective_srate = 0
 
-    def amount_of_data(
+    def calculate_amount_of_data(
         self, onset_timestamp: float, offset_timestamp: float
     ) -> tuple[float, float]:
         """Calculate amount of data within time range.
@@ -155,7 +153,6 @@ class DataStream:
                         If onset and offset timestamps are out of bounds.
                         If data has not been filtered to the specified time range.
         """
-
         self._check_timestamp_args(onset_timestamp, offset_timestamp)
 
         if (
